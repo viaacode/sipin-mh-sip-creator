@@ -98,7 +98,7 @@ class EventListener:
                 xml_file.write(sidecar)
 
             # Move file(s) to AIP folder with PID as filename(s)
-            aip_filepath = Path(self.app_cfg["aip_folder"], pid)
+            aip_filepath = Path(self.app_config["aip_folder"], pid)
 
             shutil.move(
                 essence_filepath,
