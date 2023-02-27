@@ -76,7 +76,8 @@ class EventListener:
 
         # Path to unzipped bag
         # `/opt/sipin/unzip/<name>.bag.zip`
-        path: str = event.attr
+        path: str = event._attributes.subject
+        print(path)
         pid = self.pid_client.get_pid()
         representations = graph.get_representations(metadata_graph)
 
