@@ -92,6 +92,8 @@ class EventListener:
             sidecar_filepath = Path(
                 path, "/data/representations/representation_1/data", filename
             ).with_suffix(".xml")
+            print(essence_filepath)
+            print(sidecar_filepath)
 
             # Write sidecar to file
             with open(sidecar_filepath, "wb") as xml_file:
