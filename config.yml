@@ -2,6 +2,7 @@ viaa:
     logging:
         level: DEBUG
 app:
+    host: !ENV ${HOST}
     mh-sip-creator:
         consumer_topic: !ENV ${SIP_VALIDATE_SHACL_TOPIC}
         producer_topic: !ENV ${MH_SIP_PRODUCER_TOPIC}

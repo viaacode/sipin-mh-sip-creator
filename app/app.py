@@ -109,6 +109,7 @@ class EventListener:
             # Send event on topic
             data = {
                 "source": path,
+                "host": self.config["host"],
                 "paths": [
                     str(aip_filepath.with_suffix(filename.suffix)),
                     str(aip_filepath.with_suffix(".xml")),
