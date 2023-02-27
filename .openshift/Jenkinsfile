@@ -164,7 +164,7 @@ pipeline {
 }
 
 void getImageFromDockerfile() {
-    return 'python:3.7'
+    return 'python:3.10'
 }
 void getBaseImageName() {
     return getImageFromDockerfile().split(':')[0]
@@ -185,7 +185,5 @@ void tagNewImage(String environment) {
     sh """#!/bin/bash
     oc project $OC_PROJECT
     oc tag $APP_NAME:$GIT_SHORT_COMMIT $APP_NAME:${environment}
-    # Check the status of the rollout
-    oc rollout status deployment/$APP_NAME-${environment} --watch=true --timeout=10m
     """
 }
