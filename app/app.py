@@ -77,7 +77,6 @@ class EventListener:
         # Path to unzipped bag
         # `/opt/sipin/unzip/<name>.bag.zip`
         path: str = event.get_attributes()["subject"]
-        print(event.get_attributes()["subject"])
         pid = self.pid_client.get_pid()
         representations = graph.get_representations(metadata_graph)
 
@@ -88,13 +87,11 @@ class EventListener:
             filename = Path(representations[0].files[0].filename)
 
             essence_filepath = Path(
-                path, "/data/representations/representation_1/data", filename
+                path, "data/representations/representation_1/data", filename
             )
             sidecar_filepath = Path(
-                path, "/data/representations/representation_1/data", filename
+                path, "data/representations/representation_1/data", filename
             ).with_suffix(".xml")
-            print(essence_filepath)
-            print(sidecar_filepath)
 
             # Write sidecar to file
             with open(sidecar_filepath, "wb") as xml_file:
