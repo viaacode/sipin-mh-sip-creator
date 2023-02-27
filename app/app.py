@@ -94,7 +94,7 @@ class EventListener:
             ).with_suffix(".xml")
 
             # Write sidecar to file
-            with open(sidecar_filepath, "wb") as xml_file:
+            with open(sidecar_filepath, "w") as xml_file:
                 xml_file.write(sidecar)
 
             # Move file(s) to AIP folder with PID as filename(s)

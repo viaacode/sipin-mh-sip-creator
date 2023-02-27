@@ -80,6 +80,5 @@ def build_mh_sidecar(graph: rdflib.Graph) -> str:
             xml_tag.text = obj
 
     xml = etree.tostring(root, pretty_print=True).decode()
-    print(xml)
 
     return xml
