@@ -1,0 +1,13 @@
+viaa:
+    logging:
+        level: DEBUG
+app:
+    mh-sip-creator:
+        consumer_topic: !ENV ${SIP_VALIDATE_SHACL_TOPIC}
+        producer_topic: !ENV ${MH_SIP_PRODUCER_TOPIC}
+        aip_folder: !ENV ${MH_SIP_FOLDER}
+    pulsar:
+        host: !ENV ${PULSAR_HOST}
+        port: !ENV ${PULSAR_PORT}
+    pid:
+        url: !ENV ${PID_URL}

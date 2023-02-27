@@ -1,0 +1,357 @@
+[
+  {
+    "@id": "https://data.hetarchief.be/id/object/local_idce980d9",
+    "@type": [
+      "https://data.hetarchief.be/id/object/local_id"
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": [
+      {
+        "@value": "ce980d9"
+      }
+    ]
+  },
+  {
+    "@id": "https://data.hetarchief.be/id/object/18513a8d61c6f2cbaaeeedd754b01d6b",
+    "@type": [
+      "http://id.loc.gov/vocabulary/preservation/cryptographicHashFunctions/md5"
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": [
+      {
+        "@value": "18513a8d61c6f2cbaaeeedd754b01d6b"
+      }
+    ]
+  },
+  {
+    "@id": "https://data.hetarchief.be/id/object/local_id",
+    "http://www.w3.org/2000/01/rdf-schema#subClassOf": [
+      {
+        "@id": "https://data.hetarchief.be/ns/object/LocalIdentifier"
+      }
+    ]
+  },
+  {
+    "@id": "https://data.hetarchief.be/id/object/Object_number",
+    "http://www.w3.org/2000/01/rdf-schema#subClassOf": [
+      {
+        "@id": "https://data.hetarchief.be/ns/object/LocalIdentifier"
+      }
+    ]
+  },
+  {
+    "@id": "http://the-fr.org/id/file-format/1507",
+    "@type": [
+      "http://purl.org/dc/terms/FileFormat"
+    ]
+  },
+  {
+    "@id": "https://data.hetarchief.be/id/object/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4",
+    "@type": [
+      "http://www.loc.gov/premis/rdf/v3/IntellectualEntity",
+      {
+        "@value": "edtf:EDTF"
+      },
+      {
+        "@value": "edtf:EDTF-level1"
+      }
+    ],
+    "http://id.loc.gov/vocabulary/preservation/relationshipSubType/isr": [
+      {
+        "@id": "https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572"
+      }
+    ],
+    "http://purl.org/dc/terms/abstract": [
+      {
+        "@language": "en",
+        "@value": "the abstract of the episode"
+      },
+      {
+        "@language": "nl",
+        "@value": "de samenvatting van de episode"
+      }
+    ],
+    "http://purl.org/dc/terms/alternative": [
+      {
+        "@language": "en",
+        "@value": "the alternative title of the episode"
+      },
+      {
+        "@language": "nl",
+        "@value": "de alternatieve titel van de episode"
+      }
+    ],
+    "http://purl.org/dc/terms/available": [
+      {
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "@value": "2023-02-14T18:12:36"
+      }
+    ],
+    "http://purl.org/dc/terms/contributor": [
+      {
+        "@value": "contributor 1"
+      },
+      {
+        "@value": "contributor 2"
+      }
+    ],
+    "http://purl.org/dc/terms/created": [
+      {
+        "@type": "http://id.loc.gov/datatypes/edtf/EDTF-level1",
+        "@value": "2023-02-12"
+      }
+    ],
+    "http://purl.org/dc/terms/creator": [
+      {
+        "@value": "creator 1"
+      },
+      {
+        "@value": "creator 2"
+      }
+    ],
+    "http://purl.org/dc/terms/description": [
+      {
+        "@language": "en",
+        "@value": "the description of the episode"
+      },
+      {
+        "@language": "nl",
+        "@value": "de beschrijving van de episode"
+      }
+    ],
+    "http://purl.org/dc/terms/extent": [
+      {
+        "@type": "http://www.w3.org/2001/XMLSchema#time",
+        "@value": "01:59:34"
+      }
+    ],
+    "http://purl.org/dc/terms/issued": [
+      {
+        "@type": "http://id.loc.gov/datatypes/edtf/EDTF",
+        "@value": "2023-02-14"
+      }
+    ],
+    "http://purl.org/dc/terms/language": [
+      {
+        "@value": "en"
+      }
+    ],
+    "http://purl.org/dc/terms/license": [
+      {
+        "@value": "VIAA-ONDERWIJS"
+      },
+      {
+        "@value": "VIAA-PUBLIEK-METADATA-LTD"
+      }
+    ],
+    "http://purl.org/dc/terms/publisher": [
+      {
+        "@value": "VIAA"
+      },
+      {
+        "@value": "meemoo"
+      }
+    ],
+    "http://purl.org/dc/terms/rights": [
+      {
+        "@language": "en",
+        "@value": "the rights of the episode"
+      },
+      {
+        "@language": "nl",
+        "@value": "de rechten van de episode"
+      }
+    ],
+    "http://purl.org/dc/terms/rightsHolder": [
+      {
+        "@value": "VIAA"
+      }
+    ],
+    "http://purl.org/dc/terms/spatial": [
+      {
+        "@value": "Brussels"
+      },
+      {
+        "@value": "Ghent"
+      }
+    ],
+    "http://purl.org/dc/terms/subject": [
+      {
+        "@language": "en",
+        "@value": "Keyword 1"
+      },
+      {
+        "@language": "en",
+        "@value": "Keyword 2"
+      },
+      {
+        "@language": "en",
+        "@value": "Keyword 3"
+      },
+      {
+        "@language": "nl",
+        "@value": "Trefwoord 1"
+      },
+      {
+        "@language": "nl",
+        "@value": "Trefwoord 2"
+      },
+      {
+        "@language": "nl",
+        "@value": "Trefwoord 3"
+      }
+    ],
+    "http://purl.org/dc/terms/temporal": [
+      {
+        "@value": "2023-02-12"
+      },
+      {
+        "@value": "2023-02-14"
+      }
+    ],
+    "http://purl.org/dc/terms/title": [
+      {
+        "@language": "en",
+        "@value": "the title of the episode"
+      },
+      {
+        "@language": "nl",
+        "@value": "de titel van de episode"
+      }
+    ],
+    "http://purl.org/dc/terms/type": [
+      {
+        "@value": "video"
+      }
+    ],
+    "http://www.loc.gov/premis/rdf/v3/identifier": [
+      {
+        "@id": "https://data.hetarchief.be/id/object/Object_numberv_2021073114124363"
+      },
+      {
+        "@id": "https://data.hetarchief.be/id/object/local_idce980d9"
+      }
+    ]
+  },
+  {
+    "@id": "https://data.hetarchief.be/id/sip/1.0/uuid-de61d4af-d19c-4cc7-864d-55573875b438",
+    "@type": [
+      "https://data.hetarchief.be/ns/sip/SIP"
+    ],
+    "http://purl.org/dc/terms/conformsTo": [
+      {
+        "@value": "https://data.hetarchief.be/id/sip/1.0/basic"
+      },
+      {
+        "@value": "https://earksip.dilcis.eu/profile/E-ARK-SIP.xml"
+      }
+    ],
+    "https://schema.org/agent": [
+      {
+        "@id": "_:nd114387eb8a14374b0109ec8adfa56a0b1"
+      },
+      {
+        "@id": "_:nd114387eb8a14374b0109ec8adfa56a0b2"
+      }
+    ]
+  },
+  {
+    "@id": "_:nd114387eb8a14374b0109ec8adfa56a0b1",
+    "https://schema.org/agent": [
+      {
+        "@id": "https://data.hetarchief.be/id/organization/OR-m30wc4t"
+      }
+    ],
+    "https://schema.org/roleName": [
+      {
+        "@value": "CREATOR"
+      }
+    ]
+  },
+  {
+    "@id": "_:nd114387eb8a14374b0109ec8adfa56a0b2",
+    "https://schema.org/agent": [
+      {
+        "@id": "https://data.hetarchief.be/id/organization/OR-m30wc4t"
+      }
+    ],
+    "https://schema.org/roleName": [
+      {
+        "@value": "ARCHIVIST"
+      }
+    ]
+  },
+  {
+    "@id": "https://data.hetarchief.be/id/object/Object_numberv_2021073114124363",
+    "@type": [
+      "https://data.hetarchief.be/id/object/Object_number"
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": [
+      {
+        "@value": "v_2021073114124363"
+      }
+    ]
+  },
+  {
+    "@id": "https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d",
+    "@type": [
+      "http://www.loc.gov/premis/rdf/v3/File"
+    ],
+    "http://id.loc.gov/vocabulary/preservation/relationshipSubType/isi": [
+      {
+        "@id": "https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572"
+      }
+    ],
+    "http://purl.org/dc/terms/format": [
+      {
+        "@id": "http://the-fr.org/id/file-format/1507"
+      }
+    ],
+    "http://www.loc.gov/premis/rdf/v3/fixity": [
+      {
+        "@id": "https://data.hetarchief.be/id/object/18513a8d61c6f2cbaaeeedd754b01d6b"
+      }
+    ],
+    "http://www.loc.gov/premis/rdf/v3/originalName": [
+      {
+        "@value": "D523F963.jpg"
+      }
+    ],
+    "http://www.loc.gov/premis/rdf/v3/size": [
+      {
+        "@value": 1735648
+      }
+    ]
+  },
+  {
+    "@id": "https://data.hetarchief.be/id/organization/OR-m30wc4t",
+    "@type": [
+      "http://www.w3.org/ns/org#Organization"
+    ],
+    "http://www.w3.org/2004/02/skos/core#prefLabel": [
+      {
+        "@language": "nl",
+        "@value": "Flemish Cat Museum"
+      }
+    ],
+    "https://schema.org/identifier": [
+      {
+        "@value": "OR-m30wc4t"
+      }
+    ]
+  },
+  {
+    "@id": "https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572",
+    "@type": [
+      "http://www.loc.gov/premis/rdf/v3/Representation"
+    ],
+    "http://id.loc.gov/vocabulary/preservation/relationshipSubType/inc": [
+      {
+        "@id": "https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d"
+      }
+    ],
+    "http://id.loc.gov/vocabulary/preservation/relationshipSubType/rep": [
+      {
+        "@id": "https://data.hetarchief.be/id/object/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4"
+      }
+    ]
+  }
+]

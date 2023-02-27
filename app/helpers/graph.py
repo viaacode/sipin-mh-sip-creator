@@ -1,0 +1,85 @@
+import rdflib
+
+from app.models.file import File
+from app.models.representation import Representation
+
+
+def parse_graph(jsonld: str) -> rdflib.Graph:
+    """Parses a JSON-LD string into a graph.
+
+    Args:
+        jsonld (str): The graph represented as a JSON-LD string.
+
+    Returns:
+        rdflib.Graph: The parsed graph.
+    """
+
+    g = rdflib.Graph()
+    g.parse(data=jsonld, format="json-ld")
+    return g
+
+
+def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
+    """Retrieves the CP-id from a given graph.
+
+    Args:
+        graph (rdflib.Graph): The metadata graph of the SIP.
+
+    Returns:
+        str: The CP-id (OR-XXXXXXX)
+    """
+    cp = graph.value(
+        object=rdflib.URIRef("http://www.w3.org/ns/org#Organization"),
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+    )
+    cp_id = graph.value(
+        subject=cp, predicate=rdflib.URIRef("https://schema.org/identifier")
+    )
+    return str(cp_id)
+
+
+def get_representations(graph: rdflib.Graph) -> list[Representation]:
+    """Retrieves the representations from a given graph.
+    For each representation a list of files is retrieved.
+
+    Args:
+        graph (rdflib.Graph): The metadata graph of the SIP.
+
+    Returns:
+        list[Representation]: List of the different representations in the SIP.
+    """
+    representations = []
+    for representation in graph.subjects(
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Representation")
+    ):
+        r = Representation(str(representation))
+        representations.append(r)
+        for file in graph.objects(
+            subject=representation,
+            predicate=rdflib.URIRef(
+                "http://id.loc.gov/vocabulary/preservation/relationshipSubType/inc"
+            ),
+        ):
+            f = File(
+                str(file),
+                str(
+                    graph.value(
+                        subject=file,
+                        predicate=rdflib.URIRef(
+                            "http://www.loc.gov/premis/rdf/v3/originalName"
+                        ),
+                    )
+                ),
+                str(
+                    graph.value(
+                        subject=graph.value(
+                            subject=file,
+                            predicate=rdflib.URIRef(
+                                "http://www.loc.gov/premis/rdf/v3/fixity"
+                            ),
+                        )
+                    )
+                ),
+            )
+            r.files.append(f)
+    return representations
