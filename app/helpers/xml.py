@@ -38,7 +38,9 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
         "http://www.loc.gov/premis/v3#fixity": "Dynamic.md5_viaa",
     }
 
-    root = etree.Element(etree.QName(NSMAP["mhs"], "Sidecar"), nsmap=NSMAP)
+    root = etree.Element(
+        etree.QName(NSMAP["mhs"], "Sidecar"), nsmap=NSMAP, attrib={"version": "23.1"}
+    )
 
     # Add mappable fields to the XML
     for predicate in mapping_dict.keys():
@@ -72,7 +74,6 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
                 xml_tag.append(new)
                 xml_tag = new
             xml_tag.text = obj
-
 
     # Add CP-id to the XML
     cp_tag = etree.Element("CP_id")
