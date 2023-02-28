@@ -29,7 +29,7 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
         "http://purl.org/dc/terms/language": "Dynamic.dc_languages.multiselect[]",
         "http://purl.org/dc/terms/license": "Dynamic.dc_rights_licenses.multiselect[]",
         "http://purl.org/dc/terms/rights": "Dynamic.dc_rights_comment",
-        "http://purl.org/dc/terms/rightsHolder": "Dynamic.dc_rights_rightsHolders",
+        # "http://purl.org/dc/terms/rightsHolder": "Dynamic.dc_rights_rightsHolders",
         "http://purl.org/dc/terms/spatial": "Dynamic.dc_coverages.ruimte",
         "http://purl.org/dc/terms/subject": "Dynamic.dc_subjects.Trefwoord[]",
         "http://purl.org/dc/terms/temporal": "Dynamic.dc_coverages.tijd",
