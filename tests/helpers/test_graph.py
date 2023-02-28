@@ -1,6 +1,11 @@
 import pytest
 
-from app.helpers.graph import get_cp_id_from_graph, get_representations, parse_graph
+from app.helpers.graph import (
+    get_cp_id_from_graph,
+    get_representations,
+    parse_graph,
+    get_local_ids_from_graph,
+)
 
 
 @pytest.fixture
@@ -20,6 +25,14 @@ def test_get_cp_id_from_graph(json_ld_graph):
     cp_id = get_cp_id_from_graph(graph)
 
     assert cp_id == "OR-m30wc4t"
+
+
+def test_get_local_ids_from_graph(json_ld_graph):
+    excepted = {"Object_number": "v_2021073114124363", "local_id": "ce980d9"}
+    graph = parse_graph(json_ld_graph)
+
+    local_ids = get_local_ids_from_graph(graph)
+    assert local_ids == excepted
 
 
 def test_get_representations(json_ld_graph):

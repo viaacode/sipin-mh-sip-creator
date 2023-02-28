@@ -1,6 +1,7 @@
 <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
   <mhs:Descriptive>
     <mh:Title>de titel van de episode</mh:Title>
+    <mh:Description>de samenvatting van de episode</mh:Description>
   </mhs:Descriptive>
   <mhs:Dynamic>
     <dc_title>de titel van de episode</dc_title>
@@ -45,5 +46,10 @@
       <Trefwoord>Trefwoord 3</Trefwoord>
     </dc_subjects>
     <CP_id>OR-m30wc4t</CP_id>
+    <dc_identifier_localids>
+      <Object_number>v_2021073114124363</Object_number>
+      <local_id>ce980d9</local_id>
+    </dc_identifier_localids>
+    <md5>18513a8d61c6f2cbaaeeedd754b01d6b</md5>
   </mhs:Dynamic>
 </mhs:Sidecar>
