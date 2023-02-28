@@ -15,8 +15,8 @@ def json_ld_graph():
 @pytest.fixture
 def mh_sidecar_xml():
     with open("./tests/resources/sidecar.xml", "r") as f:
-        json_ld = f.read()
-    return json_ld
+        xml = f.read()
+    return xml
 
 
 def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
@@ -24,4 +24,4 @@ def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
 
     sidecar = build_mh_sidecar(g)
 
-    print(sidecar)
+    assert sidecar == mh_sidecar_xml

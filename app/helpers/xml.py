@@ -1,5 +1,6 @@
 import rdflib
 from lxml import etree
+from app.helpers.graph import get_cp_id_from_graph
 
 
 def build_mh_mets():
@@ -7,7 +8,7 @@ def build_mh_mets():
     pass
 
 
-def build_mh_sidecar(graph: rdflib.Graph) -> str:
+def build_mh_sidecar(g: rdflib.Graph) -> str:
     """
     Builds a MH 2.0 sidecar based on metadata from a graph
     """
@@ -39,16 +40,9 @@ def build_mh_sidecar(graph: rdflib.Graph) -> str:
 
     root = etree.Element(etree.QName(NSMAP["mhs"], "Sidecar"), nsmap=NSMAP)
 
-    for y in graph.objects(
-        subject=rdflib.URIRef(
-            "http://id.loc.gov/vocabulary/preservation/cryptographicHashFunctions/md5"
-        ),
-        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#value"),
-    ):
-        print(y)
-
+    # Add mappable fields to the XML
     for predicate in mapping_dict.keys():
-        for obj in graph.objects(predicate=rdflib.URIRef(predicate)):
+        for obj in g.objects(predicate=rdflib.URIRef(predicate)):
             if obj.language and obj.language != "nl":
                 # Skip non dutch fields.
                 continue
@@ -57,11 +51,11 @@ def build_mh_sidecar(graph: rdflib.Graph) -> str:
             xml_tag = root
             for i in range(len(splitted)):
                 if i == 0:
-                    if xml_tag.find(f"mh:{splitted[i]}", namespaces=NSMAP) is not None:
-                        xml_tag = xml_tag.find(f"mh:{splitted[i]}", namespaces=NSMAP)
+                    if xml_tag.find(f"mhs:{splitted[i]}", namespaces=NSMAP) is not None:
+                        xml_tag = xml_tag.find(f"mhs:{splitted[i]}", namespaces=NSMAP)
                         continue
                     new = etree.Element(
-                        etree.QName(NSMAP["mh"], splitted[i]), nsmap=NSMAP
+                        etree.QName(NSMAP["mhs"], splitted[i]), nsmap=NSMAP
                     )
                 else:
                     if (
@@ -78,6 +72,12 @@ def build_mh_sidecar(graph: rdflib.Graph) -> str:
                 xml_tag.append(new)
                 xml_tag = new
             xml_tag.text = obj
+
+
+    # Add CP-id to the XML
+    cp_tag = etree.Element("CP_id")
+    root.find("mhs:Dynamic", namespaces=NSMAP).append(cp_tag)
+    cp_tag.text = get_cp_id_from_graph(g)
 
     xml = etree.tostring(root, pretty_print=True).decode()
 

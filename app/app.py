@@ -72,7 +72,9 @@ class EventListener:
             return
 
         # Parse the incoming metadata as a graph.
-        metadata_graph = graph.parse_graph(json.dumps(event.get_data()["metadata_graph"]))
+        metadata_graph = graph.parse_graph(
+            json.dumps(event.get_data()["metadata_graph"])
+        )
 
         # Path to unzipped bag
         # `/opt/sipin/unzip/<name>.bag.zip`
@@ -125,7 +127,9 @@ class EventListener:
         else:
             # A MH 2.0 complex should be created coming in v0.2
             pass
-        self.produce_event(self.producer_topic, data, path, EventOutcome.SUCCESS, event.correlation_id)
+        self.produce_event(
+            self.producer_topic, data, path, EventOutcome.SUCCESS, event.correlation_id
+        )
 
     def main(self):
         while True:

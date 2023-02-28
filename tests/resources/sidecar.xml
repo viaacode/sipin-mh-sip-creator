@@ -1,0 +1,43 @@
+<mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/23.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/23.1/mh/">
+  <mhs:Dynamic>
+    <dc_publisher>
+      <Uitgever>VIAA</Uitgever>
+      <Uitgever>meemoo</Uitgever>
+    </dc_publisher>
+    <dc_description>de samenvatting van de episode</dc_description>
+    <dc_titles>
+      <alternatief>de alternatieve titel van de episode</alternatief>
+      <registratie>de titel van de episode</registratie>
+    </dc_titles>
+    <dc_contributors>
+      <Bijdrager>contributor 1</Bijdrager>
+      <Bijdrager>contributor 2</Bijdrager>
+    </dc_contributors>
+    <dcterms_created>2023-02-12</dcterms_created>
+    <dc_creators>
+      <Maker>creator 1</Maker>
+      <Maker>creator 2</Maker>
+    </dc_creators>
+    <dc_description_lang>de beschrijving van de episode</dc_description_lang>
+    <dcterms_issued>2023-02-14</dcterms_issued>
+    <dc_languages>
+      <multiselect>en</multiselect>
+    </dc_languages>
+    <dc_rights_licenses>
+      <multiselect>VIAA-ONDERWIJS</multiselect>
+      <multiselect>VIAA-PUBLIEK-METADATA-LTD</multiselect>
+    </dc_rights_licenses>
+    <dc_rights_comment>de rechten van de episode</dc_rights_comment>
+    <dc_rights_rightsHolders>VIAA</dc_rights_rightsHolders>
+    <dc_coverages>
+      <ruimte>Ghent</ruimte>
+      <tijd>2023-02-14</tijd>
+    </dc_coverages>
+    <dc_subjects>
+      <Trefwoord>Trefwoord 1</Trefwoord>
+      <Trefwoord>Trefwoord 2</Trefwoord>
+      <Trefwoord>Trefwoord 3</Trefwoord>
+    </dc_subjects>
+    <CP_id>OR-m30wc4t</CP_id>
+  </mhs:Dynamic>
+</mhs:Sidecar>
