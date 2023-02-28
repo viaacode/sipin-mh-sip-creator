@@ -67,36 +67,36 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
                     continue
                 splitted = key.split(".")
                 xml_tag = root
-                for i in range(len(splitted)):
-                    if i == 0:
+                for tag in splitted:
+                    if tag in ["Dynamic", "Descriptive"]:
                         if (
-                            xml_tag.find(f"mhs:{splitted[i]}", namespaces=NSMAP)
+                            xml_tag.find(f"mhs:{tag}", namespaces=NSMAP)
                             is not None
                         ):
                             xml_tag = xml_tag.find(
-                                f"mhs:{splitted[i]}", namespaces=NSMAP
+                                f"mhs:{tag}", namespaces=NSMAP
                             )
                             continue
                         new = etree.Element(
-                            etree.QName(NSMAP["mhs"], splitted[i]), nsmap=NSMAP
+                            etree.QName(NSMAP["mhs"], tag), nsmap=NSMAP
                         )
                     else:
                         if (
-                            not splitted[i].endswith("[]")
-                            and xml_tag.find(splitted[i], namespaces=NSMAP) is not None
+                            not tag.endswith("[]")
+                            and xml_tag.find(tag, namespaces=NSMAP) is not None
                         ):
-                            xml_tag = xml_tag.find(splitted[i])
+                            xml_tag = xml_tag.find(tag)
                             continue
-                        if splitted[i].endswith("[]"):
-                            splitted[i] = splitted[i][:-2]
-                        if ":" in splitted[i]:
-                            prefix = splitted[i].split(":")[0]
-                            tag = splitted[i].split(":")[1]
+                        if tag.endswith("[]"):
+                            tag = tag.removesuffix("[]")
+                        if ":" in tag:
+                            prefix = tag.split(":")[0]
+                            tag = tag.split(":")[1]
                             new = etree.Element(
                                 etree.QName(NSMAP[prefix], tag), nsmap=NSMAP
                             )
                         else:
-                            new = etree.Element(splitted[i])
+                            new = etree.Element(tag)
 
                     xml_tag.append(new)
                     xml_tag = new
