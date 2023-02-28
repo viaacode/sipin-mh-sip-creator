@@ -1,14 +1,18 @@
 <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+  <mhs:Descriptive>
+    <mh:Title>de titel van de episode</mh:Title>
+  </mhs:Descriptive>
   <mhs:Dynamic>
+    <dc_title>de titel van de episode</dc_title>
+    <dc_titles>
+      <registratie>de titel van de episode</registratie>
+      <alternatief>de alternatieve titel van de episode</alternatief>
+    </dc_titles>
     <dc_publisher>
       <Uitgever>VIAA</Uitgever>
       <Uitgever>meemoo</Uitgever>
     </dc_publisher>
     <dc_description>de samenvatting van de episode</dc_description>
-    <dc_titles>
-      <alternatief>de alternatieve titel van de episode</alternatief>
-      <registratie>de titel van de episode</registratie>
-    </dc_titles>
     <dc_contributors>
       <Bijdrager>contributor 1</Bijdrager>
       <Bijdrager>contributor 2</Bijdrager>
@@ -28,6 +32,9 @@
       <multiselect>VIAA-PUBLIEK-METADATA-LTD</multiselect>
     </dc_rights_licenses>
     <dc_rights_comment>de rechten van de episode</dc_rights_comment>
+    <dc_rights_rightsHolders>
+      <Licentiehouder>VIAA</Licentiehouder>
+    </dc_rights_rightsHolders>
     <dc_coverages>
       <ruimte>Ghent</ruimte>
       <tijd>2023-02-14</tijd>
