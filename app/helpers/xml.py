@@ -13,8 +13,8 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
     Builds a MH 2.0 sidecar based on metadata from a graph
     """
     NSMAP = {
-        "mhs": "https://zeticon.mediahaven.com/metadata/23.1/mhs/",
-        "mh": "https://zeticon.mediahaven.com/metadata/23.1/mh/",
+        "mhs": "https://zeticon.mediahaven.com/metadata/22.1/mhs/",
+        "mh": "https://zeticon.mediahaven.com/metadata/22.1/mh/",
     }
 
     mapping_dict = {
@@ -39,7 +39,7 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
     }
 
     root = etree.Element(
-        etree.QName(NSMAP["mhs"], "Sidecar"), nsmap=NSMAP, attrib={"version": "23.1"}
+        etree.QName(NSMAP["mhs"], "Sidecar"), nsmap=NSMAP, attrib={"version": "22.1"}
     )
 
     # Add mappable fields to the XML
