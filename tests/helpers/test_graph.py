@@ -5,6 +5,7 @@ from app.helpers.graph import (
     get_representations,
     parse_graph,
     get_local_ids_from_graph,
+    get_sip_info,
 )
 
 
@@ -52,3 +53,13 @@ def test_get_representations(json_ld_graph):
         representations[0].files[0].id
         == "https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d"
     )
+
+
+def test_get_sip_info(json_ld_graph):
+    graph = parse_graph(json_ld_graph)
+
+    sip = get_sip_info(graph)
+
+    assert sip.id == "uuid-de61d4af-d19c-4cc7-864d-55573875b438"
+    assert sip.profile == "basic"
+    assert len(sip.representations) == 1

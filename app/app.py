@@ -76,11 +76,13 @@ class EventListener:
             json.dumps(event.get_data()["metadata_graph"])
         )
 
+        sip = graph.get_sip_info(metadata_graph)
+
         # Path to unzipped bag
         # `/opt/sipin/unzip/<name>.bag.zip`
         path: str = event.get_attributes()["subject"]
         pid = self.pid_client.get_pid()
-        representations = graph.get_representations(metadata_graph)
+        representations = sip.representations
 
         if len(representations) == 1 and len(representations[0].files) == 1:
             # We make essence + sidecar ready for tra

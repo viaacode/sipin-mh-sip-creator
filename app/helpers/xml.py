@@ -69,17 +69,10 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
                 xml_tag = root
                 for tag in splitted:
                     if tag in ["Dynamic", "Descriptive"]:
-                        if (
-                            xml_tag.find(f"mhs:{tag}", namespaces=NSMAP)
-                            is not None
-                        ):
-                            xml_tag = xml_tag.find(
-                                f"mhs:{tag}", namespaces=NSMAP
-                            )
+                        if xml_tag.find(f"mhs:{tag}", namespaces=NSMAP) is not None:
+                            xml_tag = xml_tag.find(f"mhs:{tag}", namespaces=NSMAP)
                             continue
-                        new = etree.Element(
-                            etree.QName(NSMAP["mhs"], tag), nsmap=NSMAP
-                        )
+                        new = etree.Element(etree.QName(NSMAP["mhs"], tag), nsmap=NSMAP)
                     else:
                         if (
                             not tag.endswith("[]")

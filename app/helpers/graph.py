@@ -1,6 +1,7 @@
 import rdflib
 
 from app.models.file import File
+from app.models.sip import SIP
 from app.models.representation import Representation
 
 
@@ -36,6 +37,28 @@ def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
         subject=cp, predicate=rdflib.URIRef("https://schema.org/identifier")
     )
     return str(cp_id)
+
+
+def get_sip_info(graph: rdflib.Graph) -> SIP:
+    sip_node = graph.value(
+        object=rdflib.URIRef("https://data.hetarchief.be/ns/sip/SIP"),
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+    )
+
+    sip_id = graph.namespace_manager.compute_qname(sip_node)[2]
+
+    sip_profile = ""
+    for sip_type in graph.objects(
+        subject=sip_node, predicate=rdflib.URIRef("http://purl.org/dc/terms/conformsTo")
+    ):
+        if sip_type.startswith(graph.namespace_manager.compute_qname(sip_node)[1]):
+            sip_profile = graph.namespace_manager.compute_qname(sip_type)[2]
+
+    sip_representations = get_representations(graph)
+
+    sip = SIP(sip_id, sip_profile, sip_representations)
+
+    return sip
 
 
 def get_local_ids_from_graph(graph: rdflib.Graph) -> dict[str, str]:
