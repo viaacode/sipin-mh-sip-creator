@@ -3,6 +3,9 @@
 ## Synopsis
 
 A Service that generates MediaHaven compliant SIPs using a graph and an unzipped meemoo SIP as input.
+If the input only has 1 representation (e.g. 1 video with metadata) a MediaHaven sidecar is made containing the metadata contained in the graph.
+Otherwise a MediaHaven 2.0 complex will be made using the incoming SIP profile to determine the correct recordtypes.
+An event is produced after generating the MediaHaven SIP.
 
 ## Prerequisites
 
