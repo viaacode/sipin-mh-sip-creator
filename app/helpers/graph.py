@@ -4,18 +4,26 @@ from app.models.file import File
 from app.models.representation import Representation
 
 
-def parse_graph(jsonld: str) -> rdflib.Graph:
-    """Parses a JSON-LD string into a graph.
+def parse_graph(data: str, format: str) -> rdflib.Graph:
+    """Parses a string into a graph. The format of the graph serialization should be passed.
+    If format is empty or invalid, json-ld will be used.
+    Valid formats are:  "xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext".
 
     Args:
-        jsonld (str): The graph represented as a JSON-LD string.
+        data (str): The graph represented as a JSON-LD string.
+        format (str): The format of the graph representation.
 
     Returns:
         rdflib.Graph: The parsed graph.
     """
-
     g = rdflib.Graph()
-    g.parse(data=jsonld, format="json-ld")
+
+    valid_formats =  ["xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext"]
+    if format and format in valid_formats:
+        g.parse(data=data, format=format)
+    else:
+        g.parse(data=data, format="json-ld")
+
     return g
 
 

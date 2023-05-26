@@ -72,8 +72,9 @@ class EventListener:
             return
 
         # Parse the incoming metadata as a graph.
+        metadata_graph_format = event.get_data().get("metadata_graph_fmt")
         metadata_graph = graph.parse_graph(
-            json.dumps(event.get_data()["metadata_graph"])
+            json.dumps(event.get_data()["metadata_graph"]), metadata_graph_format
         )
 
         # Path to unzipped bag

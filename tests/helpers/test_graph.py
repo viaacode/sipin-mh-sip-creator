@@ -16,11 +16,11 @@ def json_ld_graph():
 
 
 def test_parse_graph(json_ld_graph):
-    assert parse_graph(json_ld_graph)
+    assert parse_graph(json_ld_graph, "json-ld")
 
 
 def test_get_cp_id_from_graph(json_ld_graph):
-    graph = parse_graph(json_ld_graph)
+    graph = parse_graph(json_ld_graph, "json-ld")
 
     cp_id = get_cp_id_from_graph(graph)
 
@@ -29,14 +29,14 @@ def test_get_cp_id_from_graph(json_ld_graph):
 
 def test_get_local_ids_from_graph(json_ld_graph):
     excepted = {"Object_number": "v_2021073114124363", "local_id": "ce980d9"}
-    graph = parse_graph(json_ld_graph)
+    graph = parse_graph(json_ld_graph, "json-ld")
 
     local_ids = get_local_ids_from_graph(graph)
     assert local_ids == excepted
 
 
 def test_get_representations(json_ld_graph):
-    graph = parse_graph(json_ld_graph)
+    graph = parse_graph(json_ld_graph, "json-ld")
 
     representations = get_representations(graph)
 
