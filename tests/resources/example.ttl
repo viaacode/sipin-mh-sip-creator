@@ -1,0 +1,88 @@
+@prefix ns1: <http://purl.org/dc/terms/> .
+@prefix ns2: <https://schema.org/> .
+@prefix ns3: <http://www.loc.gov/premis/rdf/v3/> .
+@prefix ns4: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ns5: <http://id.loc.gov/vocabulary/preservation/relationshipSubType/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://data.hetarchief.be/id/sip/1.0/uuid-de61d4af-d19c-4cc7-864d-55573875b438> a <https://data.hetarchief.be/ns/sip/SIP> ;
+    ns1:conformsTo "https://data.hetarchief.be/id/sip/1.0/basic",
+        "https://earksip.dilcis.eu/profile/E-ARK-SIP.xml" ;
+    ns2:agent [ ns2:agent <https://data.hetarchief.be/id/organization/OR-m30wc4t> ;
+            ns2:roleName "CREATOR" ],
+        [ ns2:agent <https://data.hetarchief.be/id/organization/OR-m30wc4t> ;
+            ns2:roleName "ARCHIVIST" ] .
+
+<http://the-fr.org/id/file-format/1507> a ns1:FileFormat .
+
+<https://data.hetarchief.be/id/object/18513a8d61c6f2cbaaeeedd754b01d6b> a <http://id.loc.gov/vocabulary/preservation/cryptographicHashFunctions/md5> ;
+    rdf:value "18513a8d61c6f2cbaaeeedd754b01d6b" .
+
+<https://data.hetarchief.be/id/object/Object_number> rdfs:subClassOf <https://data.hetarchief.be/ns/object/LocalIdentifier> .
+
+<https://data.hetarchief.be/id/object/Object_numberv_2021073114124363> a <https://data.hetarchief.be/id/object/Object_number> ;
+    rdf:value "v_2021073114124363" .
+
+<https://data.hetarchief.be/id/object/local_id> rdfs:subClassOf <https://data.hetarchief.be/ns/object/LocalIdentifier> .
+
+<https://data.hetarchief.be/id/object/local_idce980d9> a <https://data.hetarchief.be/id/object/local_id> ;
+    rdf:value "ce980d9" .
+
+<https://data.hetarchief.be/id/object/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4> a ns3:IntellectualEntity,
+        "edtf:EDTF",
+        "edtf:EDTF-level1" ;
+    ns5:isr <https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572> ;
+    ns1:abstract "the abstract of the episode"@en,
+        "de samenvatting van de episode"@nl ;
+    ns1:alternative "the alternative title of the episode"@en,
+        "de alternatieve titel van de episode"@nl ;
+    ns1:available "2023-02-14T18:12:36"^^xsd:dateTime ;
+    ns1:contributor "contributor 1",
+        "contributor 2" ;
+    ns1:created "2023-02-12"^^<http://id.loc.gov/datatypes/edtf/EDTF-level1> ;
+    ns1:creator "creator 1",
+        "creator 2" ;
+    ns1:description "the description of the episode"@en,
+        "de beschrijving van de episode"@nl ;
+    ns1:extent "01:59:34"^^xsd:time ;
+    ns1:issued "2023-02-14"^^<http://id.loc.gov/datatypes/edtf/EDTF> ;
+    ns1:language "en" ;
+    ns1:license "VIAA-ONDERWIJS",
+        "VIAA-PUBLIEK-METADATA-LTD" ;
+    ns1:publisher "VIAA",
+        "meemoo" ;
+    ns1:rights "the rights of the episode"@en,
+        "de rechten van de episode"@nl ;
+    ns1:rightsHolder "VIAA" ;
+    ns1:spatial "Brussels",
+        "Ghent" ;
+    ns1:subject "Keyword 1"@en,
+        "Keyword 2"@en,
+        "Keyword 3"@en,
+        "Trefwoord 1"@nl,
+        "Trefwoord 2"@nl,
+        "Trefwoord 3"@nl ;
+    ns1:temporal "2023-02-12",
+        "2023-02-14" ;
+    ns1:title "the title of the episode"@en,
+        "de titel van de episode"@nl ;
+    ns1:type "video" ;
+    ns3:identifier <https://data.hetarchief.be/id/object/Object_numberv_2021073114124363>,
+        <https://data.hetarchief.be/id/object/local_idce980d9> .
+
+<https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d> a ns3:File ;
+    ns5:isi <https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572> ;
+    ns1:format <http://the-fr.org/id/file-format/1507> ;
+    ns3:fixity <https://data.hetarchief.be/id/object/18513a8d61c6f2cbaaeeedd754b01d6b> ;
+    ns3:originalName "D523F963.jpg" ;
+    ns3:size 1735648 .
+
+<https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572> a ns3:Representation ;
+    ns5:inc <https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d> ;
+    ns5:rep <https://data.hetarchief.be/id/object/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4> .
+
+<https://data.hetarchief.be/id/organization/OR-m30wc4t> a <http://www.w3.org/ns/org#Organization> ;
+    ns4:prefLabel "Flemish Cat Museum"@nl ;
+    ns2:identifier "OR-m30wc4t" .
