@@ -1,5 +1,4 @@
 import rdflib
-import json
 
 from app.models.file import File
 from app.models.representation import Representation
@@ -11,7 +10,7 @@ class GraphException(Exception):
 
 def parse_graph(data: str, format: str = "json-ld") -> rdflib.Graph:
     """Parses a string into a graph. The format of the graph serialization should be passed.
-    If format is None, empty or invalid, json-ld will be used.
+    If format is an empty string or an invalid format, json-ld will be used.
     Valid formats include:  "xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext".
 
     Args:
