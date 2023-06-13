@@ -1,5 +1,6 @@
 import rdflib
 from lxml import etree
+
 from app.helpers.graph import (
     get_cp_id_from_graph,
     get_local_ids_from_graph,

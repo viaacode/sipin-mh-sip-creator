@@ -5,19 +5,43 @@ from app.models.sip import SIP
 from app.models.representation import Representation
 
 
-def parse_graph(jsonld: str) -> rdflib.Graph:
-    """Parses a JSON-LD string into a graph.
+class GraphException(Exception):
+    pass
+
+
+def parse_graph(data: str, format: str = "json-ld") -> rdflib.Graph:
+    """Parses a string into a graph. The format of the graph serialization should be passed.
+    If format is an empty string or an invalid format, json-ld will be used.
+    Valid formats include:  "xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext".
 
     Args:
-        jsonld (str): The graph represented as a JSON-LD string.
+        data (str): The serialized graph.
+        format (str, optional): The serialization format of the graph representation. Defaults to "json-ld"
+
+    Raises:
+        GraphException: When the graph can't be parsed using the supplied format or when the graph is not json-ld, but the format is empty/invalid.
 
     Returns:
         rdflib.Graph: The parsed graph.
     """
-
     g = rdflib.Graph()
-    g.parse(data=jsonld, format="json-ld")
-    return g
+
+    try:
+        return g.parse(data=data, format=format)
+    except rdflib.plugin.PluginException:
+        # An invalid format is given. Retry using json-ld.
+        try:
+            return g.parse(data=data, format="json-ld")
+        except Exception:
+            raise GraphException(
+                "Graph can't be parsed as the supplied format is invalid and the graph is not json-ld.",
+                data,
+                format,
+            )
+    except Exception:
+        raise GraphException(
+            "Graph can't be parsed using the supplied format.", data, format
+        )
 
 
 def get_cp_id_from_graph(graph: rdflib.Graph) -> str:

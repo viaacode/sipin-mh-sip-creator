@@ -20,7 +20,7 @@ def mh_sidecar_xml():
 
 
 def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
-    g = parse_graph(json_ld_graph)
+    g = parse_graph(json_ld_graph, "json-ld")
 
     sidecar = build_mh_sidecar(g)
 
