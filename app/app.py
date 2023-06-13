@@ -1,6 +1,6 @@
+import json
 import shutil
 from pathlib import Path
-import json
 
 import rdflib
 from cloudevents.events import (
@@ -10,14 +10,14 @@ from cloudevents.events import (
     EventOutcome,
     PulsarBinding,
 )
-
-# from helpers.xml import build_mh_sidecar
-from app.services.pid import PidClient
-from app.services.pulsar import PulsarClient
 from viaa.configuration import ConfigParser
 from viaa.observability import logging
 
 from app.helpers import graph, xml
+
+# from helpers.xml import build_mh_sidecar
+from app.services.pid import PidClient
+from app.services.pulsar import PulsarClient
 
 APP_NAME = "mh-sip-creator"
 
@@ -72,8 +72,9 @@ class EventListener:
             return
 
         # Parse the incoming metadata as a graph.
+        metadata_graph_format = event.get_data().get("metadata_graph_fmt", "")
         metadata_graph = graph.parse_graph(
-            json.dumps(event.get_data()["metadata_graph"])
+            json.dumps(event.get_data()["metadata_graph"]), metadata_graph_format
         )
 
         # Path to unzipped bag
