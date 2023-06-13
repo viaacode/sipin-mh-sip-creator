@@ -20,15 +20,15 @@ MAPPING = {
         "Dynamic.dc_titles.registratie[]",
     ],
     "http://purl.org/dc/terms/publisher": ["Dynamic.dc_publisher.Uitgever[]"],
-    "http://purl.org/dc/terms/abstract": [
-        "Dynamic.dc_description",
-        "Descriptive.mh:Description",
-    ],
+    "http://purl.org/dc/terms/abstract": ["Dynamic.dc_description"],
     "http://purl.org/dc/terms/alternative": ["Dynamic.dc_titles.alternatief[]"],
     "http://purl.org/dc/terms/contributor": ["Dynamic.dc_contributors.Bijdrager[]"],
     "http://purl.org/dc/terms/created": ["Dynamic.dcterms_created"],
     "http://purl.org/dc/terms/creator": ["Dynamic.dc_creators.Maker[]"],
-    "http://purl.org/dc/terms/description": ["Dynamic.dc_description_lang"],
+    "http://purl.org/dc/terms/description": [
+        "Dynamic.dc_description_lang",
+        "Descriptive.mh:Description",
+    ],
     "http://purl.org/dc/terms/issued": ["Dynamic.dcterms_issued"],
     "http://purl.org/dc/terms/language": ["Dynamic.dc_languages.multiselect[]"],
     "http://purl.org/dc/terms/license": ["Dynamic.dc_rights_licenses.multiselect[]"],
@@ -36,9 +36,9 @@ MAPPING = {
     "http://purl.org/dc/terms/rightsHolder": [
         "Dynamic.dc_rights_rightsHolders.Licentiehouder[]"
     ],
-    "http://purl.org/dc/terms/spatial": ["Dynamic.dc_coverages.ruimte"],
+    "http://purl.org/dc/terms/spatial": ["Dynamic.dc_coverages.ruimte[]"],
     "http://purl.org/dc/terms/subject": ["Dynamic.dc_subjects.Trefwoord[]"],
-    "http://purl.org/dc/terms/temporal": ["Dynamic.dc_coverages.tijd"],
+    "http://purl.org/dc/terms/temporal": ["Dynamic.dc_coverages.tijd[]"],
     "http://www.loc.gov/premis/v3#fixity": ["Dynamic.md5_viaa"],
 }
 
@@ -97,6 +97,11 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
 
     # Add some extra dynamic metadata
     dynamic_tag = root.find("mhs:Dynamic", namespaces=NSMAP)
+
+    # Add sp_name/workflow
+    sp_tag = etree.Element("sp_name")
+    dynamic_tag.append(sp_tag)
+    sp_tag.text = "sipin"
 
     # Add CP-id to the XML
     cp_tag = etree.Element("CP_id")
