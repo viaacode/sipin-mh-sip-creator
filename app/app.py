@@ -76,7 +76,7 @@ class EventListener:
         # Parse the incoming metadata as a graph.
         metadata_graph_format = event.get_data().get("metadata_graph_fmt", "")
         metadata_graph = graph.parse_graph(
-            json.dumps(event.get_data()["metadata_graph"]), metadata_graph_format
+            event.get_data()["metadata_graph"], metadata_graph_format
         )
 
         sip = graph.get_sip_info(metadata_graph)
@@ -145,9 +145,7 @@ class EventListener:
                 for i in range(len(sip.representations)):
                     shutil.copytree(
                         Path(path, f"data/representations/representation_{i+1}/data"),
-                        Path(
-                            files_path, f"representation_{i+1}"
-                        ),
+                        Path(files_path, f"representation_{i+1}"),
                         copy_function=shutil.move,
                     )
 
@@ -157,7 +155,9 @@ class EventListener:
                 with open(Path(files_path, "mets.xml"), "w") as mets_file:
                     mets_file.write(mets_xml)
                 # Zip everything
-                shutil.make_archive(str(Path(f"{files_path}.complex")), 'zip', files_path)
+                shutil.make_archive(
+                    str(Path(f"{files_path}.complex")), "zip", files_path
+                )
                 # Remove files folder
                 shutil.rmtree(files_path)
 
