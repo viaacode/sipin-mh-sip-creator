@@ -10,6 +10,7 @@ iniconfig==2.0.0
 isodate==0.6.1
 lxml==4.9.2
 meemoo-cloudevents==0.1.0rc3
+meemoo-metsrw==0.4.0
 multidict==6.0.4
 mypy-extensions==1.0.0
 packaging==23.0
