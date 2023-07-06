@@ -1,6 +1,8 @@
 import json
 import shutil
 from pathlib import Path
+import json
+import zipfile
 
 import rdflib
 from cloudevents.events import (
@@ -82,14 +84,20 @@ class EventListener:
         # Path to unzipped bag
         # `/opt/sipin/unzip/<name>.bag.zip`
         path: str = event.get_attributes()["subject"]
-        pid = self.pid_client.get_pid()
-        representations = sip.representations
+        pid = graph.get_pid_from_graph(metadata_graph)
+        if not pid:
+            pid = self.pid_client.get_pid()
 
-        if len(representations) == 1 and len(representations[0].files) == 1:
+        if (
+            len(sip.representations) == 1
+            and len(sip.representations[0].files) == 1
+            and sip.profile == "basic"
+        ):
             # We make essence + sidecar ready for tra
-            sidecar = xml.build_mh_sidecar(metadata_graph)
             cp_id = graph.get_cp_id_from_graph(metadata_graph)
-            filename = Path(representations[0].files[0].filename)
+            filename = Path(sip.representations[0].files[0].filename)
+            md5 = sip.representations[0].files[0].fixity
+            sidecar = xml.build_mh_sidecar(metadata_graph, pid, {"md5": md5})
 
             essence_filepath = Path(
                 path, "data/representations/representation_1/data", filename
@@ -128,8 +136,48 @@ class EventListener:
 
             self.log.info(data["message"])
         else:
-            # A MH 2.0 complex should be created coming in v0.2
-            pass
+            if sip.profile == "material-artwork":
+                # Make a folder that will be zipped as the complex.
+                files_path = Path(self.app_config["aip_folder"], pid)
+                files_path.mkdir()
+
+                # Dump all files of the sip in the folder.
+                for i in range(len(sip.representations)):
+                    shutil.copytree(
+                        Path(path, f"data/representations/representation_{i+1}/data"),
+                        Path(
+                            files_path, f"representation_{i+1}"
+                        ),
+                        copy_function=shutil.move,
+                    )
+
+                # Generate mets xml
+                mets_xml = xml.build_mh_mets(metadata_graph, pid)
+                # Write xml to the complex folder
+                with open(Path(files_path, "mets.xml"), "w") as mets_file:
+                    mets_file.write(mets_xml)
+                # Zip everything
+                shutil.make_archive(str(Path(f"{files_path}.complex")), 'zip', files_path)
+                # Remove files folder
+                shutil.rmtree(files_path)
+
+                cp_id = graph.get_cp_id_from_graph(metadata_graph)
+
+                # Send event on topic
+                data = {
+                    "source": path,
+                    "host": self.config["host"],
+                    "paths": [
+                        str(Path(f"{files_path}.complex")),
+                    ],
+                    "cp_id": cp_id,
+                    "type": "complex",
+                    "pid": pid,
+                    "outcome": EventOutcome.SUCCESS,
+                    "message": f"AIP created: MH2.0 complex created",
+                }
+
+                self.log.info(data["message"])
         self.produce_event(
             self.producer_topic, data, path, EventOutcome.SUCCESS, event.correlation_id
         )

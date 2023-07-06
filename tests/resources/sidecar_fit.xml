@@ -1,0 +1,66 @@
+<mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+  <mhs:Descriptive>
+    <mh:Title>De verheerlijking van de Heilige Maagd</mh:Title>
+    <mh:Description>GIVE 2D</mh:Description>
+  </mhs:Descriptive>
+  <mhs:Dynamic>
+    <dc_title>De verheerlijking van de Heilige Maagd</dc_title>
+    <dc_titles>
+      <registratie>De verheerlijking van de Heilige Maagd</registratie>
+      <alternatief>Alt titel 2</alternatief>
+      <alternatief>Deipara Virgo</alternatief>
+    </dc_titles>
+    <dc_publisher>
+      <Uitgever>uitgever test</Uitgever>
+    </dc_publisher>
+    <dc_contributors>
+      <Bijdrager>bijdrager test</Bijdrager>
+      <Bijdrager>bijdrager test 2</Bijdrager>
+    </dc_contributors>
+    <dcterms_created>2022-08-22</dcterms_created>
+    <dc_description_lang>GIVE 2D</dc_description_lang>
+    <dcterms_issued>1530</dcterms_issued>
+    <dc_languages>
+      <multiselect>nl</multiselect>
+    </dc_languages>
+    <dc_rights_comment>public domain</dc_rights_comment>
+    <dc_coverages>
+      <ruimte>ruimtelijk test</ruimte>
+      <tijd>temporaal test</tijd>
+    </dc_coverages>
+    <dc_subjects>
+      <Trefwoord>religieuze kunst</Trefwoord>
+      <Trefwoord>religious art</Trefwoord>
+    </dc_subjects>
+    <height>1310.0</height>
+    <width>1080.0</width>
+    <depth>30.0</depth>
+    <artmedium>olieverf op paneel</artmedium>
+    <dc_creators>
+      <Maker>Ambrosius Benson</Maker>
+      <Maker>Test regisseur naam</Maker>
+      <Maker>Cedric Verhelst</Maker>
+    </dc_creators>
+    <PID>testpid</PID>
+    <CP_id>OR-w66976m</CP_id>
+    <dc_identifier_localids>
+      <Acquisition_number>acquisitie3333</Acquisition_number>
+      <Alternative_number>alt444</Alternative_number>
+      <Analoge_drager>analoge drager 555</Analoge_drager>
+      <Ardome>ardmome66</Ardome>
+      <Basis>basis777</Basis>
+      <DataPID>pid17</DataPID>
+      <Historical_carrier>historic888</Historical_carrier>
+      <Historical_record_number>histdossier999</Historical_record_number>
+      <Inventarisnummer>inv10</Inventarisnummer>
+      <LOCAL_ID>testart333</LOCAL_ID>
+      <MEDIA_ID>media11</MEDIA_ID>
+      <Object_number>adlib12</Object_number>
+      <Priref>ref 13</Priref>
+      <Topstuk_ID>topstuk15</Topstuk_ID>
+      <Word_ID>word14</Word_ID>
+      <WorkPID>pid16</WorkPID>
+    </dc_identifier_localids>
+    <sp_name>sipin</sp_name>
+  </mhs:Dynamic>
+</mhs:Sidecar>

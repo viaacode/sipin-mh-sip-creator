@@ -1,10 +1,17 @@
 import rdflib
+import metsrw
 from lxml import etree
 
 from app.helpers.graph import (
     get_cp_id_from_graph,
     get_local_ids_from_graph,
     get_representations,
+)
+
+from app.helpers.transformers import (
+    dimension_transform,
+    language_code_transform,
+    creator_transform,
 )
 
 MH_VERSION = "22.1"
@@ -15,41 +22,189 @@ NSMAP = {
 }
 
 MAPPING = {
-    "http://purl.org/dc/terms/title": [
-        "Descriptive.mh:Title",
-        "Dynamic.dc_title",
-        "Dynamic.dc_titles.registratie[]",
-    ],
-    "http://purl.org/dc/terms/publisher": ["Dynamic.dc_publisher.Uitgever[]"],
-    "http://purl.org/dc/terms/abstract": ["Dynamic.dc_description"],
-    "http://purl.org/dc/terms/alternative": ["Dynamic.dc_titles.alternatief[]"],
-    "http://purl.org/dc/terms/contributor": ["Dynamic.dc_contributors.Bijdrager[]"],
-    "http://purl.org/dc/terms/created": ["Dynamic.dcterms_created"],
-    "http://purl.org/dc/terms/creator": ["Dynamic.dc_creators.Maker[]"],
-    "http://purl.org/dc/terms/description": [
-        "Dynamic.dc_description_lang",
-        "Descriptive.mh:Description",
-    ],
-    "http://purl.org/dc/terms/issued": ["Dynamic.dcterms_issued"],
-    "http://purl.org/dc/terms/language": ["Dynamic.dc_languages.multiselect[]"],
-    "http://purl.org/dc/terms/license": ["Dynamic.dc_rights_licenses.multiselect[]"],
-    "http://purl.org/dc/terms/rights": ["Dynamic.dc_rights_comment"],
-    "http://purl.org/dc/terms/rightsHolder": [
-        "Dynamic.dc_rights_rightsHolders.Licentiehouder[]"
-    ],
-    "http://purl.org/dc/terms/spatial": ["Dynamic.dc_coverages.ruimte[]"],
-    "http://purl.org/dc/terms/subject": ["Dynamic.dc_subjects.Trefwoord[]"],
-    "http://purl.org/dc/terms/temporal": ["Dynamic.dc_coverages.tijd[]"],
-    "http://www.loc.gov/premis/v3#fixity": ["Dynamic.md5_viaa"],
+    "http://purl.org/dc/terms/title": {
+        "targets": [
+            "Descriptive.mh:Title",
+            "Dynamic.dc_title",
+            "Dynamic.dc_titles.registratie[]",
+        ]
+    },
+    "http://purl.org/dc/terms/publisher": {
+        "targets": ["Dynamic.dc_publisher.Uitgever[]"]
+    },
+    "http://purl.org/dc/terms/abstract": {"targets": ["Dynamic.dc_description"]},
+    "http://purl.org/dc/terms/alternative": {
+        "targets": ["Dynamic.dc_titles.alternatief[]"]
+    },
+    "http://purl.org/dc/terms/contributor": {
+        "targets": ["Dynamic.dc_contributors.Bijdrager[]"]
+    },
+    "http://purl.org/dc/terms/created": {"targets": ["Dynamic.dcterms_created"]},
+    "http://purl.org/dc/terms/creator": {"targets": ["Dynamic.dc_creators.Maker[]"]},
+    "http://purl.org/dc/terms/description": {
+        "targets": [
+            "Dynamic.dc_description_lang",
+            "Descriptive.mh:Description",
+        ]
+    },
+    "http://purl.org/dc/terms/issued": {"targets": ["Dynamic.dcterms_issued"]},
+    "http://purl.org/dc/terms/language": {
+        "targets": ["Dynamic.dc_languages.multiselect[]"],
+        "transformer": language_code_transform,
+    },
+    "http://purl.org/dc/terms/license": {
+        "targets": ["Dynamic.dc_rights_licenses.multiselect[]"]
+    },
+    "http://purl.org/dc/terms/rights": {"targets": ["Dynamic.dc_rights_comment"]},
+    "http://purl.org/dc/terms/rightsHolder": {
+        "targets": ["Dynamic.dc_rights_rightsHolders.Licentiehouder[]"]
+    },
+    "http://purl.org/dc/terms/spatial": {"targets": ["Dynamic.dc_coverages.ruimte[]"]},
+    "http://purl.org/dc/terms/subject": {
+        "targets": ["Dynamic.dc_subjects.Trefwoord[]"]
+    },
+    "http://purl.org/dc/terms/temporal": {"targets": ["Dynamic.dc_coverages.tijd[]"]},
+    "http://www.loc.gov/premis/v3#fixity": {"targets": ["Dynamic.md5_viaa"]},
+    "https://schema.org/height": {
+        "targets": ["Dynamic.height"],
+        "transformer": dimension_transform,
+    },
+    "https://schema.org/width": {
+        "targets": ["Dynamic.width"],
+        "transformer": dimension_transform,
+    },
+    "https://schema.org/depth": {
+        "targets": ["Dynamic.depth"],
+        "transformer": dimension_transform,
+    },
+    "https://schema.org/artForm": {
+        "targets": ["Dynamic.artform"],
+    },
+    "https://schema.org/artMedium": {
+        "targets": ["Dynamic.artmedium"],
+    },
+    "https://schema.org/creator": {
+        "targets": ["Dynamic.dc_creators.Maker[]"],
+        "transformer": creator_transform,
+    },
 }
 
 
-def build_mh_mets():
-    # Build MH mets to be used in the MH 2.0 complex, coming in v0.2
-    pass
+def lxmlns(ns: str) -> str:
+    """Return namespace"""
+    return f"{{{NSMAP[ns]}}}"
 
 
-def build_mh_sidecar(g: rdflib.Graph) -> str:
+def qname_text(ns: str, local_name: str) -> str:
+    if ns == "mets":
+        return f'{{{"http://www.loc.gov/METS/"}}}{local_name}'
+    return f"{lxmlns(ns)}{local_name}"
+
+
+def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
+    mets = metsrw.METSDocument()
+
+    mets.agents.append(metsrw.Agent("CUSTODIAN", type="ORGANIZATION", name="meemoo"))
+
+    root_folder = metsrw.FSEntry(use="Original", type="MaterialArtwork")
+
+    mets_fs = metsrw.FSEntry(
+        fileid="FILEID-MATERIALARTWORK-METS",
+        use="Disk",
+        path="mets.xml",
+        type="Representation",
+        label="Original",
+        file_uuid="FILEID-MATERIALARTWORK-METS",
+    )
+    mets_med = metsrw.FSEntry(type="Media")
+    mets_med.add_dmdsec(
+        build_minimal_sidecar(f"{pid}_mets"),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-MATERIALARTWORK-METS",
+        },
+    )
+    mets_med.add_child(mets_fs)
+    root_folder.add_child(mets_med)
+    root_folder.add_dmdsec(
+        build_mh_sidecar(g, pid),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-MATERIALARTWORK",
+        },
+    )
+
+    representations = get_representations(g)
+
+    for representation_index, representation in enumerate(representations):
+        representation_media = metsrw.FSEntry(type="Media")
+        for file_index, file in enumerate(representation.files):
+            file_representation = metsrw.FSEntry(
+                fileid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                use="Disk",
+                path=file.filename,
+                type="Representation",
+                label="Original",
+                file_uuid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                checksumtype="MD5",
+                checksum=file.fixity,
+            )
+            representation_media.add_child(file_representation)
+            file_representation.add_dmdsec(
+                build_minimal_sidecar(f"{pid}_{representation_index}_{file_index}"),
+                "OTHER",
+                **{
+                    "othermdtype": "mhs:Sidecar",
+                    "id": f"DMDID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                },
+            )
+        root_folder.add_child(representation_media)
+
+    mets.append_file(root_folder)
+
+    m = mets.serialize(normative_structmap=False)
+
+    xml = etree.tostring(
+        m, xml_declaration=True, encoding="UTF-8", pretty_print=True
+    ).decode()
+
+    return xml
+
+
+def build_minimal_sidecar(external_id: str) -> str:
+    root = etree.Element(
+        etree.QName(NSMAP["mhs"], "Sidecar"),
+        nsmap=NSMAP,
+        attrib={"version": MH_VERSION},
+    )
+
+    administrative_node = etree.Element(
+        etree.QName(NSMAP["mhs"], "Administrative"), nsmap=NSMAP
+    )
+    id_node = etree.Element(etree.QName(NSMAP["mh"], "ExternalId"), nsmap=NSMAP)
+
+    descriptive_node = etree.Element(
+        etree.QName(NSMAP["mhs"], "Descriptive"), nsmap=NSMAP
+    )
+    title_node = etree.Element(etree.QName(NSMAP["mh"], "Title"), nsmap=NSMAP)
+
+    root.append(administrative_node)
+    root.append(descriptive_node)
+    administrative_node.append(id_node)
+    descriptive_node.append(title_node)
+    id_node.text = external_id
+    title_node.text = external_id
+
+    xml = etree.tostring(root, pretty_print=True).decode()
+
+    return xml
+
+
+def build_mh_sidecar(
+    g: rdflib.Graph, pid: str, dynamic_tags: dict[str, str] = {}
+) -> str:
     """
     Builds a MH 2.0 sidecar based on metadata from a graph
     """
@@ -59,10 +214,23 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
         attrib={"version": MH_VERSION},
     )
 
+    ie = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+    )
+
     # Add mappable fields to the XML
     for predicate in MAPPING.keys():
-        for key in MAPPING[predicate]:
-            for obj in g.objects(predicate=rdflib.URIRef(predicate)):
+        for key in MAPPING[predicate]["targets"]:
+            for obj in g.objects(predicate=rdflib.URIRef(predicate), subject=ie):
+                if MAPPING[predicate].get("transformer"):
+                    if type(obj) == rdflib.URIRef:
+                        result = g.predicate_objects(subject=obj)
+                        obj = rdflib.Literal(
+                            MAPPING[predicate]["transformer"](g, result)
+                        )
+                    else:
+                        obj = rdflib.Literal(MAPPING[predicate]["transformer"](obj))
                 if obj.language and obj.language != "nl":
                     # Skip non dutch fields.
                     continue
@@ -99,10 +267,10 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
     # Add some extra dynamic metadata
     dynamic_tag = root.find("mhs:Dynamic", namespaces=NSMAP)
 
-    # Add sp_name/workflow
-    sp_tag = etree.Element("sp_name")
-    dynamic_tag.append(sp_tag)
-    sp_tag.text = "sipin"
+    # Add PID
+    pid_tag = etree.Element("PID")
+    dynamic_tag.append(pid_tag)
+    pid_tag.text = pid
 
     # Add CP-id to the XML
     cp_tag = etree.Element("CP_id")
@@ -112,11 +280,11 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
     # Add local id's to the XML
     local_ids = get_local_ids_from_graph(g)
 
+    # TODO
     if len(list(local_ids)) == 1:
-        main_local_id = local_ids[list(local_ids)[0]]
-        main_local_id = local_ids.pop("LOCAL_ID", "")
+        main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", local_ids[list(local_ids)[0]])
     else:
-        main_local_id = local_ids.pop("LOCAL_ID", "")
+        main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", "")
 
     if main_local_id:
         local_id_tag = etree.Element("dc_identifier_localid")
@@ -126,17 +294,20 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
     if local_ids:
         local_ids_tag = etree.Element("dc_identifier_localids")
         dynamic_tag.append(local_ids_tag)
-        for type, id in local_ids.items():
-            tag = etree.Element(type)
-            local_ids_tag.append(tag)
-            tag.text = id
+        for id_type, id in local_ids.items():
+            id_tag = etree.Element(id_type)
+            local_ids_tag.append(id_tag)
+            id_tag.text = id
 
-    # Add the fixity to the XML
-    representations = get_representations(g)
-    fixity = representations[0].files[0].fixity
-    fixity_tag = etree.Element("md5")
-    dynamic_tag.append(fixity_tag)
-    fixity_tag.text = fixity
+    for key in dynamic_tags:
+        key_tag = etree.Element(key)
+        dynamic_tag.append(key_tag)
+        key_tag.text = dynamic_tags[key]
+
+    # Add sp_name/workflow
+    sp_tag = etree.Element("sp_name")
+    dynamic_tag.append(sp_tag)
+    sp_tag.text = "sipin"
 
     xml = etree.tostring(root, pretty_print=True).decode()
 

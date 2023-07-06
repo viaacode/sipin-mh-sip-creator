@@ -47,12 +47,13 @@
       <Trefwoord>Trefwoord 2</Trefwoord>
       <Trefwoord>Trefwoord 3</Trefwoord>
     </dc_subjects>
-    <sp_name>sipin</sp_name>
+    <PID>testpid</PID>
     <CP_id>OR-m30wc4t</CP_id>
     <dc_identifier_localids>
       <Object_number>v_2021073114124363</Object_number>
       <local_id>ce980d9</local_id>
     </dc_identifier_localids>
     <md5>18513a8d61c6f2cbaaeeedd754b01d6b</md5>
+    <sp_name>sipin</sp_name>
   </mhs:Dynamic>
 </mhs:Sidecar>

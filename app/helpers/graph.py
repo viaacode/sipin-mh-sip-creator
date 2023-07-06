@@ -62,6 +62,44 @@ def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
     )
     return str(cp_id)
 
+def get_sp_id_from_graph(graph: rdflib.Graph) -> str:
+    """Retrieves the CP-id from a given graph.
+
+    Args:
+        graph (rdflib.Graph): The metadata graph of the SIP.
+
+    Returns:
+        str: The CP-id (OR-XXXXXXX)
+    """
+    cp = graph.value(
+        object=rdflib.URIRef("http://www.w3.org/ns/org#Organization"),
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+    )
+    cp_id = graph.value(
+        subject=cp, predicate=rdflib.URIRef("https://schema.org/identifier")
+    )
+    return str(cp_id)
+
+
+
+def get_pid_from_graph(graph: rdflib.Graph) -> str:
+    """Retrieves the PID from a given graph. Returns an empty string if no PID is found.
+
+    Args:
+        graph (rdflib.Graph): The metadata graph of the SIP.
+
+    Returns:
+        str: The PID or an empty string.
+    """
+    # pid = graph.value(
+    #     object=rdflib.URIRef("http://www.w3.org/ns/org#Organization"),
+    #     predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+    #     default="",
+    # )
+    # return str(pid)
+    # Currently the PID is not yet in the graph
+    return ""
+
 
 def get_sip_info(graph: rdflib.Graph) -> SIP:
     sip_node = graph.value(
