@@ -144,7 +144,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
             file_representation = metsrw.FSEntry(
                 fileid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
                 use="Disk",
-                path=file.filename,
+                path=f"representation_{representation_index + 1}/{file.filename}",
                 type="Representation",
                 label="Original",
                 file_uuid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
