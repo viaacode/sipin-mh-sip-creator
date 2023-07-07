@@ -11,11 +11,11 @@ def dimension_transform(graph, graph_result) -> str:
             value = obj[1].toPython()
 
     if unit == "MMT":
-        return str(value)
+        return str(round(value))
     if unit == "CMT":
-        return str(value * 10)
+        return str(round(value * 10))
     if unit == "MTR":
-        return str(value * 1000)
+        return str(round(value * 1000))
 
     return "0"
 
