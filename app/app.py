@@ -35,7 +35,6 @@ class EventListener:
         # Topics
         self.app_config = self.config["mh-sip-creator"]
         self.consumer_topic = self.app_config["consumer_topic"]
-        self.producer_topic = self.app_config["producer_topic"]
 
     def produce_event(
         self,
@@ -129,10 +128,13 @@ class EventListener:
                 ],
                 "cp_id": cp_id,
                 "type": "pair",
+                "sip_profile": sip.profile,
                 "pid": pid,
                 "outcome": EventOutcome.SUCCESS,
                 "message": f"AIP created: sidecar ingest for {filename}",
             }
+
+            producer_topic = self.app_config["producer_topic_basic"]
 
             self.log.info(data["message"])
         else:
@@ -155,9 +157,7 @@ class EventListener:
                 with open(Path(files_path, "mets.xml"), "w") as mets_file:
                     mets_file.write(mets_xml)
                 # Zip everything
-                shutil.make_archive(
-                    str(Path(f"{files_path}.complex")), "zip", files_path
-                )
+                shutil.make_archive(str(Path(f"{files_path}")), "zip", files_path)
                 # Remove files folder
                 shutil.rmtree(files_path)
 
@@ -168,18 +168,20 @@ class EventListener:
                     "source": path,
                     "host": self.config["host"],
                     "paths": [
-                        str(Path(f"{files_path}.complex")),
+                        str(Path(f"{files_path}.zip")),
                     ],
                     "cp_id": cp_id,
                     "type": "complex",
+                    "sip_profile": sip.profile,
                     "pid": pid,
                     "outcome": EventOutcome.SUCCESS,
                     "message": f"AIP created: MH2.0 complex created",
                 }
+                producer_topic = self.app_config["producer_topic_complex"]
 
                 self.log.info(data["message"])
         self.produce_event(
-            self.producer_topic, data, path, EventOutcome.SUCCESS, event.correlation_id
+            producer_topic, data, path, EventOutcome.SUCCESS, event.correlation_id
         )
 
     def main(self):
