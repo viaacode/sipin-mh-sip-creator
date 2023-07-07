@@ -175,7 +175,7 @@ class EventListener:
                     "sip_profile": sip.profile,
                     "pid": pid,
                     "outcome": EventOutcome.SUCCESS,
-                    "message": f"AIP created: MH2.0 complex created",
+                    "message": f"AIP created: MH2.0 complex created for {path}",
                 }
                 producer_topic = self.app_config["producer_topic_complex"]
 
