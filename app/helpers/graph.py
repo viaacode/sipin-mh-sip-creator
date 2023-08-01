@@ -62,6 +62,7 @@ def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
     )
     return str(cp_id)
 
+
 def get_sp_id_from_graph(graph: rdflib.Graph) -> str:
     """Retrieves the CP-id from a given graph.
 
@@ -79,7 +80,6 @@ def get_sp_id_from_graph(graph: rdflib.Graph) -> str:
         subject=cp, predicate=rdflib.URIRef("https://schema.org/identifier")
     )
     return str(cp_id)
-
 
 
 def get_pid_from_graph(graph: rdflib.Graph) -> str:
@@ -166,7 +166,8 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
     for representation in graph.subjects(
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Representation")
     ):
-        r = Representation(str(representation))
+        label = graph.value(subject=representation, predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#hiddenLabel"))
+        r = Representation(id=str(representation), label=str(label))
         representations.append(r)
         for file in graph.objects(
             subject=representation,

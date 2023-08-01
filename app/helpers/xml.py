@@ -138,13 +138,14 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
 
     representations = get_representations(g)
 
-    for representation_index, representation in enumerate(representations):
+    for representation in representations:
+        representation_index = representation.label.split("_")[1]
         representation_media = metsrw.FSEntry(type="Media")
         for file_index, file in enumerate(representation.files):
             file_representation = metsrw.FSEntry(
                 fileid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
                 use="Disk",
-                path=f"representation_{representation_index + 1}/{file.filename}",
+                path=f"{representation.label}/{file.filename}",
                 type="Representation",
                 label="Original",
                 file_uuid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",

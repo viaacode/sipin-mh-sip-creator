@@ -171,6 +171,7 @@ haObjId:b6ef78b5cdbf259101676fcb1e676306 a cryptographicHashFunctions:md5 ;
     rdf:value "b6ef78b5cdbf259101676fcb1e676306" . 
  
 haObjId:uuid-46425b95-4c1a-4a4e-81bd-6696edb52471 a premisowl:Representation ; 
+    skos:hiddenLabel "representation_1" ; 
     relSubType:inc haObjId:uuid-0be5686f-418a-4094-b7b0-1fa30e31c407 ; 
     relSubType:rep haObjId:uuid-e47ea1ab-3d47-44ff-a134-a9c60a678108 ; 
     schema:artMedium "olieverf op panieel"@nl ; 
@@ -226,7 +227,8 @@ haOrgId:OR-w66976m a org:Organization ;
  
 <http://the-fr.org/id/file-format/11> a dct:FileFormat . 
  
-haObjId:uuid-b047caad-7775-4be4-a9c2-ed154dd73864 a premisowl:Representation ; 
+haObjId:uuid-b047caad-7775-4be4-a9c2-ed154dd73864 a premisowl:Representation ;
+    skos:hiddenLabel "representation_2" ; 
     relSubType:inc haObjId:uuid-34eb1354-1ed0-4456-9b11-7b3d8c9ef9f1, 
         haObjId:uuid-907542af-0804-447d-a6e0-be4a7cee3a21 ; 
     relSubType:rep haObjId:uuid-e47ea1ab-3d47-44ff-a134-a9c60a678108 ; 
