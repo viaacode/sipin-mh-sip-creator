@@ -140,16 +140,16 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
 
     for representation in representations:
         representation_index = representation.label.split("_")[1]
-        representation_media = metsrw.FSEntry(type="Media")
-        representation_media.add_dmdsec(
-            build_minimal_sidecar(f"{pid}_{representation_index}"),
-            "OTHER",
-            **{
-                "othermdtype": "mhs:Sidecar",
-                "id": f"DMDID-MATERIALARTWORK-REPRESENTATION-{representation_index}",
-            },
-        )
         for file_index, file in enumerate(representation.files):
+            representation_media = metsrw.FSEntry(type="Media")
+            representation_media.add_dmdsec(
+                build_minimal_sidecar(f"{pid}_{representation_index}_{file_index}"),
+                "OTHER",
+                **{
+                    "othermdtype": "mhs:Sidecar",
+                    "id": f"DMDID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                },
+            )
             file_representation = metsrw.FSEntry(
                 fileid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
                 use="Disk",
@@ -161,7 +161,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
                 checksum=file.fixity,
             )
             representation_media.add_child(file_representation)
-        root_folder.add_child(representation_media)
+            root_folder.add_child(representation_media)
 
     mets.append_file(root_folder)
 
