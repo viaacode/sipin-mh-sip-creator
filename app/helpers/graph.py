@@ -53,14 +53,27 @@ def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
     Returns:
         str: The CP-id (OR-XXXXXXX)
     """
-    cp = graph.value(
+    organizations = graph.subjects(
         object=rdflib.URIRef("http://www.w3.org/ns/org#Organization"),
         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
     )
-    cp_id = graph.value(
-        subject=cp, predicate=rdflib.URIRef("https://schema.org/identifier")
-    )
-    return str(cp_id)
+
+    for organization in organizations:
+        agents = graph.subjects(
+            object=organization, predicate=rdflib.URIRef("https://schema.org/agent")
+        )
+        for agent in agents:
+            role = graph.value(
+                subject=agent, predicate=rdflib.URIRef("https://schema.org/roleName")
+            )
+
+            if str(role) == "ARCHIVIST":
+                cp_id = graph.value(
+                    subject=organization,
+                    predicate=rdflib.URIRef("https://schema.org/identifier"),
+                )
+
+                return str(cp_id)
 
 
 def get_sp_id_from_graph(graph: rdflib.Graph) -> str:
@@ -166,7 +179,10 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
     for representation in graph.subjects(
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Representation")
     ):
-        label = graph.value(subject=representation, predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#hiddenLabel"))
+        label = graph.value(
+            subject=representation,
+            predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#hiddenLabel"),
+        )
         r = Representation(id=str(representation), label=str(label))
         representations.append(r)
         for file in graph.objects(
