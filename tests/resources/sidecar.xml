@@ -1,4 +1,7 @@
 <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+  <mhs:Administrative>
+    <mh:ExternalId>testpid</mh:ExternalId>
+  </mhs:Administrative>
   <mhs:Descriptive>
     <mh:Title>de titel van de episode</mh:Title>
     <mh:Description>de beschrijving van de episode</mh:Description>

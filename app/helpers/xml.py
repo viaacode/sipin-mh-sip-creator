@@ -140,8 +140,16 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
 
     for representation in representations:
         representation_index = representation.label.split("_")[1]
-        representation_media = metsrw.FSEntry(type="Media")
         for file_index, file in enumerate(representation.files):
+            representation_media = metsrw.FSEntry(type="Media")
+            representation_media.add_dmdsec(
+                build_minimal_sidecar(f"{pid}_{representation_index}_{file_index}"),
+                "OTHER",
+                **{
+                    "othermdtype": "mhs:Sidecar",
+                    "id": f"DMDID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                },
+            )
             file_representation = metsrw.FSEntry(
                 fileid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
                 use="Disk",
@@ -153,15 +161,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
                 checksum=file.fixity,
             )
             representation_media.add_child(file_representation)
-            file_representation.add_dmdsec(
-                build_minimal_sidecar(f"{pid}_{representation_index}_{file_index}"),
-                "OTHER",
-                **{
-                    "othermdtype": "mhs:Sidecar",
-                    "id": f"DMDID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
-                },
-            )
-        root_folder.add_child(representation_media)
+            root_folder.add_child(representation_media)
 
     mets.append_file(root_folder)
 
@@ -219,6 +219,15 @@ def build_mh_sidecar(
         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
     )
+
+    # Add external ID
+    administrative_node = etree.Element(
+        etree.QName(NSMAP["mhs"], "Administrative"), nsmap=NSMAP
+    )
+    id_node = etree.Element(etree.QName(NSMAP["mh"], "ExternalId"), nsmap=NSMAP)
+    root.append(administrative_node)
+    administrative_node.append(id_node)
+    id_node.text = pid
 
     # Add mappable fields to the XML
     for predicate in MAPPING.keys():
