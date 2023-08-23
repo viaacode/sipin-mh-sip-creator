@@ -102,6 +102,10 @@ def qname_text(ns: str, local_name: str) -> str:
 
 
 def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
+    ie = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+    )
     mets = metsrw.METSDocument()
 
     mets.agents.append(metsrw.Agent("CUSTODIAN", type="ORGANIZATION", name="meemoo"))
@@ -128,7 +132,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(g, pid),
+        build_mh_sidecar(g, ie, pid),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -143,7 +147,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
         for file_index, file in enumerate(representation.files):
             representation_media = metsrw.FSEntry(type="Media")
             representation_media.add_dmdsec(
-                build_minimal_sidecar(f"{pid}_{representation_index}_{file_index}"),
+                build_mh_sidecar(g, representation.node, f"{pid}_{representation_index}_{file_index}", is_ie=False),
                 "OTHER",
                 **{
                     "othermdtype": "mhs:Sidecar",
@@ -204,7 +208,7 @@ def build_minimal_sidecar(external_id: str) -> str:
 
 
 def build_mh_sidecar(
-    g: rdflib.Graph, pid: str, dynamic_tags: dict[str, str] = {}
+    g: rdflib.Graph, subject, pid: str, dynamic_tags: dict[str, str] = {}, is_ie: bool = True
 ) -> str:
     """
     Builds a MH 2.0 sidecar based on metadata from a graph
@@ -213,11 +217,6 @@ def build_mh_sidecar(
         etree.QName(NSMAP["mhs"], "Sidecar"),
         nsmap=NSMAP,
         attrib={"version": MH_VERSION},
-    )
-
-    ie = g.value(
-        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
     )
 
     # Add external ID
@@ -232,7 +231,7 @@ def build_mh_sidecar(
     # Add mappable fields to the XML
     for predicate in MAPPING.keys():
         for key in MAPPING[predicate]["targets"]:
-            for obj in g.objects(predicate=rdflib.URIRef(predicate), subject=ie):
+            for obj in g.objects(predicate=rdflib.URIRef(predicate), subject=subject):
                 if MAPPING[predicate].get("transformer"):
                     if type(obj) == rdflib.URIRef:
                         result = g.predicate_objects(subject=obj)
@@ -280,34 +279,35 @@ def build_mh_sidecar(
     # Add PID
     pid_tag = etree.Element("PID")
     dynamic_tag.append(pid_tag)
-    pid_tag.text = pid
+    pid_tag.text = pid.split("_")[0]
 
     # Add CP-id to the XML
     cp_tag = etree.Element("CP_id")
     dynamic_tag.append(cp_tag)
     cp_tag.text = get_cp_id_from_graph(g)
 
-    # Add local id's to the XML
-    local_ids = get_local_ids_from_graph(g)
+    if is_ie:
+        # Add local id's to the XML
+        local_ids = get_local_ids_from_graph(g)
 
-    # TODO
-    if len(list(local_ids)) == 1:
-        main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", local_ids[list(local_ids)[0]])
-    else:
-        main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", "")
+        # TODO
+        if len(list(local_ids)) == 1:
+            main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", local_ids[list(local_ids)[0]])
+        else:
+            main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", "")
 
-    if main_local_id:
-        local_id_tag = etree.Element("dc_identifier_localid")
-        dynamic_tag.append(local_id_tag)
-        local_id_tag.text = main_local_id
+        if main_local_id:
+            local_id_tag = etree.Element("dc_identifier_localid")
+            dynamic_tag.append(local_id_tag)
+            local_id_tag.text = main_local_id
 
-    if local_ids:
-        local_ids_tag = etree.Element("dc_identifier_localids")
-        dynamic_tag.append(local_ids_tag)
-        for id_type, id in local_ids.items():
-            id_tag = etree.Element(id_type)
-            local_ids_tag.append(id_tag)
-            id_tag.text = id
+        if local_ids:
+            local_ids_tag = etree.Element("dc_identifier_localids")
+            dynamic_tag.append(local_ids_tag)
+            for id_type, id in local_ids.items():
+                id_tag = etree.Element(id_type)
+                local_ids_tag.append(id_tag)
+                id_tag.text = id
 
     for key in dynamic_tags:
         key_tag = etree.Element(key)

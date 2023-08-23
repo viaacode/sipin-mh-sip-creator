@@ -167,7 +167,7 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Representation")
     ):
         label = graph.value(subject=representation, predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#hiddenLabel"))
-        r = Representation(id=str(representation), label=str(label))
+        r = Representation(id=str(representation), label=str(label), node=representation)
         representations.append(r)
         for file in graph.objects(
             subject=representation,
