@@ -7,6 +7,7 @@ from app.helpers.graph import (
     get_local_ids_from_graph,
     GraphException,
     get_sip_info,
+    get_pid_from_graph,
 )
 
 
@@ -16,33 +17,49 @@ def json_ld_graph():
         json_ld = f.read()
     return json_ld
 
+
 @pytest.fixture
 def turtle_graph():
     with open("./tests/resources/example.ttl", "r") as f:
         ttl = f.read()
     return ttl
 
+
+@pytest.fixture
+def material_artwork_ttl_graph():
+    with open("./tests/resources/materialartwork.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
+
 def test_parse_json_graph_json_ld(json_ld_graph):
     assert parse_graph(json_ld_graph, "json-ld")
+
 
 def test_parse_turtle_graph_turtle(turtle_graph):
     assert parse_graph(turtle_graph, "turtle")
 
+
 def test_parse_turtle_graph_ttl(turtle_graph):
     assert parse_graph(turtle_graph, "ttl")
+
 
 def test_parse_turtle_graph_text_turtle(turtle_graph):
     assert parse_graph(turtle_graph, "text/turtle")
 
+
 def test_parse_json_graph_default(json_ld_graph):
     assert parse_graph(json_ld_graph)
+
 
 def test_parse_json_graph_invalid_format(json_ld_graph):
     assert parse_graph(json_ld_graph, "foobar")
 
+
 def test_parse_turtle_graph_invalid_format(turtle_graph):
     with pytest.raises(GraphException):
         assert parse_graph(turtle_graph, "")
+
 
 def test_get_cp_id_from_graph(json_ld_graph):
     graph = parse_graph(json_ld_graph, "json-ld")
@@ -50,6 +67,21 @@ def test_get_cp_id_from_graph(json_ld_graph):
     cp_id = get_cp_id_from_graph(graph)
 
     assert cp_id == "OR-5h7bt1n"
+
+def test_get_pid_from_turtle_graph(material_artwork_ttl_graph):
+    graph = parse_graph(material_artwork_ttl_graph, "turtle")
+
+    pid = get_pid_from_graph(graph)
+
+    assert pid == "7m03z1634f"
+
+
+def test_get_pid_from_graph(json_ld_graph):
+    graph = parse_graph(json_ld_graph, "json-ld")
+
+    pid = get_pid_from_graph(graph)
+
+    assert pid == ""
 
 
 def test_get_local_ids_from_graph(json_ld_graph):

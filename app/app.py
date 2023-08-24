@@ -96,7 +96,11 @@ class EventListener:
             cp_id = graph.get_cp_id_from_graph(metadata_graph)
             filename = Path(sip.representations[0].files[0].filename)
             md5 = sip.representations[0].files[0].fixity
-            sidecar = xml.build_mh_sidecar(metadata_graph, pid, {"md5": md5})
+            ie = metadata_graph.value(
+                predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+                object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+            )
+            sidecar = xml.build_mh_sidecar(metadata_graph, ie, pid, {"md5": md5})
 
             essence_filepath = Path(
                 path, "data/representations/representation_1/data", filename

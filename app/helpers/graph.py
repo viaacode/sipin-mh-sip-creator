@@ -96,25 +96,6 @@ def get_sp_id_from_graph(graph: rdflib.Graph) -> str:
     return str(cp_id)
 
 
-def get_pid_from_graph(graph: rdflib.Graph) -> str:
-    """Retrieves the PID from a given graph. Returns an empty string if no PID is found.
-
-    Args:
-        graph (rdflib.Graph): The metadata graph of the SIP.
-
-    Returns:
-        str: The PID or an empty string.
-    """
-    # pid = graph.value(
-    #     object=rdflib.URIRef("http://www.w3.org/ns/org#Organization"),
-    #     predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-    #     default="",
-    # )
-    # return str(pid)
-    # Currently the PID is not yet in the graph
-    return ""
-
-
 def get_sip_info(graph: rdflib.Graph) -> SIP:
     sip_node = graph.value(
         object=rdflib.URIRef("https://data.hetarchief.be/ns/sip/SIP"),
@@ -166,6 +147,26 @@ def get_local_ids_from_graph(graph: rdflib.Graph) -> dict[str, str]:
     return localids
 
 
+def get_pid_from_graph(graph: rdflib.Graph) -> str:
+    """Retrieves the PID from a given graph. Returns an empty string if no PID is found.
+
+    Args:
+        graph (rdflib.Graph): The metadata graph of the SIP.
+
+    Returns:
+        str: The PID or an empty string.
+    """
+    pid_node = graph.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("https://data.hetarchief.be/id/object/MEEMOO-PID"),
+    )
+    if pid_node:
+        pid = graph.value(subject=pid_node)
+        return str(pid)
+
+    return ""
+
+
 def get_representations(graph: rdflib.Graph) -> list[Representation]:
     """Retrieves the representations from a given graph.
     For each representation a list of files is retrieved.
@@ -184,7 +185,11 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
             subject=representation,
             predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#hiddenLabel"),
         )
-        r = Representation(id=str(representation), label=str(label))
+
+        r = Representation(
+            id=str(representation), label=str(label), node=representation
+        )
+
         representations.append(r)
         for file in graph.objects(
             subject=representation,

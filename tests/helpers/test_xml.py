@@ -1,6 +1,7 @@
 import lxml
 import pytest
 import metsrw
+import rdflib
 
 from app.helpers.graph import parse_graph
 from app.helpers.xml import build_mh_sidecar, build_mh_mets, build_minimal_sidecar
@@ -51,8 +52,13 @@ def minicar_xml():
 def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
     g = parse_graph(json_ld_graph, "json-ld")
 
+    ie = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+    )
+
     sidecar = build_mh_sidecar(
-        g, "testpid", {"md5": "18513a8d61c6f2cbaaeeedd754b01d6b"}
+        g, ie, "testpid", {"md5": "18513a8d61c6f2cbaaeeedd754b01d6b"}
     )
 
     assert sidecar == mh_sidecar_xml
@@ -62,7 +68,12 @@ def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
 def test_build_mh_sidecar_ttl(material_artwork_ttl_graph, mh_sidecar_fit_xml):
     g = parse_graph(material_artwork_ttl_graph, "ttl")
 
-    sidecar = build_mh_sidecar(g, "testpid")
+    ie = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+    )
+
+    sidecar = build_mh_sidecar(g, ie, "testpid")
 
     assert sidecar == mh_sidecar_fit_xml
 

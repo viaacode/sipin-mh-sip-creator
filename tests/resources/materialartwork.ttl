@@ -100,6 +100,11 @@ haObjId:Inventarisnummer rdfs:subClassOf haObj:LocalIdentifier .
  
 haObjId:Inventarisnummerinv10 a haObjId:Inventarisnummer ; 
     rdf:value "inv10" . 
+
+haObjId:MEEMOO-PID rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:MEEMOO-PID7m03z1634f a haObjId:MEEMOO-PID ; 
+    rdf:value "7m03z1634f" . 
  
 haObjId:LOCAL_ID rdfs:subClassOf haObj:LocalIdentifier . 
  
@@ -211,7 +216,8 @@ haObjId:uuid-e47ea1ab-3d47-44ff-a134-a9c60a678108 a premisowl:IntellectualEntity
         haObjId:Prirefref%2013, 
         haObjId:Topstuk_IDtopstuk15, 
         haObjId:Word_IDword14, 
-        haObjId:WorkPIDpid16 ; 
+        haObjId:WorkPIDpid16 ,
+        haObjId:MEEMOO-PID7m03z1634f ;
     schema:artMedium "olieverf op paneel"@nl ; 
     schema:artform "schilderij"@nl ; 
     schema:creator haObjId:08cf68ade1747259a5d6cd3a023f1dd3, 
