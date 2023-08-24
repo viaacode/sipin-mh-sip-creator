@@ -18,9 +18,9 @@
 haSipId:uuid-f178c272-dbfc-4b91-810b-7b60c137d18e a haSip:SIP ; 
     dct:conformsTo "https://data.hetarchief.be/id/sip/1.1/material-artwork", 
         "https://earksip.dilcis.eu/profile/E-ARK-SIP.xml" ; 
-    schema:agent [ schema:agent haOrgId:OR-w66976m ; 
+    schema:agent [ schema:agent haOrgId:OR-5h7bt1n ; 
             schema:roleName "ARCHIVIST" ], 
-        [ schema:agent haOrgId:OR-w66976m ; 
+        [ schema:agent haOrgId:OR-m30wc4t ; 
             schema:roleName "CREATOR" ] . 
  
 haObjId:08cf68ade1747259a5d6cd3a023f1dd3 a schema:Role ; 
