@@ -221,9 +221,13 @@ haObjId:uuid-e47ea1ab-3d47-44ff-a134-a9c60a678108 a premisowl:IntellectualEntity
     schema:height haObjId:8d7c2efb81753e0c04f3f80bb48093d5 ; 
     schema:width haObjId:9c50950c5f9ed60a2f2f90cacf05a4e4 . 
  
-haOrgId:OR-w66976m a org:Organization ; 
-    skos:prefLabel "Meemoo"@nl ; 
-    schema:identifier "OR-w66976m" . 
+haOrgId:OR-5h7bt1n a org:Organization ; 
+    skos:prefLabel "KMSKA"@nl ; 
+    schema:identifier "OR-5h7bt1n" . 
+ 
+haOrgId:OR-m30wc4t a org:Organization ; 
+    skos:prefLabel "artinflanders"@nl ; 
+    schema:identifier "OR-m30wc4t" . 
  
 <http://the-fr.org/id/file-format/11> a dct:FileFormat . 
  

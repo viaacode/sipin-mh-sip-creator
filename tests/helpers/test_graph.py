@@ -49,7 +49,7 @@ def test_get_cp_id_from_graph(json_ld_graph):
 
     cp_id = get_cp_id_from_graph(graph)
 
-    assert cp_id == "OR-m30wc4t"
+    assert cp_id == "OR-5h7bt1n"
 
 
 def test_get_local_ids_from_graph(json_ld_graph):

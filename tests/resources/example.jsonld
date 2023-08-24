@@ -257,7 +257,7 @@
     "@id": "_:nd114387eb8a14374b0109ec8adfa56a0b1",
     "https://schema.org/agent": [
       {
-        "@id": "https://data.hetarchief.be/id/organization/OR-m30wc4t"
+        "@id": "https://data.hetarchief.be/id/organization/OR-5h7bt1n"
       }
     ],
     "https://schema.org/roleName": [
@@ -270,7 +270,7 @@
     "@id": "_:nd114387eb8a14374b0109ec8adfa56a0b2",
     "https://schema.org/agent": [
       {
-        "@id": "https://data.hetarchief.be/id/organization/OR-m30wc4t"
+        "@id": "https://data.hetarchief.be/id/organization/OR-5h7bt1n"
       }
     ],
     "https://schema.org/roleName": [
@@ -322,19 +322,19 @@
     ]
   },
   {
-    "@id": "https://data.hetarchief.be/id/organization/OR-m30wc4t",
+    "@id": "https://data.hetarchief.be/id/organization/OR-5h7bt1n",
     "@type": [
       "http://www.w3.org/ns/org#Organization"
     ],
     "http://www.w3.org/2004/02/skos/core#prefLabel": [
       {
         "@language": "nl",
-        "@value": "Flemish Cat Museum"
+        "@value": "KMSKA"
       }
     ],
     "https://schema.org/identifier": [
       {
-        "@value": "OR-m30wc4t"
+        "@value": "OR-5h7bt1n"
       }
     ]
   },
