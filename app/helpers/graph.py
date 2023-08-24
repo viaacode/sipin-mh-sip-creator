@@ -45,22 +45,36 @@ def parse_graph(data: str, format: str = "json-ld") -> rdflib.Graph:
 
 
 def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
-    """Retrieves the CP-id from a given graph.
+    """Retrieves the CP-id of the archivist from a given graph. Returns an empty string if no CP-id is found.
 
     Args:
         graph (rdflib.Graph): The metadata graph of the SIP.
 
     Returns:
-        str: The CP-id (OR-XXXXXXX)
+        str: The CP-id (OR-XXXXXXX) or an empty string.
     """
-    cp = graph.value(
+    organizations = graph.subjects(
         object=rdflib.URIRef("http://www.w3.org/ns/org#Organization"),
         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
     )
-    cp_id = graph.value(
-        subject=cp, predicate=rdflib.URIRef("https://schema.org/identifier")
-    )
-    return str(cp_id)
+
+    for organization in organizations:
+        agents = graph.subjects(
+            object=organization, predicate=rdflib.URIRef("https://schema.org/agent")
+        )
+        for agent in agents:
+            role = graph.value(
+                subject=agent, predicate=rdflib.URIRef("https://schema.org/roleName")
+            )
+
+            if str(role) == "ARCHIVIST":
+                cp_id = graph.value(
+                    subject=organization,
+                    predicate=rdflib.URIRef("https://schema.org/identifier"),
+                )
+
+                return str(cp_id)
+    return ""
 
 
 def get_sp_id_from_graph(graph: rdflib.Graph) -> str:
@@ -171,9 +185,11 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
             subject=representation,
             predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#hiddenLabel"),
         )
+
         r = Representation(
             id=str(representation), label=str(label), node=representation
         )
+
         representations.append(r)
         for file in graph.objects(
             subject=representation,

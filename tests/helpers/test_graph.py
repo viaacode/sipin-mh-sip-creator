@@ -66,7 +66,7 @@ def test_get_cp_id_from_graph(json_ld_graph):
 
     cp_id = get_cp_id_from_graph(graph)
 
-    assert cp_id == "OR-m30wc4t"
+    assert cp_id == "OR-5h7bt1n"
 
 def test_get_pid_from_turtle_graph(material_artwork_ttl_graph):
     graph = parse_graph(material_artwork_ttl_graph, "turtle")

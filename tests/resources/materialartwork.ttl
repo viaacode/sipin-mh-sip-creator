@@ -18,9 +18,9 @@
 haSipId:uuid-f178c272-dbfc-4b91-810b-7b60c137d18e a haSip:SIP ; 
     dct:conformsTo "https://data.hetarchief.be/id/sip/1.1/material-artwork", 
         "https://earksip.dilcis.eu/profile/E-ARK-SIP.xml" ; 
-    schema:agent [ schema:agent haOrgId:OR-w66976m ; 
+    schema:agent [ schema:agent haOrgId:OR-5h7bt1n ; 
             schema:roleName "ARCHIVIST" ], 
-        [ schema:agent haOrgId:OR-w66976m ; 
+        [ schema:agent haOrgId:OR-m30wc4t ; 
             schema:roleName "CREATOR" ] . 
  
 haObjId:08cf68ade1747259a5d6cd3a023f1dd3 a schema:Role ; 
@@ -227,9 +227,13 @@ haObjId:uuid-e47ea1ab-3d47-44ff-a134-a9c60a678108 a premisowl:IntellectualEntity
     schema:height haObjId:8d7c2efb81753e0c04f3f80bb48093d5 ; 
     schema:width haObjId:9c50950c5f9ed60a2f2f90cacf05a4e4 . 
  
-haOrgId:OR-w66976m a org:Organization ; 
-    skos:prefLabel "Meemoo"@nl ; 
-    schema:identifier "OR-w66976m" . 
+haOrgId:OR-5h7bt1n a org:Organization ; 
+    skos:prefLabel "KMSKA"@nl ; 
+    schema:identifier "OR-5h7bt1n" . 
+ 
+haOrgId:OR-m30wc4t a org:Organization ; 
+    skos:prefLabel "artinflanders"@nl ; 
+    schema:identifier "OR-m30wc4t" . 
  
 <http://the-fr.org/id/file-format/11> a dct:FileFormat . 
  
