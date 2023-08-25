@@ -84,6 +84,8 @@ def test_build_material_artwork_mets(material_artwork_ttl_graph):
 
     mets = build_mh_mets(g, "testpid", "Disk")
 
+    assert "Disk" in mets
+    assert not "Tape" in mets
     assert mets
 
 
