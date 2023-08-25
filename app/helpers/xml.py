@@ -235,9 +235,12 @@ def build_mh_sidecar(
                 if MAPPING[predicate].get("transformer"):
                     if type(obj) == rdflib.URIRef:
                         result = g.predicate_objects(subject=obj)
-                        obj = rdflib.Literal(
-                            MAPPING[predicate]["transformer"](g, result)
-                        )
+                        obj = MAPPING[predicate]["transformer"](g, result)
+                        if type(obj) == str:
+                            obj = rdflib.Literal(obj)
+                        if type(obj) == tuple:
+                            key = obj[0]
+                            obj = rdflib.Literal(obj[1])
                     else:
                         obj = rdflib.Literal(MAPPING[predicate]["transformer"](obj))
                 if obj.language and obj.language != "nl":

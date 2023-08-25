@@ -41,8 +41,8 @@
     <artmedium>olieverf op paneel</artmedium>
     <dc_creators>
       <Maker>Ambrosius Benson</Maker>
-      <Maker>Test regisseur naam</Maker>
-      <Maker>Cedric Verhelst</Maker>
+      <Regisseur>Test regisseur naam</Regisseur>
+      <Fotograaf>Cedric Verhelst</Fotograaf>
     </dc_creators>
     <PID>testpid</PID>
     <CP_id>OR-5h7bt1n</CP_id>
