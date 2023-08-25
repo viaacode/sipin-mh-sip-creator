@@ -82,7 +82,7 @@ def test_build_mh_sidecar_ttl(material_artwork_ttl_graph, mh_sidecar_fit_xml):
 def test_build_material_artwork_mets(material_artwork_ttl_graph):
     g = parse_graph(material_artwork_ttl_graph, "ttl")
 
-    mets = build_mh_mets(g, "testpid")
+    mets = build_mh_mets(g, "testpid", "Disk")
 
     assert mets
 

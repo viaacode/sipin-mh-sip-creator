@@ -156,7 +156,7 @@ class EventListener:
                     )
 
                 # Generate mets xml
-                mets_xml = xml.build_mh_mets(metadata_graph, pid)
+                mets_xml = xml.build_mh_mets(metadata_graph, pid, self.app_config["archive_location"])
                 # Write xml to the complex folder
                 with open(Path(files_path, "mets.xml"), "w") as mets_file:
                     mets_file.write(mets_xml)
