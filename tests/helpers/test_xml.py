@@ -64,7 +64,6 @@ def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
     assert sidecar == mh_sidecar_xml
 
 
-@pytest.mark.ttl
 def test_build_mh_sidecar_ttl(material_artwork_ttl_graph, mh_sidecar_fit_xml):
     g = parse_graph(material_artwork_ttl_graph, "ttl")
 
@@ -78,7 +77,6 @@ def test_build_mh_sidecar_ttl(material_artwork_ttl_graph, mh_sidecar_fit_xml):
     assert sidecar == mh_sidecar_fit_xml
 
 
-@pytest.mark.ttl
 def test_build_material_artwork_mets(material_artwork_ttl_graph):
     g = parse_graph(material_artwork_ttl_graph, "ttl")
 
@@ -87,7 +85,6 @@ def test_build_material_artwork_mets(material_artwork_ttl_graph):
     assert mets
 
 
-@pytest.mark.ttl
 def test_build_minimal_sidecar(minicar_xml):
     minicar = build_minimal_sidecar("abcdefgh")
 
