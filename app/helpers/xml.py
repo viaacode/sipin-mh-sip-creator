@@ -147,7 +147,12 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
         for file_index, file in enumerate(representation.files):
             representation_media = metsrw.FSEntry(type="Media")
             representation_media.add_dmdsec(
-                build_mh_sidecar(g, representation.node, f"{pid}_{representation_index}_{file_index}", is_ie=False),
+                build_mh_sidecar(
+                    g,
+                    representation.node,
+                    f"{pid}_{representation_index}_{file_index}",
+                    is_ie=False,
+                ),
                 "OTHER",
                 **{
                     "othermdtype": "mhs:Sidecar",
@@ -208,7 +213,11 @@ def build_minimal_sidecar(external_id: str) -> str:
 
 
 def build_mh_sidecar(
-    g: rdflib.Graph, subject, pid: str, dynamic_tags: dict[str, str] = {}, is_ie: bool = True
+    g: rdflib.Graph,
+    subject,
+    pid: str,
+    dynamic_tags: dict[str, str] = {},
+    is_ie: bool = True,
 ) -> str:
     """
     Builds a MH 2.0 sidecar based on metadata from a graph
@@ -227,6 +236,10 @@ def build_mh_sidecar(
     root.append(administrative_node)
     administrative_node.append(id_node)
     id_node.text = pid
+
+    # Create Dynamic node
+    dynamic_tag = etree.Element(etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP)
+    root.append(dynamic_tag)
 
     # Add mappable fields to the XML
     for predicate in MAPPING.keys():
@@ -277,8 +290,6 @@ def build_mh_sidecar(
                 xml_tag.text = obj
 
     # Add some extra dynamic metadata
-    dynamic_tag = root.find("mhs:Dynamic", namespaces=NSMAP)
-
     # Add PID
     pid_tag = etree.Element("PID")
     dynamic_tag.append(pid_tag)
@@ -295,7 +306,9 @@ def build_mh_sidecar(
 
         # TODO
         if len(list(local_ids)) == 1:
-            main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", local_ids[list(local_ids)[0]])
+            main_local_id = local_ids.pop(
+                "MEEMOO-LOCAL-ID", local_ids[list(local_ids)[0]]
+            )
         else:
             main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", "")
 
