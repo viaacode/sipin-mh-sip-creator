@@ -237,10 +237,6 @@ def build_mh_sidecar(
     administrative_node.append(id_node)
     id_node.text = pid
 
-    # Create Dynamic node
-    dynamic_tag = etree.Element(etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP)
-    root.append(dynamic_tag)
-
     # Add mappable fields to the XML
     for predicate in MAPPING.keys():
         for key in MAPPING[predicate]["targets"]:
@@ -290,6 +286,12 @@ def build_mh_sidecar(
                 xml_tag.text = obj
 
     # Add some extra dynamic metadata
+    # Create Dynamic node if needed
+    dynamic_tag = root.find("mhs:Dynamic", namespaces=NSMAP)
+    if not dynamic_tag:
+        dynamic_tag = etree.Element(etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP)
+        root.append(dynamic_tag)
+
     # Add PID
     pid_tag = etree.Element("PID")
     dynamic_tag.append(pid_tag)
