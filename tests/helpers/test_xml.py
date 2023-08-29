@@ -22,6 +22,13 @@ def material_artwork_ttl_graph():
 
 
 @pytest.fixture
+def material_artwork_minimal_rep_graph():
+    with open("./tests/resources/materialartwork_minimal_rep.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
+
+@pytest.fixture
 def mh_sidecar_xml():
     with open("./tests/resources/sidecar.xml", "r") as f:
         xml = f.read()
@@ -45,6 +52,13 @@ def mets_xml():
 @pytest.fixture
 def minicar_xml():
     with open("./tests/resources/minicar.xml", "r") as f:
+        xml = f.read()
+    return xml
+
+
+@pytest.fixture
+def mh_sidecar_material_artwork_nimimal_rep_xml():
+    with open("./tests/resources/sidecar_material_artwork_minimal_rep.xml", "r") as f:
         xml = f.read()
     return xml
 
@@ -89,3 +103,18 @@ def test_build_minimal_sidecar(minicar_xml):
     minicar = build_minimal_sidecar("abcdefgh")
 
     assert minicar == minicar_xml
+
+
+def test_build_mh_sidecar_material_artwork_minimal_rep(
+    material_artwork_minimal_rep_graph, mh_sidecar_material_artwork_nimimal_rep_xml
+):
+    g = parse_graph(material_artwork_minimal_rep_graph, "ttl")
+
+    rep = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Representation"),
+    )
+
+    sidecar = build_mh_sidecar(g, rep, "testpid")
+
+    assert sidecar == mh_sidecar_material_artwork_nimimal_rep_xml
