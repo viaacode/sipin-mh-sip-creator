@@ -57,7 +57,7 @@ def minicar_xml():
 
 
 @pytest.fixture
-def mh_sidecar_material_artwork_nimimal_rep_xml():
+def mh_sidecar_material_artwork_minimal_rep_xml():
     with open("./tests/resources/sidecar_material_artwork_minimal_rep.xml", "r") as f:
         xml = f.read()
     return xml
@@ -106,7 +106,7 @@ def test_build_minimal_sidecar(minicar_xml):
 
 
 def test_build_mh_sidecar_material_artwork_minimal_rep(
-    material_artwork_minimal_rep_graph, mh_sidecar_material_artwork_nimimal_rep_xml
+    material_artwork_minimal_rep_graph, mh_sidecar_material_artwork_minimal_rep_xml
 ):
     g = parse_graph(material_artwork_minimal_rep_graph, "ttl")
 
@@ -117,4 +117,4 @@ def test_build_mh_sidecar_material_artwork_minimal_rep(
 
     sidecar = build_mh_sidecar(g, rep, "testpid")
 
-    assert sidecar == mh_sidecar_material_artwork_nimimal_rep_xml
+    assert sidecar == mh_sidecar_material_artwork_minimal_rep_xml
