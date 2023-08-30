@@ -1,0 +1,10 @@
+<mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+  <mhs:Administrative>
+    <mh:ExternalId>testpid</mh:ExternalId>
+  </mhs:Administrative>
+  <mhs:Dynamic>
+    <PID>testpid</PID>
+    <CP_id>OR-5h7bt1n</CP_id>
+    <sp_name>sipin</sp_name>
+  </mhs:Dynamic>
+</mhs:Sidecar>

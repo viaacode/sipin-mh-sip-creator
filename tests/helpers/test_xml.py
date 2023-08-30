@@ -22,6 +22,13 @@ def material_artwork_ttl_graph():
 
 
 @pytest.fixture
+def material_artwork_minimal_rep_graph():
+    with open("./tests/resources/materialartwork_minimal_rep.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
+
+@pytest.fixture
 def mh_sidecar_xml():
     with open("./tests/resources/sidecar.xml", "r") as f:
         xml = f.read()
@@ -66,6 +73,11 @@ def local_id_graphs(request):
         "amount_of_localids": request.param[1],
         "has_main_localid": request.param[0],
     }
+@pytest.fixture
+def mh_sidecar_material_artwork_minimal_rep_xml():
+    with open("./tests/resources/sidecar_material_artwork_minimal_rep.xml", "r") as f:
+        xml = f.read()
+    return xml
 
 
 def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
@@ -83,7 +95,6 @@ def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
     assert sidecar == mh_sidecar_xml
 
 
-@pytest.mark.ttl
 def test_build_mh_sidecar_ttl(material_artwork_ttl_graph, mh_sidecar_fit_xml):
     g = parse_graph(material_artwork_ttl_graph, "ttl")
 
@@ -97,16 +108,16 @@ def test_build_mh_sidecar_ttl(material_artwork_ttl_graph, mh_sidecar_fit_xml):
     assert sidecar == mh_sidecar_fit_xml
 
 
-@pytest.mark.ttl
 def test_build_material_artwork_mets(material_artwork_ttl_graph):
     g = parse_graph(material_artwork_ttl_graph, "ttl")
 
-    mets = build_mh_mets(g, "testpid")
+    mets = build_mh_mets(g, "testpid", "Disk")
 
+    assert "Disk" in mets
+    assert not "Tape" in mets
     assert mets
 
 
-@pytest.mark.ttl
 def test_build_minimal_sidecar(minicar_xml):
     minicar = build_minimal_sidecar("abcdefgh")
 
@@ -132,3 +143,17 @@ def test_localids_in_sidecar(local_id_graphs):
     assert len(localid) == local_id_graphs["has_main_localid"]
 
     pass
+
+def test_build_mh_sidecar_material_artwork_minimal_rep(
+    material_artwork_minimal_rep_graph, mh_sidecar_material_artwork_minimal_rep_xml
+):
+    g = parse_graph(material_artwork_minimal_rep_graph, "ttl")
+
+    rep = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Representation"),
+    )
+
+    sidecar = build_mh_sidecar(g, rep, "testpid")
+
+    assert sidecar == mh_sidecar_material_artwork_minimal_rep_xml

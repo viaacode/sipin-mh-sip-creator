@@ -101,7 +101,7 @@ def qname_text(ns: str, local_name: str) -> str:
     return f"{lxmlns(ns)}{local_name}"
 
 
-def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
+def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
     ie = g.value(
         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
@@ -147,7 +147,12 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
         for file_index, file in enumerate(representation.files):
             representation_media = metsrw.FSEntry(type="Media")
             representation_media.add_dmdsec(
-                build_mh_sidecar(g, representation.node, f"{pid}_{representation_index}_{file_index}", is_ie=False),
+                build_mh_sidecar(
+                    g,
+                    representation.node,
+                    f"{pid}_{representation_index}_{file_index}",
+                    is_ie=False,
+                ),
                 "OTHER",
                 **{
                     "othermdtype": "mhs:Sidecar",
@@ -156,7 +161,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
             )
             file_representation = metsrw.FSEntry(
                 fileid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
-                use="Disk",
+                use=archive_location,
                 path=f"{representation.label}/{file.filename}",
                 type="Representation",
                 label="Original",
@@ -208,7 +213,11 @@ def build_minimal_sidecar(external_id: str) -> str:
 
 
 def build_mh_sidecar(
-    g: rdflib.Graph, subject, pid: str, dynamic_tags: dict[str, str] = {}, is_ie: bool = True
+    g: rdflib.Graph,
+    subject,
+    pid: str,
+    dynamic_tags: dict[str, str] = {},
+    is_ie: bool = True,
 ) -> str:
     """
     Builds a MH 2.0 sidecar based on metadata from a graph
@@ -277,7 +286,11 @@ def build_mh_sidecar(
                 xml_tag.text = obj
 
     # Add some extra dynamic metadata
+    # Create Dynamic node if needed
     dynamic_tag = root.find("mhs:Dynamic", namespaces=NSMAP)
+    if not dynamic_tag:
+        dynamic_tag = etree.Element(etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP)
+        root.append(dynamic_tag)
 
     # Add PID
     pid_tag = etree.Element("PID")
