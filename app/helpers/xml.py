@@ -101,7 +101,7 @@ def qname_text(ns: str, local_name: str) -> str:
     return f"{lxmlns(ns)}{local_name}"
 
 
-def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
+def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
     ie = g.value(
         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
@@ -161,7 +161,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str) -> str:
             )
             file_representation = metsrw.FSEntry(
                 fileid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
-                use="Disk",
+                use=archive_location,
                 path=f"{representation.label}/{file.filename}",
                 type="Representation",
                 label="Original",
