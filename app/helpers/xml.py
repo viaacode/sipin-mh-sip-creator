@@ -306,13 +306,10 @@ def build_mh_sidecar(
         # Add local id's to the XML
         local_ids = get_local_ids_from_graph(g)
 
-        # TODO
-        if len(list(local_ids)) == 1:
-            main_local_id = local_ids.pop(
-                "MEEMOO-LOCAL-ID", local_ids[list(local_ids)[0]]
-            )
-        else:
-            main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", "")
+        main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", "")
+
+        if not main_local_id and len(list(local_ids)) == 1:
+            main_local_id = local_ids[list(local_ids)[0]]
 
         if main_local_id:
             local_id_tag = etree.Element("dc_identifier_localid")
