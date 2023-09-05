@@ -24,67 +24,73 @@ NSMAP = {
 MAPPING = {
     "http://purl.org/dc/terms/title": {
         "targets": [
-            "Descriptive.mh:Title",
-            "Dynamic.dc_title",
-            "Dynamic.dc_titles.registratie[]",
+            "mhs:Descriptive.mh:Title",
+            "mhs:Dynamic.dc_title",
+            "mhs:Dynamic.dc_titles.registratie[]",
         ]
     },
     "http://purl.org/dc/terms/publisher": {
-        "targets": ["Dynamic.dc_publisher.Uitgever[]"]
+        "targets": ["mhs:Dynamic.dc_publisher.Uitgever[]"]
     },
-    "http://purl.org/dc/terms/abstract": {"targets": ["Dynamic.dc_description"]},
+    "http://purl.org/dc/terms/abstract": {"targets": ["mhs:Dynamic.dc_description"]},
     "http://purl.org/dc/terms/alternative": {
-        "targets": ["Dynamic.dc_titles.alternatief[]"]
+        "targets": ["mhs:Dynamic.dc_titles.alternatief[]"]
     },
     "http://purl.org/dc/terms/contributor": {
-        "targets": ["Dynamic.dc_contributors.Bijdrager[]"]
+        "targets": ["mhs:Dynamic.dc_contributors.Bijdrager[]"]
     },
-    "http://purl.org/dc/terms/created": {"targets": ["Dynamic.dcterms_created"]},
-    "http://purl.org/dc/terms/creator": {"targets": ["Dynamic.dc_creators.Maker[]"]},
+    "http://purl.org/dc/terms/created": {"targets": ["mhs:Dynamic.dcterms_created"]},
+    "http://purl.org/dc/terms/creator": {
+        "targets": ["mhs:Dynamic.dc_creators.Maker[]"]
+    },
     "http://purl.org/dc/terms/description": {
         "targets": [
-            "Dynamic.dc_description_lang",
-            "Descriptive.mh:Description",
+            "mhs:Dynamic.dc_description_lang",
+            "mhs:Descriptive.mh:Description",
         ]
     },
-    "http://purl.org/dc/terms/issued": {"targets": ["Dynamic.dcterms_issued"]},
+    "http://purl.org/dc/terms/issued": {"targets": ["mhs:Dynamic.dcterms_issued"]},
     "http://purl.org/dc/terms/language": {
-        "targets": ["Dynamic.dc_languages.multiselect[]"],
+        "targets": ["mhs:Dynamic.dc_languages.multiselect[]"],
         "transformer": language_code_transform,
     },
     "http://purl.org/dc/terms/license": {
-        "targets": ["Dynamic.dc_rights_licenses.multiselect[]"]
+        "targets": ["mhs:Dynamic.dc_rights_licenses.multiselect[]"]
     },
-    "http://purl.org/dc/terms/rights": {"targets": ["Dynamic.dc_rights_comment"]},
+    "http://purl.org/dc/terms/rights": {"targets": ["mhs:Dynamic.dc_rights_comment"]},
     "http://purl.org/dc/terms/rightsHolder": {
-        "targets": ["Dynamic.dc_rights_rightsHolders.Licentiehouder[]"]
+        "targets": ["mhs:Dynamic.dc_rights_rightsHolders.Licentiehouder[]"]
     },
-    "http://purl.org/dc/terms/spatial": {"targets": ["Dynamic.dc_coverages.ruimte[]"]},
+    "http://purl.org/dc/terms/spatial": {
+        "targets": ["mhs:Dynamic.dc_coverages.ruimte[]"]
+    },
     "http://purl.org/dc/terms/subject": {
-        "targets": ["Dynamic.dc_subjects.Trefwoord[]"]
+        "targets": ["mhs:Dynamic.dc_subjects.Trefwoord[]"]
     },
-    "http://purl.org/dc/terms/temporal": {"targets": ["Dynamic.dc_coverages.tijd[]"]},
-    "http://www.loc.gov/premis/v3#fixity": {"targets": ["Dynamic.md5_viaa"]},
+    "http://purl.org/dc/terms/temporal": {
+        "targets": ["mhs:Dynamic.dc_coverages.tijd[]"]
+    },
+    "http://www.loc.gov/premis/v3#fixity": {"targets": ["mhs:Dynamic.md5_viaa"]},
     "https://schema.org/height": {
-        "targets": ["Dynamic.height"],
+        "targets": ["mhs:Dynamic.height"],
         "transformer": dimension_transform,
     },
     "https://schema.org/width": {
-        "targets": ["Dynamic.width"],
+        "targets": ["mhs:Dynamic.width"],
         "transformer": dimension_transform,
     },
     "https://schema.org/depth": {
-        "targets": ["Dynamic.depth"],
+        "targets": ["mhs:Dynamic.depth"],
         "transformer": dimension_transform,
     },
     "https://schema.org/artForm": {
-        "targets": ["Dynamic.artform"],
+        "targets": ["mhs:Dynamic.artform"],
     },
     "https://schema.org/artMedium": {
-        "targets": ["Dynamic.artmedium"],
+        "targets": ["mhs:Dynamic.artmedium"],
     },
     "https://schema.org/creator": {
-        "targets": ["Dynamic.dc_creators.Maker[]"],
+        "targets": ["mhs:Dynamic.dc_creators.Maker[]"],
         "transformer": creator_transform,
     },
 }
@@ -258,28 +264,19 @@ def build_mh_sidecar(
                 splitted = key.split(".")
                 xml_tag = root
                 for tag in splitted:
-                    if tag in ["Dynamic", "Descriptive"]:
-                        if xml_tag.find(f"mhs:{tag}", namespaces=NSMAP) is not None:
-                            xml_tag = xml_tag.find(f"mhs:{tag}", namespaces=NSMAP)
-                            continue
-                        new = etree.Element(etree.QName(NSMAP["mhs"], tag), nsmap=NSMAP)
-                    else:
-                        if (
-                            not tag.endswith("[]")
-                            and xml_tag.find(tag, namespaces=NSMAP) is not None
-                        ):
-                            xml_tag = xml_tag.find(tag)
-                            continue
-                        if tag.endswith("[]"):
-                            tag = tag.removesuffix("[]")
-                        if ":" in tag:
-                            prefix = tag.split(":")[0]
-                            tag = tag.split(":")[1]
-                            new = etree.Element(
-                                etree.QName(NSMAP[prefix], tag), nsmap=NSMAP
-                            )
-                        else:
-                            new = etree.Element(tag)
+                    if (
+                        not tag.endswith("[]")
+                        and xml_tag.find(tag, namespaces=NSMAP) is not None
+                    ):
+                        xml_tag = xml_tag.find(tag, namespaces=NSMAP)
+                        continue
+                    tag = tag.removesuffix("[]")
+
+                    prefix = tag.rpartition(":")[0]
+                    tag = tag.rpartition(":")[2]
+                    new = etree.Element(
+                        etree.QName(NSMAP.get(prefix), tag), nsmap=NSMAP
+                    )
 
                     xml_tag.append(new)
                     xml_tag = new
@@ -288,7 +285,7 @@ def build_mh_sidecar(
     # Add some extra dynamic metadata
     # Create Dynamic node if needed
     dynamic_tag = root.find("mhs:Dynamic", namespaces=NSMAP)
-    if not dynamic_tag:
+    if dynamic_tag is None:
         dynamic_tag = etree.Element(etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP)
         root.append(dynamic_tag)
 
@@ -324,10 +321,10 @@ def build_mh_sidecar(
                 local_ids_tag.append(id_tag)
                 id_tag.text = id
 
-    for key in dynamic_tags:
+    for key, value in dynamic_tags.items():
         key_tag = etree.Element(key)
         dynamic_tag.append(key_tag)
-        key_tag.text = dynamic_tags[key]
+        key_tag.text = value
 
     # Add sp_name/workflow
     sp_tag = etree.Element("sp_name")

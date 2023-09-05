@@ -31,7 +31,7 @@ def creator_transform(graph, graph_result) -> str:
                 subject=obj[1], predicate=rdflib.URIRef("https://schema.org/name")
             ).toPython()
         if obj[0].toPython() == "https://schema.org/roleName":
-            creator_target = f"Dynamic.dc_creators.{obj[1].toPython()}[]"
+            creator_target = f"mhs:Dynamic.dc_creators.{obj[1].toPython()}[]"
         else:
-            creator_target = "Dynamic.dc_creators.Maker[]"
+            creator_target = "mhs:Dynamic.dc_creators.Maker[]"
     return (creator_target, creator_name)
