@@ -4,14 +4,14 @@ from lxml import etree
 
 from app.helpers.graph import (
     get_cp_id_from_graph,
-    get_local_ids_from_graph,
     get_representations,
 )
+
+from app.helpers.mappers import local_id_mapper, creator_mapper
 
 from app.helpers.transformers import (
     dimension_transform,
     language_code_transform,
-    creator_transform,
 )
 
 MH_VERSION = "22.1"
@@ -90,8 +90,12 @@ MAPPING = {
         "targets": ["mhs:Dynamic.artmedium"],
     },
     "https://schema.org/creator": {
+        "mapping_strategy": creator_mapper,
         "targets": ["mhs:Dynamic.dc_creators.Maker[]"],
-        "transformer": creator_transform,
+    },
+    "http://www.loc.gov/premis/rdf/v3/identifier": {
+        "mapping_strategy": local_id_mapper,
+        "targets": ["mhs:Dynamic.dc_test.test[]"],
     },
 }
 
@@ -157,7 +161,6 @@ def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
                     g,
                     representation.node,
                     f"{pid}_{representation_index}_{file_index}",
-                    is_ie=False,
                 ),
                 "OTHER",
                 **{
@@ -223,7 +226,6 @@ def build_mh_sidecar(
     subject,
     pid: str,
     dynamic_tags: dict[str, str] = {},
-    is_ie: bool = True,
 ) -> str:
     """
     Builds a MH 2.0 sidecar based on metadata from a graph
@@ -245,42 +247,28 @@ def build_mh_sidecar(
 
     # Add mappable fields to the XML
     for predicate in MAPPING.keys():
-        for key in MAPPING[predicate]["targets"]:
-            for obj in g.objects(predicate=rdflib.URIRef(predicate), subject=subject):
-                if MAPPING[predicate].get("transformer"):
-                    if type(obj) == rdflib.URIRef:
-                        result = g.predicate_objects(subject=obj)
-                        obj = MAPPING[predicate]["transformer"](g, result)
-                        if type(obj) == str:
+        map = {}
+        if MAPPING[predicate].get("mapping_strategy"):
+            map = MAPPING[predicate]["mapping_strategy"](
+                g, g.objects(predicate=rdflib.URIRef(predicate), subject=subject)
+            )
+        else:
+            for key in MAPPING[predicate]["targets"]:
+                for obj in g.objects(
+                    predicate=rdflib.URIRef(predicate), subject=subject
+                ):
+                    if MAPPING[predicate].get("transformer"):
+                        if type(obj) == rdflib.URIRef:
+                            result = g.predicate_objects(subject=obj)
+                            obj = MAPPING[predicate]["transformer"](result)
                             obj = rdflib.Literal(obj)
-                        if type(obj) == tuple:
-                            key = obj[0]
-                            obj = rdflib.Literal(obj[1])
-                    else:
-                        obj = rdflib.Literal(MAPPING[predicate]["transformer"](obj))
-                if obj.language and obj.language != "nl":
-                    # Skip non dutch fields.
-                    continue
-                splitted = key.split(".")
-                xml_tag = root
-                for tag in splitted:
-                    if (
-                        not tag.endswith("[]")
-                        and xml_tag.find(tag, namespaces=NSMAP) is not None
-                    ):
-                        xml_tag = xml_tag.find(tag, namespaces=NSMAP)
+                        else:
+                            obj = rdflib.Literal(MAPPING[predicate]["transformer"](obj))
+                    if obj.language and obj.language != "nl":
+                        # Skip non dutch fields.
                         continue
-                    tag = tag.removesuffix("[]")
-
-                    prefix = tag.rpartition(":")[0]
-                    tag = tag.rpartition(":")[2]
-                    new = etree.Element(
-                        etree.QName(NSMAP.get(prefix), tag), nsmap=NSMAP
-                    )
-
-                    xml_tag.append(new)
-                    xml_tag = new
-                xml_tag.text = obj
+                    map[key] = [*map.get(key, []), str(obj)]
+        add_fields_to_xml(root, map)
 
     # Add some extra dynamic metadata
     # Create Dynamic node if needed
@@ -299,28 +287,6 @@ def build_mh_sidecar(
     dynamic_tag.append(cp_tag)
     cp_tag.text = get_cp_id_from_graph(g)
 
-    if is_ie:
-        # Add local id's to the XML
-        local_ids = get_local_ids_from_graph(g)
-
-        main_local_id = local_ids.pop("MEEMOO-LOCAL-ID", "")
-
-        if not main_local_id and len(list(local_ids)) == 1:
-            main_local_id = local_ids[list(local_ids)[0]]
-
-        if main_local_id:
-            local_id_tag = etree.Element("dc_identifier_localid")
-            dynamic_tag.append(local_id_tag)
-            local_id_tag.text = main_local_id
-
-        if local_ids:
-            local_ids_tag = etree.Element("dc_identifier_localids")
-            dynamic_tag.append(local_ids_tag)
-            for id_type, id in local_ids.items():
-                id_tag = etree.Element(id_type)
-                local_ids_tag.append(id_tag)
-                id_tag.text = id
-
     for key, value in dynamic_tags.items():
         key_tag = etree.Element(key)
         dynamic_tag.append(key_tag)
@@ -334,3 +300,26 @@ def build_mh_sidecar(
     xml = etree.tostring(root, pretty_print=True).decode()
 
     return xml
+
+
+def add_fields_to_xml(root, fields: dict[str, str]):
+    for key, values in fields.items():
+        for value in values:
+            splitted = key.split(".")
+            xml_tag = root
+            for tag in splitted:
+                if (
+                    not tag.endswith("[]")
+                    and xml_tag.find(tag, namespaces=NSMAP) is not None
+                ):
+                    xml_tag = xml_tag.find(tag, namespaces=NSMAP)
+                    continue
+                tag = tag.removesuffix("[]")
+
+                prefix = tag.rpartition(":")[0]
+                tag = tag.rpartition(":")[2]
+                new = etree.Element(etree.QName(NSMAP.get(prefix), tag), nsmap=NSMAP)
+
+                xml_tag.append(new)
+                xml_tag = new
+            xml_tag.text = value

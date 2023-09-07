@@ -111,40 +111,12 @@ def get_sip_info(graph: rdflib.Graph) -> SIP:
         if sip_type.startswith(graph.namespace_manager.compute_qname(sip_node)[1]):
             sip_profile = graph.namespace_manager.compute_qname(sip_type)[2]
 
+    # sip_ies = get_intellectual_entities(graph)
     sip_representations = get_representations(graph)
 
-    sip = SIP(sip_id, sip_profile, sip_representations)
+    sip = SIP(sip_id, sip_profile, [], sip_representations)
 
     return sip
-
-
-def get_local_ids_from_graph(graph: rdflib.Graph) -> dict[str, str]:
-    """Retrieves the localids from a given graph.
-
-    Args:
-        graph (rdflib.Graph): The metadata graph of the SIP.
-
-    Returns:
-        dict[str, str]: A dict where the key is the type of localid, and the value the localid
-    """
-    localids = {}
-    for identifier_object in graph.objects(
-        predicate=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/identifier")
-    ):
-        type = graph.namespace_manager.compute_qname(
-            graph.value(
-                predicate=rdflib.URIRef(
-                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-                ),
-                subject=identifier_object,
-            )
-        )[2]
-        value = graph.value(
-            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#value"),
-            subject=identifier_object,
-        )
-        localids[type] = str(value)
-    return localids
 
 
 def get_pid_from_graph(graph: rdflib.Graph) -> str:
