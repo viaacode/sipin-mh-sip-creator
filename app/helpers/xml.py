@@ -1,18 +1,10 @@
-import rdflib
 import metsrw
+import rdflib
 from lxml import etree
 
-from app.helpers.graph import (
-    get_cp_id_from_graph,
-    get_representations,
-)
-
-from app.helpers.mappers import local_id_mapper, creator_mapper
-
-from app.helpers.transformers import (
-    dimension_transform,
-    language_code_transform,
-)
+from app.helpers.graph import get_cp_id_from_graph, get_representations
+from app.helpers.mappers import creator_mapper, license_mapper, local_id_mapper
+from app.helpers.transformers import dimension_transform, language_code_transform
 
 MH_VERSION = "22.1"
 
@@ -21,7 +13,7 @@ NSMAP = {
     "mh": f"https://zeticon.mediahaven.com/metadata/{MH_VERSION}/mh/",
 }
 
-MAPPING = {
+MAPPING: dict = {
     "http://purl.org/dc/terms/title": {
         "targets": [
             "mhs:Descriptive.mh:Title",
@@ -55,7 +47,8 @@ MAPPING = {
         "transformer": language_code_transform,
     },
     "http://purl.org/dc/terms/license": {
-        "targets": ["mhs:Dynamic.dc_rights_licenses.multiselect[]"]
+        "mapping_strategy": license_mapper,
+        "targets": ["mhs:Dynamic.dc_rights_licenses.multiselect[]"],
     },
     "http://purl.org/dc/terms/rights": {"targets": ["mhs:Dynamic.dc_rights_comment"]},
     "http://purl.org/dc/terms/rightsHolder": {
