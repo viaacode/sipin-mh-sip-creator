@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+
 from app.models.intellectual_entity import IntellectualEntity
 from app.models.representation import Representation
 

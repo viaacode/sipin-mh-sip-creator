@@ -1,8 +1,7 @@
 import json
 import shutil
-from pathlib import Path
-import json
 import zipfile
+from pathlib import Path
 
 import rdflib
 from cloudevents.events import (
