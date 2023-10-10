@@ -44,8 +44,6 @@
       <Regisseur>Test regisseur naam</Regisseur>
       <Fotograaf>Cedric Verhelst</Fotograaf>
     </dc_creators>
-    <PID>testpid</PID>
-    <CP_id>OR-5h7bt1n</CP_id>
     <dc_identifier_localids>
       <Acquisition_number>acquisitie3333</Acquisition_number>
       <Alternative_number>alt444</Alternative_number>
@@ -65,6 +63,8 @@
       <WorkPID>pid16</WorkPID>
       <MEEMOO-PID>7m03z1634f</MEEMOO-PID>
     </dc_identifier_localids>
+    <PID>testpid</PID>
+    <CP_id>OR-5h7bt1n</CP_id>
     <sp_name>sipin</sp_name>
   </mhs:Dynamic>
 </mhs:Sidecar>
