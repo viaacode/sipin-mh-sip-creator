@@ -170,8 +170,8 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
             ),
         ):
             f = File(
-                str(file),
-                str(
+                id=str(file),
+                filename=str(
                     graph.value(
                         subject=file,
                         predicate=rdflib.URIRef(
@@ -179,7 +179,7 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
                         ),
                     )
                 ),
-                str(
+                fixity=str(
                     graph.value(
                         subject=graph.value(
                             subject=file,
@@ -189,6 +189,7 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
                         )
                     )
                 ),
+                node=file,
             )
             r.files.append(f)
     return representations

@@ -41,7 +41,6 @@ def creator_mapper(graph, creators):
     mapping = {}
 
     for creator in creators:
-        x = str(creator)
         creator_role = graph.value(
             subject=creator, predicate=rdflib.URIRef("https://schema.org/roleName")
         )
@@ -58,5 +57,22 @@ def creator_mapper(graph, creators):
         name = str(creator_name)
 
         mapping[role] = [*mapping.get(role, []), name]
+
+    return mapping
+
+
+def geometry_mapper(graph, geometries):
+    mapping = {}
+
+    for geometry in geometries:
+        faces = graph.value(subject=geometry, predicate=rdflib.URIRef("https://www.w3id.org/gom#hasFaces"))
+        vertices = graph.value(subject=geometry, predicate=rdflib.URIRef("https://www.w3id.org/gom#hasVertices"))
+
+        if faces:
+            mapping["mhs:Dynamic.mesh_geometry.number_of_triangles"] = [str(faces)]
+        
+        if vertices:
+            mapping["mhs:Dynamic.mesh_geometry.number_of_vertices"] = [str(vertices)]
+        
 
     return mapping

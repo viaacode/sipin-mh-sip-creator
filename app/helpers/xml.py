@@ -7,7 +7,7 @@ from app.helpers.graph import (
     get_representations,
 )
 
-from app.helpers.mappers import local_id_mapper, creator_mapper
+from app.helpers.mappers import local_id_mapper, creator_mapper, geometry_mapper
 
 from app.helpers.transformers import (
     dimension_transform,
@@ -91,12 +91,13 @@ MAPPING = {
     },
     "https://schema.org/creator": {
         "mapping_strategy": creator_mapper,
-        "targets": ["mhs:Dynamic.dc_creators.Maker[]"],
     },
     "http://www.loc.gov/premis/rdf/v3/identifier": {
         "mapping_strategy": local_id_mapper,
-        "targets": ["mhs:Dynamic.dc_test.test[]"],
     },
+    "http://www.w3id.org/omg#hasGeometry": {
+        "mapping_strategy": geometry_mapper,
+    }
 }
 
 
@@ -142,7 +143,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(g, ie, pid),
+        build_mh_sidecar(g, [ie], pid),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -159,7 +160,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
             representation_media.add_dmdsec(
                 build_mh_sidecar(
                     g,
-                    representation.node,
+                    [representation.node, file.node],
                     f"{pid}_{representation_index}_{file_index}",
                 ),
                 "OTHER",
@@ -223,7 +224,7 @@ def build_minimal_sidecar(external_id: str) -> str:
 
 def build_mh_sidecar(
     g: rdflib.Graph,
-    subject,
+    subjects,
     pid: str,
     dynamic_tags: dict[str, str] = {},
 ) -> str:
@@ -246,29 +247,30 @@ def build_mh_sidecar(
     id_node.text = pid
 
     # Add mappable fields to the XML
-    for predicate in MAPPING.keys():
-        map = {}
-        if MAPPING[predicate].get("mapping_strategy"):
-            map = MAPPING[predicate]["mapping_strategy"](
-                g, g.objects(predicate=rdflib.URIRef(predicate), subject=subject)
-            )
-        else:
-            for key in MAPPING[predicate]["targets"]:
-                for obj in g.objects(
-                    predicate=rdflib.URIRef(predicate), subject=subject
-                ):
-                    if MAPPING[predicate].get("transformer"):
-                        if type(obj) == rdflib.URIRef:
-                            result = g.predicate_objects(subject=obj)
-                            obj = MAPPING[predicate]["transformer"](result)
-                            obj = rdflib.Literal(obj)
-                        else:
-                            obj = rdflib.Literal(MAPPING[predicate]["transformer"](obj))
-                    if obj.language and obj.language != "nl":
-                        # Skip non dutch fields.
-                        continue
-                    map[key] = [*map.get(key, []), str(obj)]
-        add_fields_to_xml(root, map)
+    for subject in subjects:
+        for predicate in MAPPING.keys():
+            map = {}
+            if MAPPING[predicate].get("mapping_strategy"):
+                map = MAPPING[predicate]["mapping_strategy"](
+                    g, g.objects(predicate=rdflib.URIRef(predicate), subject=subject)
+                )
+            else:
+                for key in MAPPING[predicate]["targets"]:
+                    for obj in g.objects(
+                        predicate=rdflib.URIRef(predicate), subject=subject
+                    ):
+                        if MAPPING[predicate].get("transformer"):
+                            if type(obj) == rdflib.URIRef:
+                                result = g.predicate_objects(subject=obj)
+                                obj = MAPPING[predicate]["transformer"](result)
+                                obj = rdflib.Literal(obj)
+                            else:
+                                obj = rdflib.Literal(MAPPING[predicate]["transformer"](obj))
+                        if obj.language and obj.language != "nl":
+                            # Skip non dutch fields.
+                            continue
+                        map[key] = [*map.get(key, []), str(obj)]
+            add_fields_to_xml(root, map)
 
     # Add some extra dynamic metadata
     # Create Dynamic node if needed
