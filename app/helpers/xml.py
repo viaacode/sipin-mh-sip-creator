@@ -1,6 +1,7 @@
 import rdflib
 import metsrw
 from lxml import etree
+from rdflib.term import Node
 
 from app.helpers.graph import (
     get_cp_id_from_graph,
@@ -14,6 +15,7 @@ from app.helpers.transformers import (
     language_code_transform,
 )
 
+
 MH_VERSION = "22.1"
 
 NSMAP = {
@@ -21,7 +23,7 @@ NSMAP = {
     "mh": f"https://zeticon.mediahaven.com/metadata/{MH_VERSION}/mh/",
 }
 
-MAPPING = {
+MAPPING: dict = {
     "http://purl.org/dc/terms/title": {
         "targets": [
             "mhs:Descriptive.mh:Title",
@@ -97,7 +99,7 @@ MAPPING = {
     },
     "http://www.w3id.org/omg#hasGeometry": {
         "mapping_strategy": geometry_mapper,
-    }
+    },
 }
 
 
@@ -265,8 +267,10 @@ def build_mh_sidecar(
                                 obj = MAPPING[predicate]["transformer"](result)
                                 obj = rdflib.Literal(obj)
                             else:
-                                obj = rdflib.Literal(MAPPING[predicate]["transformer"](obj))
-                        if obj.language and obj.language != "nl":
+                                obj = rdflib.Literal(
+                                    MAPPING[predicate]["transformer"](obj)
+                                )
+                        if type(obj) == rdflib.Literal and obj.language and obj.language != "nl":
                             # Skip non dutch fields.
                             continue
                         map[key] = [*map.get(key, []), str(obj)]
