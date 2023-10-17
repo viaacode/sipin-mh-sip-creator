@@ -72,15 +72,15 @@ MAPPING = {
     },
     "http://www.loc.gov/premis/v3#fixity": {"targets": ["mhs:Dynamic.md5_viaa"]},
     "https://schema.org/height": {
-        "targets": ["mhs:Dynamic.height"],
+        "targets": ["mhs:Dynamic.dimensions.height_in_mm"],
         "transformer": dimension_transform,
     },
     "https://schema.org/width": {
-        "targets": ["mhs:Dynamic.width"],
+        "targets": ["mhs:Dynamic.dimensions.width_in_mm"],
         "transformer": dimension_transform,
     },
     "https://schema.org/depth": {
-        "targets": ["mhs:Dynamic.depth"],
+        "targets": ["mhs:Dynamic.dimensions.depth_in_mm"],
         "transformer": dimension_transform,
     },
     "https://schema.org/artForm": {
