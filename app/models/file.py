@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from rdflib.term import Node
 
 
@@ -9,4 +10,4 @@ class File:
     id: str
     filename: str
     fixity: str
-    node: Node    
+    node: Node

@@ -1,8 +1,8 @@
 import rdflib
 
 from app.models.file import File
-from app.models.sip import SIP
 from app.models.representation import Representation
+from app.models.sip import SIP
 
 
 class GraphException(Exception):

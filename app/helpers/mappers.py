@@ -65,14 +65,19 @@ def geometry_mapper(graph, geometries):
     mapping = {}
 
     for geometry in geometries:
-        faces = graph.value(subject=geometry, predicate=rdflib.URIRef("https://www.w3id.org/gom#hasFaces"))
-        vertices = graph.value(subject=geometry, predicate=rdflib.URIRef("https://www.w3id.org/gom#hasVertices"))
+        faces = graph.value(
+            subject=geometry,
+            predicate=rdflib.URIRef("https://www.w3id.org/gom#hasFaces"),
+        )
+        vertices = graph.value(
+            subject=geometry,
+            predicate=rdflib.URIRef("https://www.w3id.org/gom#hasVertices"),
+        )
 
         if faces:
             mapping["mhs:Dynamic.mesh_geometry.number_of_triangles"] = [str(faces)]
-        
+
         if vertices:
             mapping["mhs:Dynamic.mesh_geometry.number_of_vertices"] = [str(vertices)]
-        
 
     return mapping

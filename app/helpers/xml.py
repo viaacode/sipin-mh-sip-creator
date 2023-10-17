@@ -1,20 +1,11 @@
-import rdflib
 import metsrw
+import rdflib
 from lxml import etree
 from rdflib.term import Node
 
-from app.helpers.graph import (
-    get_cp_id_from_graph,
-    get_representations,
-)
-
-from app.helpers.mappers import local_id_mapper, creator_mapper, geometry_mapper
-
-from app.helpers.transformers import (
-    dimension_transform,
-    language_code_transform,
-)
-
+from app.helpers.graph import get_cp_id_from_graph, get_representations
+from app.helpers.mappers import creator_mapper, geometry_mapper, local_id_mapper
+from app.helpers.transformers import dimension_transform, language_code_transform
 
 MH_VERSION = "22.1"
 
@@ -270,7 +261,11 @@ def build_mh_sidecar(
                                 obj = rdflib.Literal(
                                     MAPPING[predicate]["transformer"](obj)
                                 )
-                        if type(obj) == rdflib.Literal and obj.language and obj.language != "nl":
+                        if (
+                            type(obj) == rdflib.Literal
+                            and obj.language
+                            and obj.language != "nl"
+                        ):
                             # Skip non dutch fields.
                             continue
                         map[key] = [*map.get(key, []), str(obj)]
