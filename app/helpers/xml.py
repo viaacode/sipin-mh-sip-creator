@@ -4,8 +4,17 @@ from lxml import etree
 from rdflib.term import Node
 
 from app.helpers.graph import get_cp_id_from_graph, get_representations
-from app.helpers.mappers import creator_mapper, geometry_mapper, local_id_mapper
-from app.helpers.transformers import dimension_transform, language_code_transform
+from app.helpers.mappers import (
+    creator_mapper,
+    geometry_mapper,
+    local_id_mapper,
+    title_mapper,
+)
+from app.helpers.transformers import (
+    dimension_transform,
+    language_code_transform,
+    name_transform,
+)
 
 MH_VERSION = "22.1"
 
@@ -91,6 +100,27 @@ MAPPING: dict = {
     "http://www.w3id.org/omg#hasGeometry": {
         "mapping_strategy": geometry_mapper,
     },
+    "https://data.hetarchief.be/ns/object/light-metering": {
+        "targets": ["mhs:Dynamic.light_metering"]
+    },
+    "https://data.hetarchief.be/ns/object/scan-setup": {
+        "targets": ["mhs:Dynamic.scanning.scansetup"]
+    },
+    "https://data.hetarchief.be/ns/object/height-calibration-object": {
+        "targets": [
+            "mhs:Dynamic.mesh_geometry.height_calibration_object",
+            "mhs:Dynamic.mesh_geometry.height_calibration_object_in_mm",
+        ],
+        "transformer": dimension_transform,
+    },
+    "http://id.loc.gov/vocabulary/preservation/eventRelatedAgentRole/exe": {
+        "targets": ["mhs:Dynamic.post_processing_software"],
+        "transformer": name_transform,
+    },
+    "https://schema.org/isPartOf": {"mapping_strategy": title_mapper},
+    "http://www.loc.gov/premis/rdf/v3/note": {
+        "targets": ["mhs:Dynamic.qc_note"]
+    }
 }
 
 
@@ -153,7 +183,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
             representation_media.add_dmdsec(
                 build_mh_sidecar(
                     g,
-                    [representation.node, file.node],
+                    [representation.node, file.node, *representation.events],
                     f"{pid}_{representation_index}_{file_index}",
                 ),
                 "OTHER",
