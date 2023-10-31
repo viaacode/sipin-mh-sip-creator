@@ -118,9 +118,7 @@ MAPPING: dict = {
         "transformer": name_transform,
     },
     "https://schema.org/isPartOf": {"mapping_strategy": title_mapper},
-    "http://www.loc.gov/premis/rdf/v3/note": {
-        "targets": ["mhs:Dynamic.qc_note"]
-    }
+    "http://www.loc.gov/premis/rdf/v3/note": {"targets": ["mhs:Dynamic.qc_note"]},
 }
 
 
@@ -135,7 +133,9 @@ def qname_text(ns: str, local_name: str) -> str:
     return f"{lxmlns(ns)}{local_name}"
 
 
-def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
+def build_mh_mets(
+    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+) -> str:
     ie = g.value(
         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
@@ -166,7 +166,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(g, [ie], pid),
+        build_mh_sidecar(g, [ie], pid, dynamic_tags),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -185,6 +185,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
                     g,
                     [representation.node, file.node, *representation.events],
                     f"{pid}_{representation_index}_{file_index}",
+                    dynamic_tags,
                 ),
                 "OTHER",
                 **{
@@ -319,9 +320,10 @@ def build_mh_sidecar(
     cp_tag.text = get_cp_id_from_graph(g)
 
     for key, value in dynamic_tags.items():
-        key_tag = etree.Element(key)
-        dynamic_tag.append(key_tag)
-        key_tag.text = value
+        if value:
+            key_tag = etree.Element(key)
+            dynamic_tag.append(key_tag)
+            key_tag.text = value
 
     # Add sp_name/workflow
     sp_tag = etree.Element("sp_name")

@@ -116,12 +116,15 @@ def title_mapper(graph, titles) -> dict[str, list[str]]:
                     )
                     part_type = f"deel{type_text}"
                     mapping[f"mhs:Dynamic.dc_titles.{part_type}"] = [str(part_name)]
-        if season_number := graph.value(subject=title, predicate=rdflib.URIRef("https://schema.org/seasonNumber")):
+        if season_number := graph.value(
+            subject=title, predicate=rdflib.URIRef("https://schema.org/seasonNumber")
+        ):
             mapping[f"mhs:Dynamic.dc_titles.{type_text}nummer"] = [str(season_number)]
-        if series_position := graph.value(subject=title, predicate=rdflib.URIRef("https://schema.org/position")):
+        if series_position := graph.value(
+            subject=title, predicate=rdflib.URIRef("https://schema.org/position")
+        ):
             mapping[f"mhs:Dynamic.dc_titles.{type_text}nummer"] = [str(series_position)]
-                    
-        
+
         mapping[f"mhs:Dynamic.dc_titles.{type_text}"] = [str(name)]
-        
+
     return mapping

@@ -10,6 +10,7 @@ class SIP:
 
     id: str
     profile: str
+    batch_id: str = ""
     intellectual_entities: list[IntellectualEntity] = field(
         default_factory=list[IntellectualEntity]
     )

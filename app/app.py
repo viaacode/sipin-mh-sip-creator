@@ -103,7 +103,9 @@ class EventListener:
                     "http://www.loc.gov/premis/rdf/v3/IntellectualEntity"
                 ),
             )
-            sidecar = xml.build_mh_sidecar(metadata_graph, ie, pid, {"md5": md5})
+            sidecar = xml.build_mh_sidecar(
+                metadata_graph, ie, pid, {"md5": md5, "batch_id": sip.batch_id}
+            )
 
             essence_filepath = Path(
                 path, "data/representations/representation_1/data", filename
@@ -160,7 +162,10 @@ class EventListener:
 
                 # Generate mets xml
                 mets_xml = xml.build_mh_mets(
-                    metadata_graph, pid, self.app_config["archive_location"]
+                    metadata_graph,
+                    pid,
+                    self.app_config["archive_location"],
+                    {"batch_id": sip.batch_id},
                 )
                 # Write xml to the complex folder
                 with open(Path(files_path, "mets.xml"), "w") as mets_file:

@@ -111,10 +111,27 @@ def get_sip_info(graph: rdflib.Graph) -> SIP:
         if sip_type.startswith(graph.namespace_manager.compute_qname(sip_node)[1]):
             sip_profile = graph.namespace_manager.compute_qname(sip_type)[2]
 
+    batch_id = ""
+    if sip_batch_id := graph.value(
+        subject=sip_node, predicate=rdflib.URIRef("https://schema.org/isPartOf")
+    ):
+        type = graph.value(
+            subject=sip_batch_id,
+            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        )
+        type_text = graph.namespace_manager.compute_qname(type)[2]
+        if type_text == "Batch":
+            batch_id = str(
+                graph.value(
+                    subject=sip_batch_id,
+                    predicate=rdflib.URIRef("https://schema.org/identifier"),
+                )
+            )
+
     # sip_ies = get_intellectual_entities(graph)
     sip_representations = get_representations(graph)
 
-    sip = SIP(sip_id, sip_profile, [], sip_representations)
+    sip = SIP(sip_id, sip_profile, batch_id, [], sip_representations)
 
     return sip
 
@@ -159,10 +176,14 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
         )
 
         events = []
-        event_nodes = list(graph.subjects(
-            object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Event"),
-            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        ))
+        event_nodes = list(
+            graph.subjects(
+                object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Event"),
+                predicate=rdflib.URIRef(
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                ),
+            )
+        )
 
         for event_node in event_nodes:
             if event := graph.value(

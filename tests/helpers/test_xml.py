@@ -20,11 +20,13 @@ def material_artwork_ttl_graph():
         ttl = f.read()
     return ttl
 
+
 @pytest.fixture
 def three_dimensional_ttl_graph():
     with open("./tests/resources/3d.ttl", "r") as f:
         ttl = f.read()
     return ttl
+
 
 @pytest.fixture
 def material_artwork_minimal_rep_graph():
@@ -78,6 +80,8 @@ def local_id_graphs(request):
         "amount_of_localids": request.param[1],
         "has_main_localid": request.param[0],
     }
+
+
 @pytest.fixture
 def mh_sidecar_material_artwork_minimal_rep_xml():
     with open("./tests/resources/sidecar_material_artwork_minimal_rep.xml", "r") as f:
@@ -122,14 +126,16 @@ def test_build_material_artwork_mets(material_artwork_ttl_graph):
     assert not "Tape" in mets
     assert mets
 
+
 def test_build_3d_mets(three_dimensional_ttl_graph):
     g = parse_graph(three_dimensional_ttl_graph, "ttl")
 
-    mets = build_mh_mets(g, "testpid", "Disk")
+    mets = build_mh_mets(g, "testpid", "Disk", {"batch_id": "batch-idke"})
 
     assert "16354987" in mets
     assert "13548987" in mets
     assert mets
+
 
 def test_build_minimal_sidecar(minicar_xml):
     minicar = build_minimal_sidecar("abcdefgh")
@@ -156,6 +162,7 @@ def test_localids_in_sidecar(local_id_graphs):
     assert len(localid) == local_id_graphs["has_main_localid"]
 
     pass
+
 
 def test_build_mh_sidecar_material_artwork_minimal_rep(
     material_artwork_minimal_rep_graph, mh_sidecar_material_artwork_minimal_rep_xml
