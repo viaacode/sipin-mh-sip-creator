@@ -243,7 +243,7 @@ haSipId:PRD-BD-OR-x921j0n-2022-11-10-001 a haSip:Batch ;
 haSipId:uuid-de61d4af-d19c-4cc7-864d-55573875b438 a haSip:SIP ;
     dct:conformsTo haSipId:material-artwork,
         <https://earksip.dilcis.eu/profile/E-ARK-SIP.xml> ;
-    dct:format "Physical Object" ;
+    dct:format "Scanned 3D Objects (output from photogrammetry scanning)" ;
     schema:agent [ a schema:Role ;
             schema:agent haOrgId:OR-5h7bt1n ;
             schema:roleName "ARCHIVIST" ],

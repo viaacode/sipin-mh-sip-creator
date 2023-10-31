@@ -185,7 +185,6 @@ def build_mh_mets(
                     g,
                     [representation.node, file.node, *representation.events],
                     f"{pid}_{representation_index}_{file_index}",
-                    dynamic_tags,
                 ),
                 "OTHER",
                 **{

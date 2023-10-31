@@ -128,10 +128,27 @@ def get_sip_info(graph: rdflib.Graph) -> SIP:
                 )
             )
 
+    format = ""
+    if format_node := graph.value(
+        subject=sip_node, predicate=rdflib.URIRef("http://purl.org/dc/terms/format")
+    ):
+        format_mapping = {
+            "Photographs - Digital": "photo",
+            "Scanned 3D Objects (output from photogrammetry scanning)": "3D-model",
+        }
+        format = format_mapping.get(str(format_node), "")
+
     # sip_ies = get_intellectual_entities(graph)
     sip_representations = get_representations(graph)
 
-    sip = SIP(sip_id, sip_profile, batch_id, [], sip_representations)
+    sip = SIP(
+        id=sip_id,
+        profile=sip_profile,
+        batch_id=batch_id,
+        format=format,
+        intellectual_entities=[],
+        representations=sip_representations,
+    )
 
     return sip
 
