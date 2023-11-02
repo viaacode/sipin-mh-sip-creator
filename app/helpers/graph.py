@@ -1,8 +1,8 @@
 import rdflib
 
 from app.models.file import File
-from app.models.sip import SIP
 from app.models.representation import Representation
+from app.models.sip import SIP
 
 
 class GraphException(Exception):
@@ -158,8 +158,27 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
             predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#hiddenLabel"),
         )
 
+        events = []
+        event_nodes = list(graph.subjects(
+            object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Event"),
+            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        ))
+
+        for event_node in event_nodes:
+            if event := graph.value(
+                subject=event_node, object=representation, predicate=None
+            ):
+                events.append(event)
+
+            # events = graph.subjects(
+            #     object=representation,
+            #     predicate=rdflib.URIRef(
+            #         "http://id.loc.gov/vocabulary/preservation/eventRelatedObjectRole/out"
+            #     ),
+            # )
+
         r = Representation(
-            id=str(representation), label=str(label), node=representation
+            id=str(representation), label=str(label), node=representation, events=events
         )
 
         representations.append(r)

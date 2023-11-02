@@ -1,8 +1,7 @@
 import json
 import shutil
-from pathlib import Path
-import json
 import zipfile
+from pathlib import Path
 
 import rdflib
 from cloudevents.events import (
@@ -97,8 +96,12 @@ class EventListener:
             filename = Path(sip.representations[0].files[0].filename)
             md5 = sip.representations[0].files[0].fixity
             ie = metadata_graph.value(
-                predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-                object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+                predicate=rdflib.URIRef(
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                ),
+                object=rdflib.URIRef(
+                    "http://www.loc.gov/premis/rdf/v3/IntellectualEntity"
+                ),
             )
             sidecar = xml.build_mh_sidecar(metadata_graph, ie, pid, {"md5": md5})
 
@@ -156,7 +159,9 @@ class EventListener:
                     )
 
                 # Generate mets xml
-                mets_xml = xml.build_mh_mets(metadata_graph, pid, self.app_config["archive_location"])
+                mets_xml = xml.build_mh_mets(
+                    metadata_graph, pid, self.app_config["archive_location"]
+                )
                 # Write xml to the complex folder
                 with open(Path(files_path, "mets.xml"), "w") as mets_file:
                     mets_file.write(mets_xml)

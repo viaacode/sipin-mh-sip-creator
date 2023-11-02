@@ -1,8 +1,8 @@
 import rdflib
 
 
-def local_id_mapper(graph, objects):
-    mapping = {}
+def local_id_mapper(graph, objects) -> dict[str, list[str]]:
+    mapping: dict[str, list[str]] = {}
     local_ids = {}
     for object in objects:
         type = graph.namespace_manager.compute_qname(
@@ -37,8 +37,8 @@ def local_id_mapper(graph, objects):
     return mapping
 
 
-def creator_mapper(graph, creators):
-    mapping = {}
+def creator_mapper(graph, creators) -> dict[str, list[str]]:
+    mapping: dict[str, list[str]] = {}
 
     for creator in creators:
         creator_role = graph.value(
@@ -61,18 +61,67 @@ def creator_mapper(graph, creators):
     return mapping
 
 
-def geometry_mapper(graph, geometries):
-    mapping = {}
+def geometry_mapper(graph, geometries) -> dict[str, list[str]]:
+    mapping: dict[str, list[str]] = {}
 
     for geometry in geometries:
-        faces = graph.value(subject=geometry, predicate=rdflib.URIRef("https://www.w3id.org/gom#hasFaces"))
-        vertices = graph.value(subject=geometry, predicate=rdflib.URIRef("https://www.w3id.org/gom#hasVertices"))
+        faces = graph.value(
+            subject=geometry,
+            predicate=rdflib.URIRef("https://www.w3id.org/gom#hasFaces"),
+        )
+        vertices = graph.value(
+            subject=geometry,
+            predicate=rdflib.URIRef("https://www.w3id.org/gom#hasVertices"),
+        )
 
         if faces:
             mapping["mhs:Dynamic.mesh_geometry.number_of_triangles"] = [str(faces)]
-        
+
         if vertices:
             mapping["mhs:Dynamic.mesh_geometry.number_of_vertices"] = [str(vertices)]
-        
 
+    return mapping
+
+
+def title_mapper(graph, titles) -> dict[str, list[str]]:
+    type_map = {
+        "BroadcastEvent": "programma",
+        "ArchiveComponent": "archief",
+        "Episode": "episode",
+        "CreativeWorkSeason": "seizoen",
+        "CreativeWorkSeries": "serie",
+        "Collection": "collectie",
+    }
+    mapping = {}
+    for title in titles:
+        name = graph.value(
+            subject=title, predicate=rdflib.URIRef("https://schema.org/name")
+        )
+        type = graph.value(
+            subject=title,
+            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        )
+        type_text = type_map[graph.namespace_manager.compute_qname(type)[2]]
+        parts = list(
+            graph.objects(
+                subject=title, predicate=rdflib.URIRef("https://schema.org/hasPart")
+            )
+        )
+        if len(parts) > 1:
+            for part in parts:
+                if graph.value(subject=part, object=type, predicate=None):
+                    part_name = graph.value(
+                        subject=part,
+                        predicate=rdflib.URIRef("https://schema.org/name"),
+                    )
+                    part_type = f"deel{type_text}"
+                    mapping[f"mhs:Dynamic.dc_titles.{part_type}"] = [str(part_name)]
+        if season_number := graph.value(subject=title, predicate=rdflib.URIRef("https://schema.org/seasonNumber")):
+            mapping[f"mhs:Dynamic.dc_titles.{type_text}nummer"] = [str(season_number)]
+        if series_position := graph.value(subject=title, predicate=rdflib.URIRef("https://schema.org/position")):
+            mapping[f"mhs:Dynamic.dc_titles.{type_text}nummer"] = [str(series_position)]
+                    
+        
+        mapping[f"mhs:Dynamic.dc_titles.{type_text}"] = [str(name)]
+        
     return mapping

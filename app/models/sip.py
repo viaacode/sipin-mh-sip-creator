@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+
 from app.models.intellectual_entity import IntellectualEntity
 from app.models.representation import Representation
 
@@ -9,5 +10,7 @@ class SIP:
 
     id: str
     profile: str
-    intellectual_entities: list[IntellectualEntity] = field(default_factory=list[IntellectualEntity])
+    intellectual_entities: list[IntellectualEntity] = field(
+        default_factory=list[IntellectualEntity]
+    )
     representations: list[Representation] = field(default_factory=list[Representation])

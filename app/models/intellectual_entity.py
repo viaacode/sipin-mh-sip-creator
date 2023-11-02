@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
+
 from rdflib.term import Node
+
 from app.models.representation import Representation
 
 
