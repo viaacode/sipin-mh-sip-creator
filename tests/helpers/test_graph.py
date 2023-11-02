@@ -31,6 +31,13 @@ def material_artwork_ttl_graph():
     return ttl
 
 
+@pytest.fixture
+def threed_ttl_graph():
+    with open("./tests/resources/3d.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
+
 def test_parse_json_graph_json_ld(json_ld_graph):
     assert parse_graph(json_ld_graph, "json-ld")
 
@@ -66,6 +73,7 @@ def test_get_cp_id_from_graph(json_ld_graph):
     cp_id = get_cp_id_from_graph(graph)
 
     assert cp_id == "OR-5h7bt1n"
+
 
 def test_get_pid_from_turtle_graph(material_artwork_ttl_graph):
     graph = parse_graph(material_artwork_ttl_graph, "turtle")
@@ -110,3 +118,14 @@ def test_get_sip_info(json_ld_graph):
     assert sip.id == "uuid-de61d4af-d19c-4cc7-864d-55573875b438"
     assert sip.profile == "basic"
     assert len(sip.representations) == 1
+
+
+def test_get_sip_info_3d(threed_ttl_graph):
+    graph = parse_graph(threed_ttl_graph, format="ttl")
+
+    sip = get_sip_info(graph)
+
+    assert sip.profile == "material-artwork"
+    assert len(sip.representations) == 4
+    assert sip.batch_id == "PRD-BD-OR-x921j0n-2022-11-10-001"
+    assert sip.format == "3D-model"

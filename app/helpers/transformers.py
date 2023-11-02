@@ -22,3 +22,10 @@ def dimension_transform(graph_result) -> str:
 
 def language_code_transform(bcp47_code) -> str:
     return bcp47_code[0:2]
+
+def name_transform(graph_result) -> str:
+    name = ""
+    for obj in graph_result:
+        if obj[0] == rdflib.URIRef("https://schema.org/name"):
+            name = obj[1].toPython()
+    return name
