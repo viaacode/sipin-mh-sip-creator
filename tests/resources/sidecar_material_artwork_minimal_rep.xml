@@ -3,6 +3,15 @@
     <mh:ExternalId>testpid</mh:ExternalId>
   </mhs:Administrative>
   <mhs:Dynamic>
+    <dc_rights_licenses>
+      <multiselect>VIAA-ONDERWIJS</multiselect>
+      <multiselect>VIAA-ONDERZOEK</multiselect>
+      <multiselect>VIAA-INTRA_CP-CONTENT</multiselect>
+      <multiselect>VIAA-INTRA_CP-METADATA-ALL</multiselect>
+      <multiselect>VIAA-PUBLIEK-METADATA-LTD</multiselect>
+      <multiselect>BEZOEKERTOOL-CONTENT</multiselect>
+      <multiselect>BEZOEKERTOOL-METADATA-ALL</multiselect>
+    </dc_rights_licenses>
     <PID>testpid</PID>
     <CP_id>OR-5h7bt1n</CP_id>
     <sp_name>sipin</sp_name>

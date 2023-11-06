@@ -61,6 +61,28 @@ def creator_mapper(graph, creators) -> dict[str, list[str]]:
     return mapping
 
 
+def license_mapper(graph, licenses):
+    license_list = list(licenses)
+    mapping = {}
+    if license_list:
+        mapping = {
+            "mhs:Dynamic.dc_rights_licenses.multiselect[]": [
+                str(license) for license in license_list
+            ]
+        }
+    else:
+        mapping = {
+            "mhs:Dynamic.dc_rights_licenses.multiselect[]": [
+                "VIAA-ONDERWIJS",
+                "VIAA-ONDERZOEK",
+                "VIAA-INTRA_CP-CONTENT",
+                "VIAA-INTRA_CP-METADATA-ALL",
+                "VIAA-PUBLIEK-METADATA-LTD",
+                "BEZOEKERTOOL-CONTENT",
+                "BEZOEKERTOOL-METADATA-ALL",
+            ]
+        }
+
 def geometry_mapper(graph, geometries) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
 

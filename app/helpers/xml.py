@@ -1,6 +1,7 @@
 import metsrw
 import rdflib
 from lxml import etree
+
 from rdflib.term import Node
 
 from app.helpers.graph import get_cp_id_from_graph, get_representations
@@ -9,6 +10,7 @@ from app.helpers.mappers import (
     geometry_mapper,
     local_id_mapper,
     title_mapper,
+    license_mapper
 )
 from app.helpers.transformers import (
     dimension_transform,
@@ -57,7 +59,8 @@ MAPPING: dict = {
         "transformer": language_code_transform,
     },
     "http://purl.org/dc/terms/license": {
-        "targets": ["mhs:Dynamic.dc_rights_licenses.multiselect[]"]
+        "mapping_strategy": license_mapper,
+        "targets": ["mhs:Dynamic.dc_rights_licenses.multiselect[]"],
     },
     "http://purl.org/dc/terms/rights": {"targets": ["mhs:Dynamic.dc_rights_comment"]},
     "http://purl.org/dc/terms/rightsHolder": {
