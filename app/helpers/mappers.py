@@ -82,6 +82,7 @@ def license_mapper(graph, licenses):
                 "BEZOEKERTOOL-METADATA-ALL",
             ]
         }
+    return mapping
 
 def geometry_mapper(graph, geometries) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
