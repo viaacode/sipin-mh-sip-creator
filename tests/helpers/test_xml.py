@@ -22,6 +22,13 @@ def material_artwork_ttl_graph():
 
 
 @pytest.fixture
+def three_dimensional_ttl_graph():
+    with open("./tests/resources/3d.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
+
+@pytest.fixture
 def material_artwork_minimal_rep_graph():
     with open("./tests/resources/materialartwork_minimal_rep.ttl", "r") as f:
         ttl = f.read()
@@ -73,6 +80,8 @@ def local_id_graphs(request):
         "amount_of_localids": request.param[1],
         "has_main_localid": request.param[0],
     }
+
+
 @pytest.fixture
 def mh_sidecar_material_artwork_minimal_rep_xml():
     with open("./tests/resources/sidecar_material_artwork_minimal_rep.xml", "r") as f:
@@ -89,7 +98,7 @@ def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
     )
 
     sidecar = build_mh_sidecar(
-        g, ie, "testpid", {"md5": "18513a8d61c6f2cbaaeeedd754b01d6b"}
+        g, [ie], "testpid", {"md5": "18513a8d61c6f2cbaaeeedd754b01d6b"}
     )
 
     assert sidecar == mh_sidecar_xml
@@ -103,7 +112,7 @@ def test_build_mh_sidecar_ttl(material_artwork_ttl_graph, mh_sidecar_fit_xml):
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
     )
 
-    sidecar = build_mh_sidecar(g, ie, "testpid")
+    sidecar = build_mh_sidecar(g, [ie], "testpid")
 
     assert sidecar == mh_sidecar_fit_xml
 
@@ -115,6 +124,16 @@ def test_build_material_artwork_mets(material_artwork_ttl_graph):
 
     assert "Disk" in mets
     assert not "Tape" in mets
+    assert mets
+
+
+def test_build_3d_mets(three_dimensional_ttl_graph):
+    g = parse_graph(three_dimensional_ttl_graph, "ttl")
+
+    mets = build_mh_mets(g, "testpid", "Disk", {"batch_id": "batch-idke"})
+
+    assert "16354987" in mets
+    assert "13548987" in mets
     assert mets
 
 
@@ -132,7 +151,7 @@ def test_localids_in_sidecar(local_id_graphs):
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
     )
 
-    sidecar = build_mh_sidecar(g, ie, "testpid")
+    sidecar = build_mh_sidecar(g, [ie], "testpid")
 
     root = lxml.etree.fromstring(sidecar)
 
@@ -144,6 +163,7 @@ def test_localids_in_sidecar(local_id_graphs):
 
     pass
 
+
 def test_build_mh_sidecar_material_artwork_minimal_rep(
     material_artwork_minimal_rep_graph, mh_sidecar_material_artwork_minimal_rep_xml
 ):
@@ -154,6 +174,6 @@ def test_build_mh_sidecar_material_artwork_minimal_rep(
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Representation"),
     )
 
-    sidecar = build_mh_sidecar(g, rep, "testpid")
+    sidecar = build_mh_sidecar(g, [rep], "testpid")
 
     assert sidecar == mh_sidecar_material_artwork_minimal_rep_xml

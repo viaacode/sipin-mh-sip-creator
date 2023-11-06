@@ -12,4 +12,5 @@ class Representation:
     id: str
     label: str
     node: Node
+    events: list[Node] = field(default_factory=list[Node])
     files: list[File] = field(default_factory=list[File])

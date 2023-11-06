@@ -2,9 +2,21 @@ import metsrw
 import rdflib
 from lxml import etree
 
+from rdflib.term import Node
+
 from app.helpers.graph import get_cp_id_from_graph, get_representations
-from app.helpers.mappers import creator_mapper, license_mapper, local_id_mapper
-from app.helpers.transformers import dimension_transform, language_code_transform
+from app.helpers.mappers import (
+    creator_mapper,
+    geometry_mapper,
+    local_id_mapper,
+    title_mapper,
+    license_mapper
+)
+from app.helpers.transformers import (
+    dimension_transform,
+    language_code_transform,
+    name_transform,
+)
 
 MH_VERSION = "22.1"
 
@@ -65,15 +77,15 @@ MAPPING: dict = {
     },
     "http://www.loc.gov/premis/v3#fixity": {"targets": ["mhs:Dynamic.md5_viaa"]},
     "https://schema.org/height": {
-        "targets": ["mhs:Dynamic.height"],
+        "targets": ["mhs:Dynamic.dimensions.height_in_mm"],
         "transformer": dimension_transform,
     },
     "https://schema.org/width": {
-        "targets": ["mhs:Dynamic.width"],
+        "targets": ["mhs:Dynamic.dimensions.width_in_mm"],
         "transformer": dimension_transform,
     },
     "https://schema.org/depth": {
-        "targets": ["mhs:Dynamic.depth"],
+        "targets": ["mhs:Dynamic.dimensions.depth_in_mm"],
         "transformer": dimension_transform,
     },
     "https://schema.org/artForm": {
@@ -84,12 +96,32 @@ MAPPING: dict = {
     },
     "https://schema.org/creator": {
         "mapping_strategy": creator_mapper,
-        "targets": ["mhs:Dynamic.dc_creators.Maker[]"],
     },
     "http://www.loc.gov/premis/rdf/v3/identifier": {
         "mapping_strategy": local_id_mapper,
-        "targets": ["mhs:Dynamic.dc_test.test[]"],
     },
+    "http://www.w3id.org/omg#hasGeometry": {
+        "mapping_strategy": geometry_mapper,
+    },
+    "https://data.hetarchief.be/ns/object/light-metering": {
+        "targets": ["mhs:Dynamic.light_metering"]
+    },
+    "https://data.hetarchief.be/ns/object/scan-setup": {
+        "targets": ["mhs:Dynamic.scanning.scansetup"]
+    },
+    "https://data.hetarchief.be/ns/object/height-calibration-object": {
+        "targets": [
+            "mhs:Dynamic.mesh_geometry.height_calibration_object",
+            "mhs:Dynamic.mesh_geometry.height_calibration_object_in_mm",
+        ],
+        "transformer": dimension_transform,
+    },
+    "http://id.loc.gov/vocabulary/preservation/eventRelatedAgentRole/exe": {
+        "targets": ["mhs:Dynamic.post_processing_software"],
+        "transformer": name_transform,
+    },
+    "https://schema.org/isPartOf": {"mapping_strategy": title_mapper},
+    "http://www.loc.gov/premis/rdf/v3/note": {"targets": ["mhs:Dynamic.qc_note"]},
 }
 
 
@@ -104,7 +136,9 @@ def qname_text(ns: str, local_name: str) -> str:
     return f"{lxmlns(ns)}{local_name}"
 
 
-def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
+def build_mh_mets(
+    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+) -> str:
     ie = g.value(
         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
@@ -135,7 +169,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(g, ie, pid),
+        build_mh_sidecar(g, [ie], pid, dynamic_tags),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -152,7 +186,7 @@ def build_mh_mets(g: rdflib.Graph, pid: str, archive_location: str) -> str:
             representation_media.add_dmdsec(
                 build_mh_sidecar(
                     g,
-                    representation.node,
+                    [representation.node, file.node, *representation.events],
                     f"{pid}_{representation_index}_{file_index}",
                 ),
                 "OTHER",
@@ -216,7 +250,7 @@ def build_minimal_sidecar(external_id: str) -> str:
 
 def build_mh_sidecar(
     g: rdflib.Graph,
-    subject,
+    subjects,
     pid: str,
     dynamic_tags: dict[str, str] = {},
 ) -> str:
@@ -239,29 +273,36 @@ def build_mh_sidecar(
     id_node.text = pid
 
     # Add mappable fields to the XML
-    for predicate in MAPPING.keys():
-        map = {}
-        if MAPPING[predicate].get("mapping_strategy"):
-            map = MAPPING[predicate]["mapping_strategy"](
-                g, g.objects(predicate=rdflib.URIRef(predicate), subject=subject)
-            )
-        else:
-            for key in MAPPING[predicate]["targets"]:
-                for obj in g.objects(
-                    predicate=rdflib.URIRef(predicate), subject=subject
-                ):
-                    if MAPPING[predicate].get("transformer"):
-                        if type(obj) == rdflib.URIRef:
-                            result = g.predicate_objects(subject=obj)
-                            obj = MAPPING[predicate]["transformer"](result)
-                            obj = rdflib.Literal(obj)
-                        else:
-                            obj = rdflib.Literal(MAPPING[predicate]["transformer"](obj))
-                    if obj.language and obj.language != "nl":
-                        # Skip non dutch fields.
-                        continue
-                    map[key] = [*map.get(key, []), str(obj)]
-        add_fields_to_xml(root, map)
+    for subject in subjects:
+        for predicate in MAPPING.keys():
+            map = {}
+            if MAPPING[predicate].get("mapping_strategy"):
+                map = MAPPING[predicate]["mapping_strategy"](
+                    g, g.objects(predicate=rdflib.URIRef(predicate), subject=subject)
+                )
+            else:
+                for key in MAPPING[predicate]["targets"]:
+                    for obj in g.objects(
+                        predicate=rdflib.URIRef(predicate), subject=subject
+                    ):
+                        if MAPPING[predicate].get("transformer"):
+                            if type(obj) == rdflib.URIRef:
+                                result = g.predicate_objects(subject=obj)
+                                obj = MAPPING[predicate]["transformer"](result)
+                                obj = rdflib.Literal(obj)
+                            else:
+                                obj = rdflib.Literal(
+                                    MAPPING[predicate]["transformer"](obj)
+                                )
+                        if (
+                            type(obj) == rdflib.Literal
+                            and obj.language
+                            and obj.language != "nl"
+                        ):
+                            # Skip non dutch fields.
+                            continue
+                        map[key] = [*map.get(key, []), str(obj)]
+            add_fields_to_xml(root, map)
 
     # Add some extra dynamic metadata
     # Create Dynamic node if needed
@@ -281,9 +322,10 @@ def build_mh_sidecar(
     cp_tag.text = get_cp_id_from_graph(g)
 
     for key, value in dynamic_tags.items():
-        key_tag = etree.Element(key)
-        dynamic_tag.append(key_tag)
-        key_tag.text = value
+        if value:
+            key_tag = etree.Element(key)
+            dynamic_tag.append(key_tag)
+            key_tag.text = value
 
     # Add sp_name/workflow
     sp_tag = etree.Element("sp_name")

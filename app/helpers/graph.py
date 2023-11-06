@@ -111,10 +111,44 @@ def get_sip_info(graph: rdflib.Graph) -> SIP:
         if sip_type.startswith(graph.namespace_manager.compute_qname(sip_node)[1]):
             sip_profile = graph.namespace_manager.compute_qname(sip_type)[2]
 
+    batch_id = ""
+    if sip_batch_id := graph.value(
+        subject=sip_node, predicate=rdflib.URIRef("https://schema.org/isPartOf")
+    ):
+        type = graph.value(
+            subject=sip_batch_id,
+            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        )
+        type_text = graph.namespace_manager.compute_qname(type)[2]
+        if type_text == "Batch":
+            batch_id = str(
+                graph.value(
+                    subject=sip_batch_id,
+                    predicate=rdflib.URIRef("https://schema.org/identifier"),
+                )
+            )
+
+    format = ""
+    if format_node := graph.value(
+        subject=sip_node, predicate=rdflib.URIRef("http://purl.org/dc/terms/format")
+    ):
+        format_mapping = {
+            "Photographs - Digital": "photo",
+            "Scanned 3D Objects (output from photogrammetry scanning)": "3D-model",
+        }
+        format = format_mapping.get(str(format_node), "")
+
     # sip_ies = get_intellectual_entities(graph)
     sip_representations = get_representations(graph)
 
-    sip = SIP(sip_id, sip_profile, [], sip_representations)
+    sip = SIP(
+        id=sip_id,
+        profile=sip_profile,
+        batch_id=batch_id,
+        format=format,
+        intellectual_entities=[],
+        representations=sip_representations,
+    )
 
     return sip
 
@@ -158,8 +192,31 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
             predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#hiddenLabel"),
         )
 
+        events = []
+        event_nodes = list(
+            graph.subjects(
+                object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Event"),
+                predicate=rdflib.URIRef(
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                ),
+            )
+        )
+
+        for event_node in event_nodes:
+            if event := graph.value(
+                subject=event_node, object=representation, predicate=None
+            ):
+                events.append(event)
+
+            # events = graph.subjects(
+            #     object=representation,
+            #     predicate=rdflib.URIRef(
+            #         "http://id.loc.gov/vocabulary/preservation/eventRelatedObjectRole/out"
+            #     ),
+            # )
+
         r = Representation(
-            id=str(representation), label=str(label), node=representation
+            id=str(representation), label=str(label), node=representation, events=events
         )
 
         representations.append(r)
@@ -170,8 +227,8 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
             ),
         ):
             f = File(
-                str(file),
-                str(
+                id=str(file),
+                filename=str(
                     graph.value(
                         subject=file,
                         predicate=rdflib.URIRef(
@@ -179,7 +236,7 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
                         ),
                     )
                 ),
-                str(
+                fixity=str(
                     graph.value(
                         subject=graph.value(
                             subject=file,
@@ -189,6 +246,7 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
                         )
                     )
                 ),
+                node=file,
             )
             r.files.append(f)
     return representations

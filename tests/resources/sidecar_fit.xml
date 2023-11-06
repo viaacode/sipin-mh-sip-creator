@@ -44,9 +44,11 @@
       <Trefwoord>religieuze kunst</Trefwoord>
       <Trefwoord>religious art</Trefwoord>
     </dc_subjects>
-    <height>1310</height>
-    <width>1080</width>
-    <depth>30</depth>
+    <dimensions>
+      <height_in_mm>1310</height_in_mm>
+      <width_in_mm>1080</width_in_mm>
+      <depth_in_mm>30</depth_in_mm>
+    </dimensions>
     <artmedium>olieverf op paneel</artmedium>
     <dc_creators>
       <Maker>Ambrosius Benson</Maker>
