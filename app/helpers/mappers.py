@@ -61,7 +61,7 @@ def creator_mapper(graph, creators) -> dict[str, list[str]]:
     return mapping
 
 
-def license_mapper(graph, licenses):
+def license_mapper(graph, licenses) -> dict[str, list[str]]:
     license_list = list(licenses)
     mapping = {}
     if license_list:
@@ -83,6 +83,7 @@ def license_mapper(graph, licenses):
             ]
         }
     return mapping
+
 
 def geometry_mapper(graph, geometries) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
@@ -150,4 +151,24 @@ def title_mapper(graph, titles) -> dict[str, list[str]]:
 
         mapping[f"mhs:Dynamic.dc_titles.{type_text}"] = [str(name)]
 
+    return mapping
+
+
+def instrument_mapper(graph, instruments) -> dict[str, list[str]]:
+    mapping = {}
+    for instrument in instruments:
+        instrument_type = graph.value(
+            subject=instrument,
+            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        )
+        if graph.namespace_manager.compute_qname(instrument_type)[2] == "HardwareAgent":
+            if scanner_model := graph.value(
+                subject=instrument, predicate=rdflib.URIRef("https://schema.org/model")
+            ):
+                mapping["mhs:Dynamic.scanning.scannermodel"] = [str(scanner_model)]
+            if scan_type := graph.value(
+                subject=instrument,
+                predicate=rdflib.URIRef("https://schema.org/additionalType"),
+            ):
+                mapping["mhs:Dynamic.scanning.scantype"] = [str(scan_type)]
     return mapping

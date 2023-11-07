@@ -10,7 +10,8 @@ from app.helpers.mappers import (
     geometry_mapper,
     local_id_mapper,
     title_mapper,
-    license_mapper
+    license_mapper,
+    instrument_mapper,
 )
 from app.helpers.transformers import (
     dimension_transform,
@@ -88,6 +89,10 @@ MAPPING: dict = {
         "targets": ["mhs:Dynamic.dimensions.depth_in_mm"],
         "transformer": dimension_transform,
     },
+    "https://schema.org/weight": {
+        "targets": ["mhs:Dynamic.dimensions.weight_in_kg"],
+        "transformer": dimension_transform,
+    },
     "https://schema.org/artForm": {
         "targets": ["mhs:Dynamic.artform"],
     },
@@ -122,6 +127,7 @@ MAPPING: dict = {
     },
     "https://schema.org/isPartOf": {"mapping_strategy": title_mapper},
     "http://www.loc.gov/premis/rdf/v3/note": {"targets": ["mhs:Dynamic.qc_note"]},
+    "https://schema.org/instrument": {"mapping_strategy": instrument_mapper},
 }
 
 
