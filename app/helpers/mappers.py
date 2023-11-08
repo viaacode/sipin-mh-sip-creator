@@ -25,7 +25,7 @@ def local_id_mapper(graph, objects) -> dict[str, list[str]]:
         main_local_id = local_ids[list(local_ids)[0]]
 
     if main_local_id:
-        mapping["mhs:Dynamic.dc_identifier_localid"] = main_local_id
+        mapping["mhs:Dynamic.dc_identifier_localid"] = [main_local_id]
 
     if local_ids:
         for id_type, id in local_ids.items():
