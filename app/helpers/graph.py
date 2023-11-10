@@ -203,10 +203,10 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
         )
 
         for event_node in event_nodes:
-            if event := graph.value(
+            if graph.value(
                 subject=event_node, object=representation, predicate=None
             ):
-                events.append(event)
+                events.append(event_node)
 
             # events = graph.subjects(
             #     object=representation,

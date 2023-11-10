@@ -3,7 +3,7 @@ import rdflib
 
 def local_id_mapper(graph, objects) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
-    local_ids = {}
+    local_ids: dict[str, str] = {}
     for object in objects:
         type = graph.namespace_manager.compute_qname(
             graph.value(
