@@ -93,7 +93,7 @@ MAPPING: dict = {
         "targets": ["mhs:Dynamic.dimensions.weight_in_kg"],
         "transformer": dimension_transform,
     },
-    "https://schema.org/artForm": {
+    "https://schema.org/artform": {
         "targets": ["mhs:Dynamic.artform"],
     },
     "https://schema.org/artMedium": {
