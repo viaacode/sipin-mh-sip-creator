@@ -1,7 +1,7 @@
 import rdflib
 
 
-def local_id_mapper(graph, objects) -> dict[str, list[str]]:
+def local_id_mapper(graph, subject, objects) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
     local_ids: dict[str, str] = {}
     for object in objects:
@@ -37,7 +37,7 @@ def local_id_mapper(graph, objects) -> dict[str, list[str]]:
     return mapping
 
 
-def creator_mapper(graph, creators) -> dict[str, list[str]]:
+def creator_mapper(graph, subject, creators) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
 
     for creator in creators:
@@ -61,7 +61,13 @@ def creator_mapper(graph, creators) -> dict[str, list[str]]:
     return mapping
 
 
-def license_mapper(graph, licenses) -> dict[str, list[str]]:
+def license_mapper(graph, subject, licenses) -> dict[str, list[str]]:
+    type = graph.namespace_manager.compute_qname(
+        graph.value(
+            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+            subject=subject,
+        )
+    )[2]
     license_list = list(licenses)
     mapping = {}
     if license_list:
@@ -70,7 +76,7 @@ def license_mapper(graph, licenses) -> dict[str, list[str]]:
                 str(license) for license in license_list
             ]
         }
-    else:
+    elif type == "IntellectualEntity":
         mapping = {
             "mhs:Dynamic.dc_rights_licenses.multiselect[]": [
                 "VIAA-ONDERWIJS",
@@ -85,7 +91,7 @@ def license_mapper(graph, licenses) -> dict[str, list[str]]:
     return mapping
 
 
-def geometry_mapper(graph, geometries) -> dict[str, list[str]]:
+def geometry_mapper(graph, subject, geometries) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
 
     for geometry in geometries:
@@ -107,7 +113,7 @@ def geometry_mapper(graph, geometries) -> dict[str, list[str]]:
     return mapping
 
 
-def title_mapper(graph, titles) -> dict[str, list[str]]:
+def title_mapper(graph, subject, titles) -> dict[str, list[str]]:
     type_map = {
         "BroadcastEvent": "programma",
         "ArchiveComponent": "archief",
@@ -154,7 +160,7 @@ def title_mapper(graph, titles) -> dict[str, list[str]]:
     return mapping
 
 
-def instrument_mapper(graph, instruments) -> dict[str, list[str]]:
+def instrument_mapper(graph, subject, instruments) -> dict[str, list[str]]:
     mapping = {}
     for instrument in instruments:
         instrument_type = graph.value(

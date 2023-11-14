@@ -284,7 +284,9 @@ def build_mh_sidecar(
             map = {}
             if MAPPING[predicate].get("mapping_strategy"):
                 map = MAPPING[predicate]["mapping_strategy"](
-                    g, g.objects(predicate=rdflib.URIRef(predicate), subject=subject)
+                    g,
+                    subject,
+                    g.objects(predicate=rdflib.URIRef(predicate), subject=subject),
                 )
             else:
                 for key in MAPPING[predicate]["targets"]:
