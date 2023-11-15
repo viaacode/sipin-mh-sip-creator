@@ -31,7 +31,6 @@ MAPPING: dict = {
         "targets": [
             "mhs:Descriptive.mh:Title",
             "mhs:Dynamic.dc_title",
-            "mhs:Dynamic.dc_titles.registratie[]",
         ]
     },
     "http://purl.org/dc/terms/publisher": {

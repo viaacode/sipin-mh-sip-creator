@@ -8,14 +8,13 @@
   </mhs:Descriptive>
   <mhs:Dynamic>
     <dc_title>De verheerlijking van de Heilige Maagd</dc_title>
-    <dc_titles>
-      <registratie>De verheerlijking van de Heilige Maagd</registratie>
-      <alternatief>Alt titel 2</alternatief>
-      <alternatief>Deipara Virgo</alternatief>
-    </dc_titles>
     <dc_publisher>
       <Uitgever>uitgever test</Uitgever>
     </dc_publisher>
+    <dc_titles>
+      <alternatief>Alt titel 2</alternatief>
+      <alternatief>Deipara Virgo</alternatief>
+    </dc_titles>
     <dc_contributors>
       <Bijdrager>bijdrager test</Bijdrager>
       <Bijdrager>bijdrager test 2</Bijdrager>
@@ -49,6 +48,7 @@
       <width_in_mm>1080</width_in_mm>
       <depth_in_mm>30</depth_in_mm>
     </dimensions>
+    <artform>schilderij</artform>
     <artmedium>olieverf op paneel</artmedium>
     <dc_creators>
       <Maker>Ambrosius Benson</Maker>
