@@ -70,7 +70,9 @@ class EventListener:
         if not event.has_successful_outcome():
             self.log.info(f"Dropping non succesful event: {event.get_data()}")
             return
-
+        
+        self.log.info(f"Start handling of {event.get_attributes()['subject']}.")
+        
         # Parse the incoming metadata as a graph.
         metadata_graph_format = event.get_data().get("metadata_graph_fmt", "")
         metadata_graph = graph.parse_graph(
