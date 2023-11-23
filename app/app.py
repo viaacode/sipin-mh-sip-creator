@@ -171,7 +171,9 @@ class EventListener:
                 with open(Path(files_path, "mets.xml"), "w") as mets_file:
                     mets_file.write(mets_xml)
                 # Zip everything
-                shutil.make_archive(str(Path(f"{files_path}")), "zip", files_path)
+                with zipfile.ZipFile(str(Path(f"{files_path}.zip")), "w") as zf:
+                    for file_path in files_path.rglob("*"):
+                        zf.write(file_path, arcname=file_path.relative_to(files_path))
                 # Remove files folder
                 shutil.rmtree(files_path)
 
