@@ -56,6 +56,6 @@
     <PID>testpid</PID>
     <CP_id>OR-5h7bt1n</CP_id>
     <md5>18513a8d61c6f2cbaaeeedd754b01d6b</md5>
-    <sp_name>sipin</sp_name>
+    <ingest_workflow>sipin</ingest_workflow>
   </mhs:Dynamic>
 </mhs:Sidecar>
