@@ -76,6 +76,6 @@
     </dc_identifier_localids>
     <PID>testpid</PID>
     <CP_id>OR-5h7bt1n</CP_id>
-    <sp_name>sipin</sp_name>
+    <ingest_workflow>sipin</ingest_workflow>
   </mhs:Dynamic>
 </mhs:Sidecar>

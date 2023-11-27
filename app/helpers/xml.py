@@ -127,6 +127,9 @@ MAPPING: dict = {
     "https://schema.org/isPartOf": {"mapping_strategy": title_mapper},
     "http://www.loc.gov/premis/rdf/v3/note": {"targets": ["mhs:Dynamic.qc_note"]},
     "https://schema.org/instrument": {"mapping_strategy": instrument_mapper},
+    "http://id.loc.gov/vocabulary/preservation/eventRelatedAgentRole/imp": {
+        "targets": ["mhs:Dynamic.sp_name"]
+    }
 }
 
 
@@ -301,6 +304,9 @@ def build_mh_sidecar(
                                 obj = rdflib.Literal(
                                     MAPPING[predicate]["transformer"](obj)
                                 )
+                        else:
+                            if type(obj) == rdflib.URIRef:
+                                obj = g.namespace_manager.compute_qname(obj)[2]
                         if (
                             type(obj) == rdflib.Literal
                             and obj.language
@@ -334,8 +340,8 @@ def build_mh_sidecar(
             dynamic_tag.append(key_tag)
             key_tag.text = value
 
-    # Add sp_name/workflow
-    sp_tag = etree.Element("sp_name")
+    # Set ingest_workflow to sipin
+    sp_tag = etree.Element("ingest_workflow")
     dynamic_tag.append(sp_tag)
     sp_tag.text = "sipin"
 

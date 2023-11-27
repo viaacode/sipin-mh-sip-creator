@@ -70,7 +70,7 @@
               <Word_ID>word14</Word_ID>
               <WorkPID>pid16</WorkPID>
             </dc_identifier_localids>
-            <sp_name>sipin</sp_name>
+            <ingest_workflow>sipin</ingest_workflow>
           </mhs:Dynamic>
         </mhs:Sidecar>
       </mets:xmlData>
