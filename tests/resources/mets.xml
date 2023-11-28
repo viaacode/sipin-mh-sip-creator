@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mets:mets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version1121/mets.xsd">
+  <mets:metsHdr CREATEDATE="2023-07-04T08:16:50">
+    <mets:agent ROLE="CUSTODIAN" TYPE="ORGANIZATION">
+      <mets:name>meemoo</mets:name>
+    </mets:agent>
+  </mets:metsHdr>
+  <mets:dmdSec ID="DMDID-MATERIALARTWORK" CREATED="2023-07-04T08:16:50" STATUS="original">
+    <mets:mdWrap MDTYPE="OTHER" OTHERMDTYPE="mhs:Sidecar">
+      <mets:xmlData>
+        <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+          <mhs:Descriptive>
+            <mh:Title>De verheerlijking van de Heilige Maagd</mh:Title>
+            <mh:Description>GIVE 2D</mh:Description>
+          </mhs:Descriptive>
+          <mhs:Dynamic>
+            <dc_title>De verheerlijking van de Heilige Maagd</dc_title>
+            <dc_titles>
+              <alternatief>Alt titel 2</alternatief>
+              <alternatief>Deipara Virgo</alternatief>
+            </dc_titles>
+            <dc_publisher>
+              <Uitgever>uitgever test</Uitgever>
+            </dc_publisher>
+            <dc_contributors>
+              <Bijdrager>bijdrager test</Bijdrager>
+              <Bijdrager>bijdrager test 2</Bijdrager>
+            </dc_contributors>
+            <dcterms_created>2022-08-22</dcterms_created>
+            <dc_description_lang>GIVE 2D</dc_description_lang>
+            <dcterms_issued>1530</dcterms_issued>
+            <dc_languages>
+              <multiselect>nl</multiselect>
+            </dc_languages>
+            <dc_rights_comment>public domain</dc_rights_comment>
+            <dc_coverages>
+              <ruimte>ruimtelijk test</ruimte>
+              <tijd>temporaal test</tijd>
+            </dc_coverages>
+            <dc_subjects>
+              <Trefwoord>religieuze kunst</Trefwoord>
+              <Trefwoord>religious art</Trefwoord>
+            </dc_subjects>
+            <height>1310.0</height>
+            <width>1080.0</width>
+            <depth>30.0</depth>
+            <artmedium>olieverf op paneel</artmedium>
+            <dc_creators>
+              <Maker>Ambrosius Benson</Maker>
+              <Maker>Test regisseur naam</Maker>
+              <Maker>Cedric Verhelst</Maker>
+            </dc_creators>
+            <PID>testpid</PID>
+            <CP_id>OR-w66976m</CP_id>
+            <dc_identifier_localids>
+              <Acquisition_number>acquisitie3333</Acquisition_number>
+              <Alternative_number>alt444</Alternative_number>
+              <Analoge_drager>analoge drager 555</Analoge_drager>
+              <Ardome>ardmome66</Ardome>
+              <Basis>basis777</Basis>
+              <DataPID>pid17</DataPID>
+              <Historical_carrier>historic888</Historical_carrier>
+              <Historical_record_number>histdossier999</Historical_record_number>
+              <Inventarisnummer>inv10</Inventarisnummer>
+              <LOCAL_ID>testart333</LOCAL_ID>
+              <MEDIA_ID>media11</MEDIA_ID>
+              <Object_number>adlib12</Object_number>
+              <Priref>ref 13</Priref>
+              <Topstuk_ID>topstuk15</Topstuk_ID>
+              <Word_ID>word14</Word_ID>
+              <WorkPID>pid16</WorkPID>
+            </dc_identifier_localids>
+            <ingest_workflow>sipin</ingest_workflow>
+          </mhs:Dynamic>
+        </mhs:Sidecar>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:dmdSec ID="DMDID-MATERIALARTWORK-METS" CREATED="2023-07-04T08:16:50" STATUS="original">
+    <mets:mdWrap MDTYPE="OTHER" OTHERMDTYPE="mhs:Sidecar">
+      <mets:xmlData>
+        <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+          <mhs:Administrative>
+            <mh:ExternalId>testpid_mets</mh:ExternalId>
+          </mhs:Administrative>
+          <mhs:Descriptive>
+            <mh:Title>testpid_mets</mh:Title>
+          </mhs:Descriptive>
+        </mhs:Sidecar>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:dmdSec ID="DMDID-MATERIALARTWORK-REPRESENTATION-0-0" CREATED="2023-07-04T08:16:50" STATUS="original">
+    <mets:mdWrap MDTYPE="OTHER" OTHERMDTYPE="mhs:Sidecar">
+      <mets:xmlData>
+        <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+          <mhs:Administrative>
+            <mh:ExternalId>testpid_0_0</mh:ExternalId>
+          </mhs:Administrative>
+          <mhs:Descriptive>
+            <mh:Title>testpid_0_0</mh:Title>
+          </mhs:Descriptive>
+        </mhs:Sidecar>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:dmdSec ID="DMDID-MATERIALARTWORK-REPRESENTATION-1-0" CREATED="2023-07-04T08:16:50" STATUS="original">
+    <mets:mdWrap MDTYPE="OTHER" OTHERMDTYPE="mhs:Sidecar">
+      <mets:xmlData>
+        <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+          <mhs:Administrative>
+            <mh:ExternalId>testpid_1_0</mh:ExternalId>
+          </mhs:Administrative>
+          <mhs:Descriptive>
+            <mh:Title>testpid_1_0</mh:Title>
+          </mhs:Descriptive>
+        </mhs:Sidecar>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:dmdSec ID="DMDID-MATERIALARTWORK-REPRESENTATION-1-1" CREATED="2023-07-04T08:16:50" STATUS="original">
+    <mets:mdWrap MDTYPE="OTHER" OTHERMDTYPE="mhs:Sidecar">
+      <mets:xmlData>
+        <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+          <mhs:Administrative>
+            <mh:ExternalId>testpid_1_1</mh:ExternalId>
+          </mhs:Administrative>
+          <mhs:Descriptive>
+            <mh:Title>testpid_1_1</mh:Title>
+          </mhs:Descriptive>
+        </mhs:Sidecar>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:fileSec>
+    <mets:fileGrp USE="Original">
+      <mets:file ID="FILEID-MATERIALARTWORK-METS" USE="Disk">
+        <mets:FLocat xlink:href="mets.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="FILEID-MATERIALARTWORK-REPRESENTATION-1-0" CHECKSUM="b6ef78b5cdbf259101676fcb1e676306" CHECKSUMTYPE="MD5" USE="Disk">
+        <mets:FLocat xlink:href="artwork_test2.png" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="FILEID-MATERIALARTWORK-REPRESENTATION-1-1" CHECKSUM="b6ef78b5cdbf259101676fcb1e676306" CHECKSUMTYPE="MD5" USE="Disk">
+        <mets:FLocat xlink:href="artwork_test.png" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="FILEID-MATERIALARTWORK-REPRESENTATION-0-0" CHECKSUM="ff7352850109a722f5c47ce67f40d181" CHECKSUMTYPE="MD5" USE="Disk">
+        <mets:FLocat xlink:href="test_image.png" LOCTYPE="URL"/>
+      </mets:file>
+    </mets:fileGrp>
+  </mets:fileSec>
+  <mets:structMap>
+    <mets:div TYPE="MaterialArtwork" DMDID="DMDID-MATERIALARTWORK">
+      <mets:div TYPE="Media" DMDID="DMDID-MATERIALARTWORK-METS">
+        <mets:div TYPE="Representation" LABEL="Original">
+          <mets:fptr FILEID="FILEID-MATERIALARTWORK-METS"/>
+        </mets:div>
+      </mets:div>
+      <mets:div TYPE="Media">
+        <mets:div TYPE="Representation" LABEL="Original" DMDID="DMDID-MATERIALARTWORK-REPRESENTATION-0-0">
+          <mets:fptr FILEID="FILEID-MATERIALARTWORK-REPRESENTATION-0-0"/>
+        </mets:div>
+      </mets:div>
+      <mets:div TYPE="Media">
+        <mets:div TYPE="Representation" LABEL="Original" DMDID="DMDID-MATERIALARTWORK-REPRESENTATION-1-0">
+          <mets:fptr FILEID="FILEID-MATERIALARTWORK-REPRESENTATION-1-0"/>
+        </mets:div>
+        <mets:div TYPE="Representation" LABEL="Original" DMDID="DMDID-MATERIALARTWORK-REPRESENTATION-1-1">
+          <mets:fptr FILEID="FILEID-MATERIALARTWORK-REPRESENTATION-1-1"/>
+        </mets:div>
+      </mets:div>
+    </mets:div>
+  </mets:structMap>
+</mets:mets>

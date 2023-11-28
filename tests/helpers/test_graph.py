@@ -4,8 +4,9 @@ from app.helpers.graph import (
     get_cp_id_from_graph,
     get_representations,
     parse_graph,
-    get_local_ids_from_graph,
-    GraphException
+    GraphException,
+    get_sip_info,
+    get_pid_from_graph,
 )
 
 
@@ -15,48 +16,79 @@ def json_ld_graph():
         json_ld = f.read()
     return json_ld
 
+
 @pytest.fixture
 def turtle_graph():
     with open("./tests/resources/example.ttl", "r") as f:
         ttl = f.read()
     return ttl
 
+
+@pytest.fixture
+def material_artwork_ttl_graph():
+    with open("./tests/resources/materialartwork.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
+
+@pytest.fixture
+def threed_ttl_graph():
+    with open("./tests/resources/3d.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
+
 def test_parse_json_graph_json_ld(json_ld_graph):
     assert parse_graph(json_ld_graph, "json-ld")
+
 
 def test_parse_turtle_graph_turtle(turtle_graph):
     assert parse_graph(turtle_graph, "turtle")
 
+
 def test_parse_turtle_graph_ttl(turtle_graph):
     assert parse_graph(turtle_graph, "ttl")
+
 
 def test_parse_turtle_graph_text_turtle(turtle_graph):
     assert parse_graph(turtle_graph, "text/turtle")
 
+
 def test_parse_json_graph_default(json_ld_graph):
     assert parse_graph(json_ld_graph)
+
 
 def test_parse_json_graph_invalid_format(json_ld_graph):
     assert parse_graph(json_ld_graph, "foobar")
 
+
 def test_parse_turtle_graph_invalid_format(turtle_graph):
     with pytest.raises(GraphException):
         assert parse_graph(turtle_graph, "")
+
 
 def test_get_cp_id_from_graph(json_ld_graph):
     graph = parse_graph(json_ld_graph, "json-ld")
 
     cp_id = get_cp_id_from_graph(graph)
 
-    assert cp_id == "OR-m30wc4t"
+    assert cp_id == "OR-5h7bt1n"
 
 
-def test_get_local_ids_from_graph(json_ld_graph):
-    excepted = {"Object_number": "v_2021073114124363", "local_id": "ce980d9"}
+def test_get_pid_from_turtle_graph(material_artwork_ttl_graph):
+    graph = parse_graph(material_artwork_ttl_graph, "turtle")
+
+    pid = get_pid_from_graph(graph)
+
+    assert pid == "7m03z1634f"
+
+
+def test_get_pid_from_graph(json_ld_graph):
     graph = parse_graph(json_ld_graph, "json-ld")
 
-    local_ids = get_local_ids_from_graph(graph)
-    assert local_ids == excepted
+    pid = get_pid_from_graph(graph)
+
+    assert pid == ""
 
 
 def test_get_representations(json_ld_graph):
@@ -76,3 +108,24 @@ def test_get_representations(json_ld_graph):
         representations[0].files[0].id
         == "https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d"
     )
+
+
+def test_get_sip_info(json_ld_graph):
+    graph = parse_graph(json_ld_graph)
+
+    sip = get_sip_info(graph)
+
+    assert sip.id == "uuid-de61d4af-d19c-4cc7-864d-55573875b438"
+    assert sip.profile == "basic"
+    assert len(sip.representations) == 1
+
+
+def test_get_sip_info_3d(threed_ttl_graph):
+    graph = parse_graph(threed_ttl_graph, format="ttl")
+
+    sip = get_sip_info(graph)
+
+    assert sip.profile == "material-artwork"
+    assert len(sip.representations) == 4
+    assert sip.batch_id == "PRD-BD-OR-x921j0n-2022-11-10-001"
+    assert sip.format == "3D-model"

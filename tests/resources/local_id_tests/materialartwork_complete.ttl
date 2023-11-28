@@ -1,0 +1,252 @@
+@prefix cryptographicHashFunctions: <http://id.loc.gov/vocabulary/preservation/cryptographicHashFunctions/> . 
+@prefix dct: <http://purl.org/dc/terms/> . 
+@prefix edtf: <http://id.loc.gov/datatypes/edtf/> . 
+@prefix haObj: <https://data.hetarchief.be/ns/object/> . 
+@prefix haObjId: <https://data.hetarchief.be/id/object/> . 
+@prefix haOrgId: <https://data.hetarchief.be/id/organization/> . 
+@prefix haSip: <https://data.hetarchief.be/ns/sip/> . 
+@prefix haSipId: <https://data.hetarchief.be/id/sip/1.1/> . 
+@prefix org: <http://www.w3.org/ns/org#> . 
+@prefix premisowl: <http://www.loc.gov/premis/rdf/v3/> . 
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> . 
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> . 
+@prefix relSubType: <http://id.loc.gov/vocabulary/preservation/relationshipSubType/> . 
+@prefix schema: <https://schema.org/> . 
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> . 
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> . 
+ 
+haSipId:uuid-f178c272-dbfc-4b91-810b-7b60c137d18e a haSip:SIP ; 
+    dct:conformsTo "https://data.hetarchief.be/id/sip/1.1/material-artwork", 
+        "https://earksip.dilcis.eu/profile/E-ARK-SIP.xml" ; 
+    schema:agent [ schema:agent haOrgId:OR-5h7bt1n ; 
+            schema:roleName "ARCHIVIST" ], 
+        [ schema:agent haOrgId:OR-m30wc4t ; 
+            schema:roleName "CREATOR" ] . 
+ 
+haObjId:08cf68ade1747259a5d6cd3a023f1dd3 a schema:Role ; 
+    schema:creator haObjId:56d4ed615024c5c21fad80faf7dd1232 ; 
+    schema:roleName "Maker" . 
+ 
+haObjId:1026c8c00be578196c85621abcb48b33 a schema:Person ; 
+    schema:birthDate "2023-03-02"^^edtf:EDTF ; 
+    schema:deathDate "2023-03-29"^^edtf:EDTF ; 
+    schema:name "Test regisseur naam" . 
+ 
+haObjId:33df38f2ea2056d30e28b0145b33b822 a schema:Role ; 
+    schema:creator haObjId:1026c8c00be578196c85621abcb48b33 ; 
+    schema:roleName "Regisseur" . 
+ 
+haObjId:56d4ed615024c5c21fad80faf7dd1232 a schema:Person ; 
+    schema:birthDate "1490/1500"^^edtf:EDTF ; 
+    schema:deathDate "1550-XX-XX"^^edtf:EDTF ; 
+    schema:name "Ambrosius Benson" . 
+ 
+haObjId:604d226a6b6b4d2e2a6508ffc91a032c a schema:QuantitativeValue ; 
+    schema:unitCode "CMT" ; 
+    schema:unitText "cm" ; 
+    schema:value "3.0"^^xsd:float . 
+ 
+haObjId:8d7c2efb81753e0c04f3f80bb48093d5 a schema:QuantitativeValue ; 
+    schema:unitCode "MMT" ; 
+    schema:unitText "mm" ; 
+    schema:value "1310.0"^^xsd:float . 
+ 
+haObjId:9c50950c5f9ed60a2f2f90cacf05a4e4 a schema:QuantitativeValue ; 
+    schema:unitCode "MMT" ; 
+    schema:unitText "mm" ; 
+    schema:value "1080.0"^^xsd:float . 
+ 
+haObjId:Acquisition_number rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Acquisition_numberacquisitie3333 a haObjId:Acquisition_number ; 
+    rdf:value "acquisitie3333" . 
+ 
+haObjId:Alternative_number rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Alternative_numberalt444 a haObjId:Alternative_number ; 
+    rdf:value "alt444" . 
+ 
+haObjId:Analoge_drager rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Analoge_drageranaloge%20drager%20555 a haObjId:Analoge_drager ; 
+    rdf:value "analoge drager 555" . 
+ 
+haObjId:Ardome rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Ardomeardmome66 a haObjId:Ardome ; 
+    rdf:value "ardmome66" . 
+ 
+haObjId:Basis rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Basisbasis777 a haObjId:Basis ; 
+    rdf:value "basis777" . 
+ 
+haObjId:DataPID rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:DataPIDpid17 a haObjId:DataPID ; 
+    rdf:value "pid17" . 
+ 
+haObjId:Historical_carrier rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Historical_carrierhistoric888 a haObjId:Historical_carrier ; 
+    rdf:value "historic888" . 
+ 
+haObjId:Historical_record_number rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Historical_record_numberhistdossier999 a haObjId:Historical_record_number ; 
+    rdf:value "histdossier999" . 
+ 
+haObjId:Inventarisnummer rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Inventarisnummerinv10 a haObjId:Inventarisnummer ; 
+    rdf:value "inv10" . 
+
+haObjId:MEEMOO-PID rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:MEEMOO-PID7m03z1634f a haObjId:MEEMOO-PID ; 
+    rdf:value "7m03z1634f" . 
+ 
+haObjId:LOCAL_ID rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:LOCAL_IDtestart333 a haObjId:LOCAL_ID ; 
+    rdf:value "testart333" . 
+ 
+haObjId:MEDIA_ID rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:MEDIA_IDmedia11 a haObjId:MEDIA_ID ; 
+    rdf:value "media11" . 
+ 
+haObjId:Object_number rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Object_numberadlib12 a haObjId:Object_number ; 
+    rdf:value "adlib12" . 
+ 
+haObjId:Priref rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Prirefref%2013 a haObjId:Priref ; 
+    rdf:value "ref 13" . 
+ 
+haObjId:Topstuk_ID rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Topstuk_IDtopstuk15 a haObjId:Topstuk_ID ; 
+    rdf:value "topstuk15" . 
+ 
+haObjId:Word_ID rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:Word_IDword14 a haObjId:Word_ID ; 
+    rdf:value "word14" . 
+ 
+haObjId:WorkPID rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:WorkPIDpid16 a haObjId:WorkPID ; 
+    rdf:value "pid16" . 
+
+haObjId:MEEMOO-LOCAL-ID rdfs:subClassOf haObj:LocalIdentifier . 
+ 
+haObjId:MEEMOO-LOCAL-IDtestart333 a haObjId:MEEMOO-LOCAL-ID ; 
+    rdf:value "testart333" . 
+ 
+haObjId:d44d6104481ae5939e23e50d66e8a5a8 a schema:Role ; 
+    schema:creator haObjId:e68a1d21fb75bdd987fa51d5353009bb ; 
+    schema:roleName "Fotograaf" . 
+ 
+haObjId:e68a1d21fb75bdd987fa51d5353009bb a schema:Person ; 
+    schema:name "Cedric Verhelst" . 
+ 
+haObjId:ff7352850109a722f5c47ce67f40d181 a cryptographicHashFunctions:md5 ; 
+    rdf:value "ff7352850109a722f5c47ce67f40d181" . 
+ 
+haObjId:uuid-0be5686f-418a-4094-b7b0-1fa30e31c407 a premisowl:File ; 
+    relSubType:isi haObjId:uuid-46425b95-4c1a-4a4e-81bd-6696edb52471 ; 
+    dct:format <http://the-fr.org/id/file-format/11> ; 
+    premisowl:fixity haObjId:ff7352850109a722f5c47ce67f40d181 ; 
+    premisowl:originalName "test_image.png" ; 
+    premisowl:size 11385 . 
+ 
+haObjId:uuid-34eb1354-1ed0-4456-9b11-7b3d8c9ef9f1 a premisowl:File ; 
+    relSubType:isi haObjId:uuid-b047caad-7775-4be4-a9c2-ed154dd73864 ; 
+    dct:format <http://the-fr.org/id/file-format/11> ; 
+    premisowl:fixity haObjId:b6ef78b5cdbf259101676fcb1e676306 ; 
+    premisowl:originalName "artwork_test2.png" ; 
+    premisowl:size 234778 . 
+ 
+haObjId:uuid-907542af-0804-447d-a6e0-be4a7cee3a21 a premisowl:File ; 
+    relSubType:isi haObjId:uuid-b047caad-7775-4be4-a9c2-ed154dd73864 ; 
+    dct:format <http://the-fr.org/id/file-format/11> ; 
+    premisowl:fixity haObjId:b6ef78b5cdbf259101676fcb1e676306 ; 
+    premisowl:originalName "artwork_test.png" ; 
+    premisowl:size 234778 . 
+ 
+haObjId:b6ef78b5cdbf259101676fcb1e676306 a cryptographicHashFunctions:md5 ; 
+    rdf:value "b6ef78b5cdbf259101676fcb1e676306" . 
+ 
+haObjId:uuid-46425b95-4c1a-4a4e-81bd-6696edb52471 a premisowl:Representation ; 
+    skos:hiddenLabel "representation_1" ; 
+    relSubType:inc haObjId:uuid-0be5686f-418a-4094-b7b0-1fa30e31c407 ; 
+    relSubType:rep haObjId:uuid-e47ea1ab-3d47-44ff-a134-a9c60a678108 ; 
+    schema:artMedium "olieverf op panieel"@nl ; 
+    schema:artform "schilderij"@nl . 
+ 
+haObjId:uuid-e47ea1ab-3d47-44ff-a134-a9c60a678108 a premisowl:IntellectualEntity ; 
+    relSubType:isr haObjId:uuid-46425b95-4c1a-4a4e-81bd-6696edb52471, 
+        haObjId:uuid-b047caad-7775-4be4-a9c2-ed154dd73864 ; 
+    dct:alternative "Alt titel 2"@nl, 
+        "Deipara Virgo"@nl ; 
+    dct:available "2023-03-17T00:00:00+00:00"^^xsd:dateTime ; 
+    dct:contributor "bijdrager test", 
+        "bijdrager test 2" ; 
+    dct:created "2022-08-22"^^edtf:EDTF ; 
+    dct:description "GIVE 2D"@nl ; 
+    dct:issued "1530"^^edtf:EDTF ; 
+    dct:language "nl-BE" ; 
+    dct:publisher "uitgever test" ; 
+    dct:rights "public domain"@nl ; 
+    dct:spatial "ruimtelijk test" ; 
+    dct:subject "religieuze kunst"@nl, 
+        "religious art"@nl ; 
+    dct:temporal "temporaal test" ; 
+    dct:title "De verheerlijking van de Heilige Maagd"@nl ; 
+    premisowl:identifier haObjId:Acquisition_numberacquisitie3333, 
+        haObjId:Alternative_numberalt444, 
+        haObjId:Analoge_drageranaloge%20drager%20555, 
+        haObjId:Ardomeardmome66, 
+        haObjId:Basisbasis777, 
+        haObjId:DataPIDpid17, 
+        haObjId:Historical_carrierhistoric888, 
+        haObjId:Historical_record_numberhistdossier999, 
+        haObjId:Inventarisnummerinv10, 
+        haObjId:LOCAL_IDtestart333, 
+        haObjId:MEDIA_IDmedia11, 
+        haObjId:Object_numberadlib12, 
+        haObjId:Prirefref%2013, 
+        haObjId:Topstuk_IDtopstuk15, 
+        haObjId:Word_IDword14, 
+        haObjId:WorkPIDpid16 ,
+        haObjId:MEEMOO-PID7m03z1634f,
+        haObjId:MEEMOO-LOCAL-IDtestart333 ;
+    schema:artMedium "olieverf op paneel"@nl ; 
+    schema:artform "schilderij"@nl ; 
+    schema:creator haObjId:08cf68ade1747259a5d6cd3a023f1dd3, 
+        haObjId:33df38f2ea2056d30e28b0145b33b822, 
+        haObjId:d44d6104481ae5939e23e50d66e8a5a8 ; 
+    schema:depth haObjId:604d226a6b6b4d2e2a6508ffc91a032c ; 
+    schema:height haObjId:8d7c2efb81753e0c04f3f80bb48093d5 ; 
+    schema:width haObjId:9c50950c5f9ed60a2f2f90cacf05a4e4 . 
+ 
+haOrgId:OR-5h7bt1n a org:Organization ; 
+    skos:prefLabel "KMSKA"@nl ; 
+    schema:identifier "OR-5h7bt1n" . 
+ 
+haOrgId:OR-m30wc4t a org:Organization ; 
+    skos:prefLabel "artinflanders"@nl ; 
+    schema:identifier "OR-m30wc4t" . 
+ 
+<http://the-fr.org/id/file-format/11> a dct:FileFormat . 
+ 
+haObjId:uuid-b047caad-7775-4be4-a9c2-ed154dd73864 a premisowl:Representation ;
+    skos:hiddenLabel "representation_2" ; 
+    relSubType:inc haObjId:uuid-34eb1354-1ed0-4456-9b11-7b3d8c9ef9f1, 
+        haObjId:uuid-907542af-0804-447d-a6e0-be4a7cee3a21 ; 
+    relSubType:rep haObjId:uuid-e47ea1ab-3d47-44ff-a134-a9c60a678108 ; 
+    schema:artMedium "gegoten koper"@nl ; 
+    schema:artform "standbeeld"@nl .

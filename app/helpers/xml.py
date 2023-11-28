@@ -1,10 +1,22 @@
+import metsrw
 import rdflib
 from lxml import etree
 
-from app.helpers.graph import (
-    get_cp_id_from_graph,
-    get_local_ids_from_graph,
-    get_representations,
+from rdflib.term import Node
+
+from app.helpers.graph import get_cp_id_from_graph, get_representations
+from app.helpers.mappers import (
+    creator_mapper,
+    geometry_mapper,
+    local_id_mapper,
+    title_mapper,
+    license_mapper,
+    instrument_mapper,
+)
+from app.helpers.transformers import (
+    dimension_transform,
+    language_code_transform,
+    name_transform,
 )
 
 MH_VERSION = "22.1"
@@ -14,42 +26,242 @@ NSMAP = {
     "mh": f"https://zeticon.mediahaven.com/metadata/{MH_VERSION}/mh/",
 }
 
-MAPPING = {
-    "http://purl.org/dc/terms/title": [
-        "Descriptive.mh:Title",
-        "Dynamic.dc_title",
-        "Dynamic.dc_titles.registratie[]",
-    ],
-    "http://purl.org/dc/terms/publisher": ["Dynamic.dc_publisher.Uitgever[]"],
-    "http://purl.org/dc/terms/abstract": ["Dynamic.dc_description"],
-    "http://purl.org/dc/terms/alternative": ["Dynamic.dc_titles.alternatief[]"],
-    "http://purl.org/dc/terms/contributor": ["Dynamic.dc_contributors.Bijdrager[]"],
-    "http://purl.org/dc/terms/created": ["Dynamic.dcterms_created"],
-    "http://purl.org/dc/terms/creator": ["Dynamic.dc_creators.Maker[]"],
-    "http://purl.org/dc/terms/description": [
-        "Dynamic.dc_description_lang",
-        "Descriptive.mh:Description",
-    ],
-    "http://purl.org/dc/terms/issued": ["Dynamic.dcterms_issued"],
-    "http://purl.org/dc/terms/language": ["Dynamic.dc_languages.multiselect[]"],
-    "http://purl.org/dc/terms/license": ["Dynamic.dc_rights_licenses.multiselect[]"],
-    "http://purl.org/dc/terms/rights": ["Dynamic.dc_rights_comment"],
-    "http://purl.org/dc/terms/rightsHolder": [
-        "Dynamic.dc_rights_rightsHolders.Licentiehouder[]"
-    ],
-    "http://purl.org/dc/terms/spatial": ["Dynamic.dc_coverages.ruimte[]"],
-    "http://purl.org/dc/terms/subject": ["Dynamic.dc_subjects.Trefwoord[]"],
-    "http://purl.org/dc/terms/temporal": ["Dynamic.dc_coverages.tijd[]"],
-    "http://www.loc.gov/premis/v3#fixity": ["Dynamic.md5_viaa"],
+MAPPING: dict = {
+    "http://purl.org/dc/terms/title": {
+        "targets": [
+            "mhs:Descriptive.mh:Title",
+            "mhs:Dynamic.dc_title",
+        ]
+    },
+    "http://purl.org/dc/terms/publisher": {
+        "targets": ["mhs:Dynamic.dc_publisher.Uitgever[]"]
+    },
+    "http://purl.org/dc/terms/abstract": {"targets": ["mhs:Dynamic.dc_description"]},
+    "http://purl.org/dc/terms/alternative": {
+        "targets": ["mhs:Dynamic.dc_titles.alternatief[]"]
+    },
+    "http://purl.org/dc/terms/contributor": {
+        "targets": ["mhs:Dynamic.dc_contributors.Bijdrager[]"]
+    },
+    "http://purl.org/dc/terms/created": {"targets": ["mhs:Dynamic.dcterms_created"]},
+    "http://purl.org/dc/terms/creator": {
+        "targets": ["mhs:Dynamic.dc_creators.Maker[]"]
+    },
+    "http://purl.org/dc/terms/description": {
+        "targets": [
+            "mhs:Dynamic.dc_description_lang",
+            "mhs:Descriptive.mh:Description",
+        ]
+    },
+    "http://purl.org/dc/terms/issued": {"targets": ["mhs:Dynamic.dcterms_issued"]},
+    "http://purl.org/dc/terms/language": {
+        "targets": ["mhs:Dynamic.dc_languages.multiselect[]"],
+        "transformer": language_code_transform,
+    },
+    "http://purl.org/dc/terms/license": {
+        "mapping_strategy": license_mapper,
+        "targets": ["mhs:Dynamic.dc_rights_licenses.multiselect[]"],
+    },
+    "http://purl.org/dc/terms/rights": {"targets": ["mhs:Dynamic.dc_rights_comment"]},
+    "http://purl.org/dc/terms/rightsHolder": {
+        "targets": ["mhs:Dynamic.dc_rights_rightsHolders.Licentiehouder[]"]
+    },
+    "http://purl.org/dc/terms/spatial": {
+        "targets": ["mhs:Dynamic.dc_coverages.ruimte[]"]
+    },
+    "http://purl.org/dc/terms/subject": {
+        "targets": ["mhs:Dynamic.dc_subjects.Trefwoord[]"]
+    },
+    "http://purl.org/dc/terms/temporal": {
+        "targets": ["mhs:Dynamic.dc_coverages.tijd[]"]
+    },
+    "http://www.loc.gov/premis/v3#fixity": {"targets": ["mhs:Dynamic.md5_viaa"]},
+    "https://schema.org/height": {
+        "targets": ["mhs:Dynamic.dimensions.height_in_mm"],
+        "transformer": dimension_transform,
+    },
+    "https://schema.org/width": {
+        "targets": ["mhs:Dynamic.dimensions.width_in_mm"],
+        "transformer": dimension_transform,
+    },
+    "https://schema.org/depth": {
+        "targets": ["mhs:Dynamic.dimensions.depth_in_mm"],
+        "transformer": dimension_transform,
+    },
+    "https://schema.org/weight": {
+        "targets": ["mhs:Dynamic.dimensions.weight_in_kg"],
+        "transformer": dimension_transform,
+    },
+    "https://schema.org/artform": {
+        "targets": ["mhs:Dynamic.artform"],
+    },
+    "https://schema.org/artMedium": {
+        "targets": ["mhs:Dynamic.artmedium"],
+    },
+    "https://schema.org/creator": {
+        "mapping_strategy": creator_mapper,
+    },
+    "http://www.loc.gov/premis/rdf/v3/identifier": {
+        "mapping_strategy": local_id_mapper,
+    },
+    "http://www.w3id.org/omg#hasGeometry": {
+        "mapping_strategy": geometry_mapper,
+    },
+    "https://data.hetarchief.be/ns/object/light-metering": {
+        "targets": ["mhs:Dynamic.light_metering"]
+    },
+    "https://data.hetarchief.be/ns/object/scan-setup": {
+        "targets": ["mhs:Dynamic.scanning.scansetup"]
+    },
+    "https://data.hetarchief.be/ns/object/height-calibration-object": {
+        "targets": [
+            "mhs:Dynamic.mesh_geometry.height_calibration_object",
+            "mhs:Dynamic.mesh_geometry.height_calibration_object_in_mm",
+        ],
+        "transformer": dimension_transform,
+    },
+    "http://id.loc.gov/vocabulary/preservation/eventRelatedAgentRole/exe": {
+        "targets": ["mhs:Dynamic.post_processing_software"],
+        "transformer": name_transform,
+    },
+    "https://schema.org/isPartOf": {"mapping_strategy": title_mapper},
+    "http://www.loc.gov/premis/rdf/v3/note": {"targets": ["mhs:Dynamic.qc_note"]},
+    "https://schema.org/instrument": {"mapping_strategy": instrument_mapper},
+    "http://id.loc.gov/vocabulary/preservation/eventRelatedAgentRole/imp": {
+        "targets": ["mhs:Dynamic.sp_name"]
+    }
 }
 
 
-def build_mh_mets():
-    # Build MH mets to be used in the MH 2.0 complex, coming in v0.2
-    pass
+def lxmlns(ns: str) -> str:
+    """Return namespace"""
+    return f"{{{NSMAP[ns]}}}"
 
 
-def build_mh_sidecar(g: rdflib.Graph) -> str:
+def qname_text(ns: str, local_name: str) -> str:
+    if ns == "mets":
+        return f'{{{"http://www.loc.gov/METS/"}}}{local_name}'
+    return f"{lxmlns(ns)}{local_name}"
+
+
+def build_mh_mets(
+    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+) -> str:
+    ie = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+    )
+    mets = metsrw.METSDocument()
+
+    mets.agents.append(metsrw.Agent("CUSTODIAN", type="ORGANIZATION", name="meemoo"))
+
+    root_folder = metsrw.FSEntry(use="Original", type="MaterialArtwork")
+
+    mets_fs = metsrw.FSEntry(
+        fileid="FILEID-MATERIALARTWORK-METS",
+        use="Disk",
+        path="mets.xml",
+        type="Representation",
+        label="Original",
+        file_uuid="FILEID-MATERIALARTWORK-METS",
+    )
+    mets_med = metsrw.FSEntry(type="Media")
+    mets_med.add_dmdsec(
+        build_minimal_sidecar(f"{pid}_mets"),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-MATERIALARTWORK-METS",
+        },
+    )
+    mets_med.add_child(mets_fs)
+    root_folder.add_child(mets_med)
+    root_folder.add_dmdsec(
+        build_mh_sidecar(g, [ie], pid, dynamic_tags),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-MATERIALARTWORK",
+        },
+    )
+
+    representations = get_representations(g)
+
+    for representation in representations:
+        representation_index = representation.label.split("_")[1]
+        for file_index, file in enumerate(representation.files):
+            representation_media = metsrw.FSEntry(type="Media")
+            representation_media.add_dmdsec(
+                build_mh_sidecar(
+                    g,
+                    [representation.node, file.node, *representation.events],
+                    f"{pid}_{representation_index}_{file_index}",
+                ),
+                "OTHER",
+                **{
+                    "othermdtype": "mhs:Sidecar",
+                    "id": f"DMDID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                },
+            )
+            file_representation = metsrw.FSEntry(
+                fileid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                use=archive_location,
+                path=f"{representation.label}/{file.filename}",
+                type="Representation",
+                label="Original",
+                file_uuid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                checksumtype="MD5",
+                checksum=file.fixity,
+            )
+            representation_media.add_child(file_representation)
+            root_folder.add_child(representation_media)
+
+    mets.append_file(root_folder)
+
+    m = mets.serialize(normative_structmap=False)
+
+    xml = etree.tostring(
+        m, xml_declaration=True, encoding="UTF-8", pretty_print=True
+    ).decode()
+
+    return xml
+
+
+def build_minimal_sidecar(external_id: str) -> str:
+    root = etree.Element(
+        etree.QName(NSMAP["mhs"], "Sidecar"),
+        nsmap=NSMAP,
+        attrib={"version": MH_VERSION},
+    )
+
+    administrative_node = etree.Element(
+        etree.QName(NSMAP["mhs"], "Administrative"), nsmap=NSMAP
+    )
+    id_node = etree.Element(etree.QName(NSMAP["mh"], "ExternalId"), nsmap=NSMAP)
+
+    descriptive_node = etree.Element(
+        etree.QName(NSMAP["mhs"], "Descriptive"), nsmap=NSMAP
+    )
+    title_node = etree.Element(etree.QName(NSMAP["mh"], "Title"), nsmap=NSMAP)
+
+    root.append(administrative_node)
+    root.append(descriptive_node)
+    administrative_node.append(id_node)
+    descriptive_node.append(title_node)
+    id_node.text = external_id
+    title_node.text = external_id
+
+    xml = etree.tostring(root, pretty_print=True).decode()
+
+    return xml
+
+
+def build_mh_sidecar(
+    g: rdflib.Graph,
+    subjects,
+    pid: str,
+    dynamic_tags: dict[str, str] = {},
+) -> str:
     """
     Builds a MH 2.0 sidecar based on metadata from a graph
     """
@@ -59,85 +271,103 @@ def build_mh_sidecar(g: rdflib.Graph) -> str:
         attrib={"version": MH_VERSION},
     )
 
-    # Add mappable fields to the XML
-    for predicate in MAPPING.keys():
-        for key in MAPPING[predicate]:
-            for obj in g.objects(predicate=rdflib.URIRef(predicate)):
-                if obj.language and obj.language != "nl":
-                    # Skip non dutch fields.
-                    continue
-                splitted = key.split(".")
-                xml_tag = root
-                for tag in splitted:
-                    if tag in ["Dynamic", "Descriptive"]:
-                        if xml_tag.find(f"mhs:{tag}", namespaces=NSMAP) is not None:
-                            xml_tag = xml_tag.find(f"mhs:{tag}", namespaces=NSMAP)
-                            continue
-                        new = etree.Element(etree.QName(NSMAP["mhs"], tag), nsmap=NSMAP)
-                    else:
-                        if (
-                            not tag.endswith("[]")
-                            and xml_tag.find(tag, namespaces=NSMAP) is not None
-                        ):
-                            xml_tag = xml_tag.find(tag)
-                            continue
-                        if tag.endswith("[]"):
-                            tag = tag.removesuffix("[]")
-                        if ":" in tag:
-                            prefix = tag.split(":")[0]
-                            tag = tag.split(":")[1]
-                            new = etree.Element(
-                                etree.QName(NSMAP[prefix], tag), nsmap=NSMAP
-                            )
-                        else:
-                            new = etree.Element(tag)
+    # Add external ID
+    administrative_node = etree.Element(
+        etree.QName(NSMAP["mhs"], "Administrative"), nsmap=NSMAP
+    )
+    id_node = etree.Element(etree.QName(NSMAP["mh"], "ExternalId"), nsmap=NSMAP)
+    root.append(administrative_node)
+    administrative_node.append(id_node)
+    id_node.text = pid
 
-                    xml_tag.append(new)
-                    xml_tag = new
-                xml_tag.text = obj
+    # Add mappable fields to the XML
+    for subject in subjects:
+        for predicate in MAPPING.keys():
+            map = {}
+            if MAPPING[predicate].get("mapping_strategy"):
+                map = MAPPING[predicate]["mapping_strategy"](
+                    g,
+                    subject,
+                    g.objects(predicate=rdflib.URIRef(predicate), subject=subject),
+                )
+            else:
+                for key in MAPPING[predicate]["targets"]:
+                    for obj in g.objects(
+                        predicate=rdflib.URIRef(predicate), subject=subject
+                    ):
+                        if MAPPING[predicate].get("transformer"):
+                            if type(obj) == rdflib.URIRef:
+                                result = g.predicate_objects(subject=obj)
+                                obj = MAPPING[predicate]["transformer"](result)
+                                obj = rdflib.Literal(obj)
+                            else:
+                                obj = rdflib.Literal(
+                                    MAPPING[predicate]["transformer"](obj)
+                                )
+                        else:
+                            if type(obj) == rdflib.URIRef:
+                                obj = g.namespace_manager.compute_qname(obj)[2]
+                        if (
+                            type(obj) == rdflib.Literal
+                            and obj.language
+                            and obj.language != "nl"
+                        ):
+                            # Skip non dutch fields.
+                            continue
+                        map[key] = [*map.get(key, []), str(obj)]
+            add_fields_to_xml(root, map)
 
     # Add some extra dynamic metadata
+    # Create Dynamic node if needed
     dynamic_tag = root.find("mhs:Dynamic", namespaces=NSMAP)
+    if dynamic_tag is None:
+        dynamic_tag = etree.Element(etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP)
+        root.append(dynamic_tag)
 
-    # Add sp_name/workflow
-    sp_tag = etree.Element("sp_name")
-    dynamic_tag.append(sp_tag)
-    sp_tag.text = "sipin"
+    # Add PID
+    pid_tag = etree.Element("PID")
+    dynamic_tag.append(pid_tag)
+    pid_tag.text = pid.split("_")[0]
 
     # Add CP-id to the XML
     cp_tag = etree.Element("CP_id")
     dynamic_tag.append(cp_tag)
     cp_tag.text = get_cp_id_from_graph(g)
 
-    # Add local id's to the XML
-    local_ids = get_local_ids_from_graph(g)
+    for key, value in dynamic_tags.items():
+        if value:
+            key_tag = etree.Element(key)
+            dynamic_tag.append(key_tag)
+            key_tag.text = value
 
-    if len(list(local_ids)) == 1:
-        main_local_id = local_ids[list(local_ids)[0]]
-        main_local_id = local_ids.pop("LOCAL_ID", "")
-    else:
-        main_local_id = local_ids.pop("LOCAL_ID", "")
-
-    if main_local_id:
-        local_id_tag = etree.Element("dc_identifier_localid")
-        dynamic_tag.append(local_id_tag)
-        local_id_tag.text = main_local_id
-
-    if local_ids:
-        local_ids_tag = etree.Element("dc_identifier_localids")
-        dynamic_tag.append(local_ids_tag)
-        for type, id in local_ids.items():
-            tag = etree.Element(type)
-            local_ids_tag.append(tag)
-            tag.text = id
-
-    # Add the fixity to the XML
-    representations = get_representations(g)
-    fixity = representations[0].files[0].fixity
-    fixity_tag = etree.Element("md5")
-    dynamic_tag.append(fixity_tag)
-    fixity_tag.text = fixity
+    # Set ingest_workflow to sipin
+    sp_tag = etree.Element("ingest_workflow")
+    dynamic_tag.append(sp_tag)
+    sp_tag.text = "sipin"
 
     xml = etree.tostring(root, pretty_print=True).decode()
 
     return xml
+
+
+def add_fields_to_xml(root, fields: dict[str, str]):
+    for key, values in fields.items():
+        for value in values:
+            splitted = key.split(".")
+            xml_tag = root
+            for tag in splitted:
+                if (
+                    not tag.endswith("[]")
+                    and xml_tag.find(tag, namespaces=NSMAP) is not None
+                ):
+                    xml_tag = xml_tag.find(tag, namespaces=NSMAP)
+                    continue
+                tag = tag.removesuffix("[]")
+
+                prefix = tag.rpartition(":")[0]
+                tag = tag.rpartition(":")[2]
+                new = etree.Element(etree.QName(NSMAP.get(prefix), tag), nsmap=NSMAP)
+
+                xml_tag.append(new)
+                xml_tag = new
+            xml_tag.text = value

@@ -5,8 +5,10 @@ app:
     host: !ENV ${HOST}
     mh-sip-creator:
         consumer_topic: !ENV ${SIP_VALIDATE_SHACL_TOPIC}
-        producer_topic: !ENV ${MH_SIP_PRODUCER_TOPIC}
+        producer_topic_basic: !ENV ${MH_SIP_PRODUCER_TOPIC}
+        producer_topic_complex: !ENV ${MH_SIP_COMPLEX_PRODUCER_TOPIC}
         aip_folder: !ENV ${MH_SIP_FOLDER}
+        archive_location: !ENV ${ARCHIVE_LOCATION}
     pulsar:
         host: !ENV ${PULSAR_HOST}
         port: !ENV ${PULSAR_PORT}

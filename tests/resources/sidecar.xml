@@ -1,19 +1,21 @@
 <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+  <mhs:Administrative>
+    <mh:ExternalId>testpid</mh:ExternalId>
+  </mhs:Administrative>
   <mhs:Descriptive>
     <mh:Title>de titel van de episode</mh:Title>
     <mh:Description>de beschrijving van de episode</mh:Description>
   </mhs:Descriptive>
   <mhs:Dynamic>
     <dc_title>de titel van de episode</dc_title>
-    <dc_titles>
-      <registratie>de titel van de episode</registratie>
-      <alternatief>de alternatieve titel van de episode</alternatief>
-    </dc_titles>
     <dc_publisher>
       <Uitgever>VIAA</Uitgever>
       <Uitgever>meemoo</Uitgever>
     </dc_publisher>
     <dc_description>de samenvatting van de episode</dc_description>
+    <dc_titles>
+      <alternatief>de alternatieve titel van de episode</alternatief>
+    </dc_titles>
     <dc_contributors>
       <Bijdrager>contributor 1</Bijdrager>
       <Bijdrager>contributor 2</Bijdrager>
@@ -47,12 +49,13 @@
       <Trefwoord>Trefwoord 2</Trefwoord>
       <Trefwoord>Trefwoord 3</Trefwoord>
     </dc_subjects>
-    <sp_name>sipin</sp_name>
-    <CP_id>OR-m30wc4t</CP_id>
     <dc_identifier_localids>
       <Object_number>v_2021073114124363</Object_number>
       <local_id>ce980d9</local_id>
     </dc_identifier_localids>
+    <PID>testpid</PID>
+    <CP_id>OR-5h7bt1n</CP_id>
     <md5>18513a8d61c6f2cbaaeeedd754b01d6b</md5>
+    <ingest_workflow>sipin</ingest_workflow>
   </mhs:Dynamic>
 </mhs:Sidecar>

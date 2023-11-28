@@ -2,6 +2,7 @@ import rdflib
 
 from app.models.file import File
 from app.models.representation import Representation
+from app.models.sip import SIP
 
 
 class GraphException(Exception):
@@ -44,6 +45,39 @@ def parse_graph(data: str, format: str = "json-ld") -> rdflib.Graph:
 
 
 def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
+    """Retrieves the CP-id of the archivist from a given graph. Returns an empty string if no CP-id is found.
+
+    Args:
+        graph (rdflib.Graph): The metadata graph of the SIP.
+
+    Returns:
+        str: The CP-id (OR-XXXXXXX) or an empty string.
+    """
+    organizations = graph.subjects(
+        object=rdflib.URIRef("http://www.w3.org/ns/org#Organization"),
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+    )
+
+    for organization in organizations:
+        agents = graph.subjects(
+            object=organization, predicate=rdflib.URIRef("https://schema.org/agent")
+        )
+        for agent in agents:
+            role = graph.value(
+                subject=agent, predicate=rdflib.URIRef("https://schema.org/roleName")
+            )
+
+            if str(role) == "ARCHIVIST":
+                cp_id = graph.value(
+                    subject=organization,
+                    predicate=rdflib.URIRef("https://schema.org/identifier"),
+                )
+
+                return str(cp_id)
+    return ""
+
+
+def get_sp_id_from_graph(graph: rdflib.Graph) -> str:
     """Retrieves the CP-id from a given graph.
 
     Args:
@@ -62,33 +96,81 @@ def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
     return str(cp_id)
 
 
-def get_local_ids_from_graph(graph: rdflib.Graph) -> dict[str, str]:
-    """Retrieves the localids from a given graph.
+def get_sip_info(graph: rdflib.Graph) -> SIP:
+    sip_node = graph.value(
+        object=rdflib.URIRef("https://data.hetarchief.be/ns/sip/SIP"),
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+    )
+
+    sip_id = graph.namespace_manager.compute_qname(sip_node)[2]
+
+    sip_profile = ""
+    for sip_type in graph.objects(
+        subject=sip_node, predicate=rdflib.URIRef("http://purl.org/dc/terms/conformsTo")
+    ):
+        if sip_type.startswith(graph.namespace_manager.compute_qname(sip_node)[1]):
+            sip_profile = graph.namespace_manager.compute_qname(sip_type)[2]
+
+    batch_id = ""
+    if sip_batch_id := graph.value(
+        subject=sip_node, predicate=rdflib.URIRef("https://schema.org/isPartOf")
+    ):
+        type = graph.value(
+            subject=sip_batch_id,
+            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        )
+        type_text = graph.namespace_manager.compute_qname(type)[2]
+        if type_text == "Batch":
+            batch_id = str(
+                graph.value(
+                    subject=sip_batch_id,
+                    predicate=rdflib.URIRef("https://schema.org/identifier"),
+                )
+            )
+
+    format = ""
+    if format_node := graph.value(
+        subject=sip_node, predicate=rdflib.URIRef("http://purl.org/dc/terms/format")
+    ):
+        format_mapping = {
+            "Photographs - Digital": "photo",
+            "Scanned 3D Objects (output from photogrammetry scanning)": "3D-model",
+        }
+        format = format_mapping.get(str(format_node), "")
+
+    # sip_ies = get_intellectual_entities(graph)
+    sip_representations = get_representations(graph)
+
+    sip = SIP(
+        id=sip_id,
+        profile=sip_profile,
+        batch_id=batch_id,
+        format=format,
+        intellectual_entities=[],
+        representations=sip_representations,
+    )
+
+    return sip
+
+
+def get_pid_from_graph(graph: rdflib.Graph) -> str:
+    """Retrieves the PID from a given graph. Returns an empty string if no PID is found.
 
     Args:
         graph (rdflib.Graph): The metadata graph of the SIP.
 
     Returns:
-        dict[str, str]: A dict where the key is the type of localid, and the value the localid
+        str: The PID or an empty string.
     """
-    localids = {}
-    for identifier_object in graph.objects(
-        predicate=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/identifier")
-    ):
-        type = graph.namespace_manager.compute_qname(
-            graph.value(
-                predicate=rdflib.URIRef(
-                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-                ),
-                subject=identifier_object,
-            )
-        )[2]
-        value = graph.value(
-            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#value"),
-            subject=identifier_object,
-        )
-        localids[type] = str(value)
-    return localids
+    pid_node = graph.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("https://data.hetarchief.be/id/object/MEEMOO-PID"),
+    )
+    if pid_node:
+        pid = graph.value(subject=pid_node)
+        return str(pid)
+
+    return ""
 
 
 def get_representations(graph: rdflib.Graph) -> list[Representation]:
@@ -105,7 +187,38 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
     for representation in graph.subjects(
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Representation")
     ):
-        r = Representation(str(representation))
+        label = graph.value(
+            subject=representation,
+            predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#hiddenLabel"),
+        )
+
+        events = []
+        event_nodes = list(
+            graph.subjects(
+                object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/Event"),
+                predicate=rdflib.URIRef(
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                ),
+            )
+        )
+
+        for event_node in event_nodes:
+            if graph.value(
+                subject=event_node, object=representation, predicate=None
+            ):
+                events.append(event_node)
+
+            # events = graph.subjects(
+            #     object=representation,
+            #     predicate=rdflib.URIRef(
+            #         "http://id.loc.gov/vocabulary/preservation/eventRelatedObjectRole/out"
+            #     ),
+            # )
+
+        r = Representation(
+            id=str(representation), label=str(label), node=representation, events=events
+        )
+
         representations.append(r)
         for file in graph.objects(
             subject=representation,
@@ -114,8 +227,8 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
             ),
         ):
             f = File(
-                str(file),
-                str(
+                id=str(file),
+                filename=str(
                     graph.value(
                         subject=file,
                         predicate=rdflib.URIRef(
@@ -123,7 +236,7 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
                         ),
                     )
                 ),
-                str(
+                fixity=str(
                     graph.value(
                         subject=graph.value(
                             subject=file,
@@ -133,6 +246,7 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
                         )
                     )
                 ),
+                node=file,
             )
             r.files.append(f)
     return representations

@@ -1,0 +1,81 @@
+<mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/" xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+  <mhs:Administrative>
+    <mh:ExternalId>testpid</mh:ExternalId>
+  </mhs:Administrative>
+  <mhs:Descriptive>
+    <mh:Title>De verheerlijking van de Heilige Maagd</mh:Title>
+    <mh:Description>GIVE 2D</mh:Description>
+  </mhs:Descriptive>
+  <mhs:Dynamic>
+    <dc_title>De verheerlijking van de Heilige Maagd</dc_title>
+    <dc_publisher>
+      <Uitgever>uitgever test</Uitgever>
+    </dc_publisher>
+    <dc_titles>
+      <alternatief>Alt titel 2</alternatief>
+      <alternatief>Deipara Virgo</alternatief>
+    </dc_titles>
+    <dc_contributors>
+      <Bijdrager>bijdrager test</Bijdrager>
+      <Bijdrager>bijdrager test 2</Bijdrager>
+    </dc_contributors>
+    <dcterms_created>2022-08-22</dcterms_created>
+    <dc_description_lang>GIVE 2D</dc_description_lang>
+    <dcterms_issued>1530</dcterms_issued>
+    <dc_languages>
+      <multiselect>nl</multiselect>
+    </dc_languages>
+    <dc_rights_licenses>
+      <multiselect>VIAA-ONDERWIJS</multiselect>
+      <multiselect>VIAA-ONDERZOEK</multiselect>
+      <multiselect>VIAA-INTRA_CP-CONTENT</multiselect>
+      <multiselect>VIAA-INTRA_CP-METADATA-ALL</multiselect>
+      <multiselect>VIAA-PUBLIEK-METADATA-LTD</multiselect>
+      <multiselect>BEZOEKERTOOL-CONTENT</multiselect>
+      <multiselect>BEZOEKERTOOL-METADATA-ALL</multiselect>
+    </dc_rights_licenses>
+    <dc_rights_comment>public domain</dc_rights_comment>
+    <dc_coverages>
+      <ruimte>ruimtelijk test</ruimte>
+      <tijd>temporaal test</tijd>
+    </dc_coverages>
+    <dc_subjects>
+      <Trefwoord>religieuze kunst</Trefwoord>
+      <Trefwoord>religious art</Trefwoord>
+    </dc_subjects>
+    <dimensions>
+      <height_in_mm>1310</height_in_mm>
+      <width_in_mm>1080</width_in_mm>
+      <depth_in_mm>30</depth_in_mm>
+    </dimensions>
+    <artform>schilderij</artform>
+    <artmedium>olieverf op paneel</artmedium>
+    <dc_creators>
+      <Maker>Ambrosius Benson</Maker>
+      <Regisseur>Test regisseur naam</Regisseur>
+      <Fotograaf>Cedric Verhelst</Fotograaf>
+    </dc_creators>
+    <dc_identifier_localids>
+      <Acquisition_number>acquisitie3333</Acquisition_number>
+      <Alternative_number>alt444</Alternative_number>
+      <Analoge_drager>analoge drager 555</Analoge_drager>
+      <Ardome>ardmome66</Ardome>
+      <Basis>basis777</Basis>
+      <DataPID>pid17</DataPID>
+      <Historical_carrier>historic888</Historical_carrier>
+      <Historical_record_number>histdossier999</Historical_record_number>
+      <Inventarisnummer>inv10</Inventarisnummer>
+      <LOCAL_ID>testart333</LOCAL_ID>
+      <MEDIA_ID>media11</MEDIA_ID>
+      <Object_number>adlib12</Object_number>
+      <Priref>ref 13</Priref>
+      <Topstuk_ID>topstuk15</Topstuk_ID>
+      <Word_ID>word14</Word_ID>
+      <WorkPID>pid16</WorkPID>
+      <MEEMOO-PID>7m03z1634f</MEEMOO-PID>
+    </dc_identifier_localids>
+    <PID>testpid</PID>
+    <CP_id>OR-5h7bt1n</CP_id>
+    <ingest_workflow>sipin</ingest_workflow>
+  </mhs:Dynamic>
+</mhs:Sidecar>
