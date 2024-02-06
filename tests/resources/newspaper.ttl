@@ -1,0 +1,545 @@
+@prefix bf: <http://id.loc.gov/ontologies/bibframe/> .
+@prefix cryptographicHashFunctions: <http://id.loc.gov/vocabulary/preservation/cryptographicHashFunctions/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix edtf: <http://id.loc.gov/datatypes/edtf/> .
+@prefix evtRelAgent: <http://id.loc.gov/vocabulary/preservation/eventRelatedAgentRole/> .
+@prefix evtRelObject: <http://id.loc.gov/vocabulary/preservation/eventRelatedObjectRole/> .
+@prefix haBib: <https://data.hetarchief.be/ns/bibliographic/> .
+@prefix haObj: <https://data.hetarchief.be/ns/object/> .
+@prefix haObjId: <https://data.hetarchief.be/id/object/> .
+@prefix haOrgId: <https://data.hetarchief.be/id/organization/> .
+@prefix haSip: <https://data.hetarchief.be/ns/sip/> .
+@prefix haSipId: <https://data.hetarchief.be/id/sip/1.1/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix premis: <http://www.loc.gov/premis/rdf/v3/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix relSubType: <http://id.loc.gov/vocabulary/preservation/relationshipSubType/> .
+@prefix schema: <https://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+haObjId:be439fa2c63b73d5041d1798936900c8 a bf:Series ;
+    schema:identifier <https://anet.be/record/opacbnc/c:bnc:99999/N> .
+
+haObjId:uuid-b05d1f1b-fc5d-4a55-819a-ffb5ce2c1f1e a premis:Event,
+        haObj:transcription ;
+    evtRelAgent:exe haObjId:uuid-29e1716b-55a3-4e98-bcf5-ea3a57ca469c ;
+    evtRelObject:out haObjId:uuid-f59f6fc6-bd50-4cb2-ae41-2a29eec96e52 ;
+    evtRelObject:sou haObjId:uuid-be3538f9-4f00-4a92-ad63-c4b12e06fc99 ;
+    premis:note "Generate ALTO XML from TIFF via OCR" ;
+    prov:endedAtTime "2023-11-10T00:00:00+02:00"^^xsd:dateTime ;
+    prov:startedAtTime "2023-11-10T00:00:00+02:00"^^xsd:dateTime .
+
+haSipId:uuid-f82f9e39-3760-4dcd-8f3d-7e482f231988 a haSip:SIP ;
+    dct:conformsTo haSipId:newspaper,
+        <https://earksip.dilcis.eu/profile/E-ARK-SIP.xml> ;
+    dct:format "Textual works - Print" ;
+    schema:agent [ a schema:Role ;
+            schema:agent haOrgId:OR-v97zq9j ;
+            schema:roleName "ARCHIVIST" ],
+        [ a schema:Role ;
+            schema:agent haOrgId:3139ac42aa0f553ac530101ffb02cc28 ;
+            schema:roleName "CREATOR" ],
+        [ a schema:Role ;
+            schema:agent haOrgId:OR-qj77x56 ;
+            schema:roleName "CREATOR" ] .
+
+<https://anet.be> a bf:Series ;
+    rdfs:label "Abraham. Catalogus van Belgische kranten" .
+
+haObjId:03f8b4292c79383464679a0a94f4d0bb a bf:Contribution ;
+    bf:agent haObjId:4a5bc950717d5bc0418c08792fac4c33 ;
+    bf:role haObjId:fdf6c1980f0d5e5bffc6a4c3b0a21f43 .
+
+haObjId:0485df95bbfad639457c6573459c5983 a bf:GenreForm ;
+    rdfs:label "amateur newspapers" ;
+    bf:source <https://www.lib.washington.edu/gmm/collections/mcnews/ngl> .
+
+haObjId:0832c1202da8d382318e329a7c133ea0 a bf:Topic ;
+    rdfs:label "cats" .
+
+haObjId:0986e078691514789b47696d42a01025 a cryptographicHashFunctions:md5 ;
+    rdf:value "0986e078691514789b47696d42a01025" .
+
+haObjId:18e724ac0d277e271a81600ef1461d94 a cryptographicHashFunctions:md5 ;
+    rdf:value "18e724ac0d277e271a81600ef1461d94" .
+
+haObjId:24317ef322f92f000cd2c88a5a303f40 a bf:Carrier ;
+    rdfs:label "print" ;
+    bf:source <https://www.loc.gov/standards/valuelist/marcform.html> .
+
+haObjId:243eebd40faa8e12c36dc91a1f17138e a cryptographicHashFunctions:md5 ;
+    rdf:value "243eebd40faa8e12c36dc91a1f17138e" .
+
+haObjId:29bc54305b6f4e6bfcb066d7ba152abd a bf:Summary ;
+    rdfs:label "Le Chat Blanc abstract etc. etc." .
+
+haObjId:2fbf20e3f7b1a2e53fa7ce79700c0139 a cryptographicHashFunctions:md5 ;
+    rdf:value "2fbf20e3f7b1a2e53fa7ce79700c0139" .
+
+haObjId:2fd3dec88cead1d784895918fb6bb06b a cryptographicHashFunctions:md5 ;
+    rdf:value "2fd3dec88cead1d784895918fb6bb06b" .
+
+haObjId:3be1bd272c989efb76984cbe37bff1bf a cryptographicHashFunctions:md5 ;
+    rdf:value "3be1bd272c989efb76984cbe37bff1bf" .
+
+haObjId:3f404bbed1672b52480a334dd13ab4a4 a bf:Topic ;
+    rdfs:label "chat blanc" .
+
+haObjId:44b09b94ff453317af6fe97b92aafed7 a cryptographicHashFunctions:md5 ;
+    rdf:value "44b09b94ff453317af6fe97b92aafed7" .
+
+haObjId:4a5bc950717d5bc0418c08792fac4c33 a bf:Person ;
+    schema:familyName "Verne" ;
+    schema:givenName "Jules" .
+
+haObjId:4d38ea14b56645df762b5f9c6c4f3dbd a cryptographicHashFunctions:md5 ;
+    rdf:value "4d38ea14b56645df762b5f9c6c4f3dbd" .
+
+haObjId:534af70a2909841bc3d93a19322eede0 a cryptographicHashFunctions:md5 ;
+    rdf:value "534af70a2909841bc3d93a19322eede0" .
+
+haObjId:5730d92ca352d9b29aaf8c8658f2ed09 a cryptographicHashFunctions:md5 ;
+    rdf:value "5730d92ca352d9b29aaf8c8658f2ed09" .
+
+haObjId:5e418480772f8557285b856b9147dd48 a bf:Place ;
+    rdfs:label "Ghent, Belgium" ;
+    bf:code "BEL" ;
+    bf:source <https://www.iso.org/iso-3166-country-codes.html> .
+
+haObjId:68283e345cc949cb59ba7b09e7f12ce7 a cryptographicHashFunctions:md5 ;
+    rdf:value "68283e345cc949cb59ba7b09e7f12ce7" .
+
+haObjId:69da234ae73a51cbeca323b8cefd1f4e a bf:GenreForm ;
+    rdfs:label "newspaper" ;
+    bf:source <https://www.loc.gov/standards/valuelist/marcgt.html> .
+
+haObjId:69f132a12fee1e2a9c175564e6f2da11 a cryptographicHashFunctions:md5 ;
+    rdf:value "69f132a12fee1e2a9c175564e6f2da11" .
+
+haObjId:7147e04c4401d38bcce6f0bba61f0e1f a cryptographicHashFunctions:md5 ;
+    rdf:value "7147e04c4401d38bcce6f0bba61f0e1f" .
+
+haObjId:7341d3d55c9789e2b75fd4ed75ef5767 a cryptographicHashFunctions:md5 ;
+    rdf:value "7341d3d55c9789e2b75fd4ed75ef5767" .
+
+haObjId:7d0278ab7c1b0a64d600b450d32d5129 a bf:Extent ;
+    rdfs:label "59.7 x 74.9" ;
+    bf:unit haObjId:820eb5b696ea2a657c0db1e258dc7d81 .
+
+haObjId:820eb5b696ea2a657c0db1e258dc7d81 a bf:Unit ;
+    rdfs:label "cm" .
+
+haObjId:857928aa04d704669ee2d3df2dc0c811 a cryptographicHashFunctions:md5 ;
+    rdf:value "857928aa04d704669ee2d3df2dc0c811" .
+
+haObjId:930c2ea3505021d8bb0cd4ef8b7d7508 a cryptographicHashFunctions:md5 ;
+    rdf:value "930c2ea3505021d8bb0cd4ef8b7d7508" .
+
+haObjId:9618480b3b4466a8679e7f742293e471 a cryptographicHashFunctions:md5 ;
+    rdf:value "9618480b3b4466a8679e7f742293e471" .
+
+haObjId:987049735baa85af6b0998079fc30df3 a cryptographicHashFunctions:md5 ;
+    rdf:value "987049735baa85af6b0998079fc30df3" .
+
+haObjId:99757a38731eb21418cd5836bc95d1e1 a bf:Identifier ;
+    rdf:value "uuid-9f07a3eb-1edb-4119-a98e-83ec7fd8d61c" .
+
+haObjId:BEZOEKERTOOL-CONTENT a bf:UsageAndAccessPolicy ;
+    rdfs:label "BEZOEKERTOOL-CONTENT" .
+
+haObjId:BEZOEKERTOOL-METADATA-ALL a bf:UsageAndAccessPolicy ;
+    rdfs:label "BEZOEKERTOOL-METADATA-ALL" .
+
+haObjId:VIAA-INTRA_CP-CONTENT a bf:UsageAndAccessPolicy ;
+    rdfs:label "VIAA-INTRA_CP-CONTENT" .
+
+haObjId:VIAA-INTRA_CP-METADATA-ALL a bf:UsageAndAccessPolicy ;
+    rdfs:label "VIAA-INTRA_CP-METADATA-ALL" .
+
+haObjId:VIAA-ONDERWIJS a bf:UsageAndAccessPolicy ;
+    rdfs:label "VIAA-ONDERWIJS" .
+
+haObjId:VIAA-ONDERZOEK a bf:UsageAndAccessPolicy ;
+    rdfs:label "VIAA-ONDERZOEK" .
+
+haObjId:VIAA-PUBLIEK-METADATA-LTD a bf:UsageAndAccessPolicy ;
+    rdfs:label "VIAA-PUBLIEK-METADATA-LTD" .
+
+haObjId:a65d975de019813ff2d1835579ce2671 a cryptographicHashFunctions:md5 ;
+    rdf:value "a65d975de019813ff2d1835579ce2671" .
+
+haObjId:a7ef160e8522a8eb9fdeafc21a85c5a0 a cryptographicHashFunctions:md5 ;
+    rdf:value "a7ef160e8522a8eb9fdeafc21a85c5a0" .
+
+haObjId:ab9f05e1d16e3583fdfd6031cfaad3b0 a cryptographicHashFunctions:md5 ;
+    rdf:value "ab9f05e1d16e3583fdfd6031cfaad3b0" .
+
+haObjId:ae4304079248f5dd4a73903e76bcd763 a cryptographicHashFunctions:md5 ;
+    rdf:value "ae4304079248f5dd4a73903e76bcd763" .
+
+haObjId:b005c5563621a8500cbae591f2ee4476 a cryptographicHashFunctions:md5 ;
+    rdf:value "b005c5563621a8500cbae591f2ee4476" .
+
+haObjId:b203825339525959f488ba1849b61114 a cryptographicHashFunctions:md5 ;
+    rdf:value "b203825339525959f488ba1849b61114" .
+
+haObjId:b2ed2598f510223cc7a4c79330c5bb2a a cryptographicHashFunctions:md5 ;
+    rdf:value "b2ed2598f510223cc7a4c79330c5bb2a" .
+
+haObjId:b8c411b63f4a75515b660b7d65cf272b a bf:Title ;
+    rdfs:label "Le Chat Blanc" .
+
+haObjId:c911a4fe0929d734bf4f17eac671d0f6 a cryptographicHashFunctions:md5 ;
+    rdf:value "c911a4fe0929d734bf4f17eac671d0f6" .
+
+haObjId:cb441ca867daf9ba655904d8b2407bae a bf:Publication ;
+    bf:date "2022-08-02"^^edtf:EDTF ;
+    bf:place haObjId:5e418480772f8557285b856b9147dd48 .
+
+haObjId:d0f1597e43b69c94385a959e4f4bb192 a cryptographicHashFunctions:md5 ;
+    rdf:value "d0f1597e43b69c94385a959e4f4bb192" .
+
+haObjId:d14cb55488cf1e12df1afa58f45cd8d4 a cryptographicHashFunctions:md5 ;
+    rdf:value "d14cb55488cf1e12df1afa58f45cd8d4" .
+
+haObjId:d79f82e431dab397687b8bb23c454925 a cryptographicHashFunctions:md5 ;
+    rdf:value "d79f82e431dab397687b8bb23c454925" .
+
+haObjId:ebce1eda81a4643f4ab420bec816db2e a bf:VariantTitle ;
+    rdfs:label "Journal Indépendant: Le Chat Blanc" ;
+    bf:variantType "alternative" .
+
+haObjId:ed4ff26982e9cfec78c5663bd248ea07 a cryptographicHashFunctions:md5 ;
+    rdf:value "ed4ff26982e9cfec78c5663bd248ea07" .
+
+haObjId:fdf6c1980f0d5e5bffc6a4c3b0a21f43 a bf:Role ;
+    rdfs:label "author" .
+
+haObjId:uuid-002f116f-fd66-4fad-9fd9-225755bb06ac a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:7147e04c4401d38bcce6f0bba61f0e1f ;
+    premis:originalName "GVA-18920101-01001001.xml" ;
+    premis:size 270 .
+
+haObjId:uuid-0647c3d1-7d4a-4933-ae03-ea9170ac8fbf a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:b2ed2598f510223cc7a4c79330c5bb2a ;
+    premis:originalName "GVA-18920101-01002002.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-15066343-19b7-4e1d-bf9b-1f5dfae65920 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:18e724ac0d277e271a81600ef1461d94 ;
+    premis:originalName "GVA-18920101-01002001.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-15400cb8-b1f4-465e-903d-467edeb3ce76 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:2fbf20e3f7b1a2e53fa7ce79700c0139 ;
+    premis:originalName "GVA-18920101-01004003.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-1e4c8c3d-3781-45c5-b40f-dd9393caad0e a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:c911a4fe0929d734bf4f17eac671d0f6 ;
+    premis:originalName "GVA-18920101-01003001.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-29e1716b-55a3-4e98-bcf5-ea3a57ca469c a premis:SoftwareAgent ;
+    schema:name "EasyData Cloud OCR" .
+
+haObjId:uuid-2c0c2002-f4b5-4044-a2a7-8d66bb7ca263 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:857928aa04d704669ee2d3df2dc0c811 ;
+    premis:originalName "GVA-18920101-01004008.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-320097f7-9d94-4872-92c7-6297877a81fc a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:d79f82e431dab397687b8bb23c454925 ;
+    premis:originalName "GVA-18920101-01003002.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-32f60ec2-c3d9-4897-b7b7-c855b25d46ae a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:3be1bd272c989efb76984cbe37bff1bf ;
+    premis:originalName "GVA-18920101-01001002.xml" ;
+    premis:size 137 .
+
+haObjId:uuid-4672ce2c-f86c-4419-91af-3924cda1ecd6 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:4d38ea14b56645df762b5f9c6c4f3dbd ;
+    premis:originalName "GVA-18920101-01001005.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-48881331-b7dc-4043-afd8-355318de6e0f a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:44b09b94ff453317af6fe97b92aafed7 ;
+    premis:originalName "GVA-18920101-01001007.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-4a7cd48c-c5bd-4fb8-a52d-5f2c231a4ede a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:7341d3d55c9789e2b75fd4ed75ef5767 ;
+    premis:originalName "GVA-18920101-01001004.xml" ;
+    premis:size 137 .
+
+haObjId:uuid-57362369-f43e-4502-a5d9-59734ad053f1 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:d14cb55488cf1e12df1afa58f45cd8d4 ;
+    premis:originalName "GVA-18920101-01004007.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-5934b085-791c-4083-a5a8-8b3de347e8b5 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:69f132a12fee1e2a9c175564e6f2da11 ;
+    premis:originalName "GVA-18920101-01004006.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-5b843289-b9fd-4cf2-900f-79a9d7852b2d a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:a7ef160e8522a8eb9fdeafc21a85c5a0 ;
+    premis:originalName "GVA-18920101-01001003.xml" ;
+    premis:size 137 .
+
+haObjId:uuid-68e884fc-bbb1-4688-902c-48b0ea0b8c13 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:68283e345cc949cb59ba7b09e7f12ce7 ;
+    premis:originalName "GVA-18920101-01004002.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-7eb5a221-ac73-41ba-8a75-4eb281fa2155 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:ae4304079248f5dd4a73903e76bcd763 ;
+    premis:originalName "GVA-18920101-01001006.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-8233b3d6-2228-43a1-af69-75582184c3c2 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:5730d92ca352d9b29aaf8c8658f2ed09 ;
+    premis:originalName "GVA-18920101-01004001.xml" ;
+    premis:size 137 .
+
+haObjId:uuid-9100c2eb-fc43-4049-8c65-c5a26d67bdd1 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:d0f1597e43b69c94385a959e4f4bb192 ;
+    premis:originalName "GVA-18920101-01003003.xml" ;
+    premis:size 137 .
+
+haObjId:uuid-d7f710e6-d65a-4545-be82-ad19a53f818d a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:243eebd40faa8e12c36dc91a1f17138e ;
+    premis:originalName "GVA-18920101-01002003.xml" ;
+    premis:size 137 .
+
+haObjId:uuid-d8b719dd-61a3-4c53-b7d3-09771b369c71 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:0986e078691514789b47696d42a01025 ;
+    premis:originalName "GVA-18920101-01004009.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-eed731fb-53e1-4817-96ba-0dad2e15ea10 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:b005c5563621a8500cbae591f2ee4476 ;
+    premis:originalName "GVA-18920101-01004005.xml" ;
+    premis:size 280 .
+
+haObjId:uuid-f78b6428-b0d0-4797-8404-443de4c0f910 a premis:File ;
+    relSubType:isi haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:ed4ff26982e9cfec78c5663bd248ea07 ;
+    premis:originalName "GVA-18920101-01004004.xml" ;
+    premis:size 280 .
+
+haOrgId:3139ac42aa0f553ac530101ffb02cc28 a premis:SoftwareAgent ;
+    schema:name "meemoo SIP creator" ;
+    schema:version "0.1.0" .
+
+haOrgId:OR-qj77x56 a org:Organization ;
+    skos:prefLabel "GMS"@nl ;
+    schema:identifier "OR-qj77x56" .
+
+haOrgId:OR-v97zq9j a org:Organization ;
+    skos:prefLabel "erfgoedbibliotheekhendrikconscience"@nl ;
+    schema:identifier "OR-v97zq9j" .
+
+<https://www.iso.org/iso-3166-country-codes.html> a bf:Source ;
+    rdfs:label "iso3166" .
+
+<https://www.lib.washington.edu/gmm/collections/mcnews/ngl> a bf:Source ;
+    rdfs:label "ngl" .
+
+<https://www.loc.gov/standards/valuelist/marcform.html> a bf:Source ;
+    rdfs:label "marcform" .
+
+<https://www.loc.gov/standards/valuelist/marcgt.html> a bf:Source ;
+    rdfs:label "marcgt" .
+
+<https://anet.be/record/opacbnc/c:bnc:99999/N> a bf:Identifier ;
+    bf:source <https://anet.be> ;
+    rdf:value "c:bnc:99999" .
+
+haObjId:uuid-0d2d63c7-4a29-48ca-ae06-5e7c6f8aa7fd a premis:File ;
+    relSubType:isi haObjId:uuid-4f8f37ab-a3f0-478c-becb-3e1826663558,
+        haObjId:uuid-be3538f9-4f00-4a92-ad63-c4b12e06fc99 ;
+    dct:format <http://the-fr.org/id/file-format/353> ;
+    premis:fixity haObjId:534af70a2909841bc3d93a19322eede0 ;
+    premis:originalName "GVA-01-002-18920101.tif" ;
+    premis:size 1007 .
+
+haObjId:uuid-2e9943fb-9b5a-4fd4-846f-3ad7a60e5824 a premis:File ;
+    relSubType:isi haObjId:uuid-be3538f9-4f00-4a92-ad63-c4b12e06fc99,
+        haObjId:uuid-df553be9-759a-4560-b8e7-9b06d220b57c ;
+    dct:format <http://the-fr.org/id/file-format/353> ;
+    premis:fixity haObjId:ab9f05e1d16e3583fdfd6031cfaad3b0 ;
+    premis:originalName "GVA-01-001-18920101.tif" ;
+    premis:size 1007 .
+
+haObjId:uuid-45040a1c-8600-4c9e-8a57-153c88aad298 a premis:File ;
+    relSubType:isi haObjId:uuid-d4922046-839d-4bbb-a27a-f7d3d065525f,
+        haObjId:uuid-f59f6fc6-bd50-4cb2-ae41-2a29eec96e52 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:930c2ea3505021d8bb0cd4ef8b7d7508 ;
+    premis:originalName "GVA-01-004-18920101_alto.xml" ;
+    premis:size 946 .
+
+haObjId:uuid-4f8f37ab-a3f0-478c-becb-3e1826663558 a premis:File ;
+    relSubType:isi haObjId:uuid-0d2d63c7-4a29-48ca-ae06-5e7c6f8aa7fd,
+        haObjId:uuid-f59f6fc6-bd50-4cb2-ae41-2a29eec96e52 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:9618480b3b4466a8679e7f742293e471 ;
+    premis:originalName "GVA-01-002-18920101_alto.xml" ;
+    premis:size 946 .
+
+haObjId:uuid-5b321487-6077-49d0-96b3-2923ed7bd5d9 a premis:File ;
+    relSubType:isi haObjId:uuid-ace2e92b-50ba-4cbc-8d7d-3921ec05758a,
+        haObjId:uuid-f59f6fc6-bd50-4cb2-ae41-2a29eec96e52 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:2fd3dec88cead1d784895918fb6bb06b ;
+    premis:originalName "GVA-01-003-18920101_alto.xml" ;
+    premis:size 946 .
+
+haObjId:uuid-ace2e92b-50ba-4cbc-8d7d-3921ec05758a a premis:File ;
+    relSubType:isi haObjId:uuid-5b321487-6077-49d0-96b3-2923ed7bd5d9,
+        haObjId:uuid-be3538f9-4f00-4a92-ad63-c4b12e06fc99 ;
+    dct:format <http://the-fr.org/id/file-format/353> ;
+    premis:fixity haObjId:a65d975de019813ff2d1835579ce2671 ;
+    premis:originalName "GVA-01-003-18920101.tif" ;
+    premis:size 1007 .
+
+haObjId:uuid-d4922046-839d-4bbb-a27a-f7d3d065525f a premis:File ;
+    relSubType:isi haObjId:uuid-45040a1c-8600-4c9e-8a57-153c88aad298,
+        haObjId:uuid-be3538f9-4f00-4a92-ad63-c4b12e06fc99 ;
+    dct:format <http://the-fr.org/id/file-format/353> ;
+    premis:fixity haObjId:b203825339525959f488ba1849b61114 ;
+    premis:originalName "GVA-01-004-18920101.tif" ;
+    premis:size 1007 .
+
+haObjId:uuid-df553be9-759a-4560-b8e7-9b06d220b57c a premis:File ;
+    relSubType:isi haObjId:uuid-2e9943fb-9b5a-4fd4-846f-3ad7a60e5824,
+        haObjId:uuid-f59f6fc6-bd50-4cb2-ae41-2a29eec96e52 ;
+    dct:format <http://the-fr.org/id/file-format/101> ;
+    premis:fixity haObjId:987049735baa85af6b0998079fc30df3 ;
+    premis:originalName "GVA-01-001-18920101_alto.xml" ;
+    premis:size 948 .
+
+haObjId:uuid-9f07a3eb-1edb-4119-a98e-83ec7fd8d61c a bf:Work,
+        premis:IntellectualEntity,
+        haBib:NewspaperIssue ;
+    rdfs:label "Le Chat Blanc" ;
+    bf:carrier haObjId:24317ef322f92f000cd2c88a5a303f40 ;
+    bf:contribution haObjId:03f8b4292c79383464679a0a94f4d0bb ;
+    bf:extent haObjId:7d0278ab7c1b0a64d600b450d32d5129 ;
+    bf:genreForm haObjId:0485df95bbfad639457c6573459c5983,
+        haObjId:69da234ae73a51cbeca323b8cefd1f4e ;
+    bf:hasSeries <https://anet.be/record/opacbnc/c:bnc:99999/N> ;
+    bf:identifiedBy haObjId:99757a38731eb21418cd5836bc95d1e1 ;
+    bf:issuance "serial" ;
+    bf:originDate "2022-08-02"^^edtf:EDTF ;
+    bf:provisionActivity haObjId:cb441ca867daf9ba655904d8b2407bae ;
+    bf:subject haObjId:0832c1202da8d382318e329a7c133ea0,
+        haObjId:3f404bbed1672b52480a334dd13ab4a4 ;
+    bf:summary haObjId:29bc54305b6f4e6bfcb066d7ba152abd ;
+    bf:title haObjId:b8c411b63f4a75515b660b7d65cf272b,
+        haObjId:ebce1eda81a4643f4ab420bec816db2e ;
+    bf:usageAndAccessPolicy haObjId:BEZOEKERTOOL-CONTENT,
+        haObjId:BEZOEKERTOOL-METADATA-ALL,
+        haObjId:VIAA-INTRA_CP-CONTENT,
+        haObjId:VIAA-INTRA_CP-METADATA-ALL,
+        haObjId:VIAA-ONDERWIJS,
+        haObjId:VIAA-ONDERZOEK,
+        haObjId:VIAA-PUBLIEK-METADATA-LTD ;
+    relSubType:isr haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74,
+        haObjId:uuid-be3538f9-4f00-4a92-ad63-c4b12e06fc99,
+        haObjId:uuid-f59f6fc6-bd50-4cb2-ae41-2a29eec96e52 ;
+    haBib:numberOfPages 3 .
+
+<http://the-fr.org/id/file-format/353> a dct:FileFormat .
+
+haObjId:uuid-be3538f9-4f00-4a92-ad63-c4b12e06fc99 a premis:Representation ;
+    relSubType:inc haObjId:uuid-0d2d63c7-4a29-48ca-ae06-5e7c6f8aa7fd,
+        haObjId:uuid-2e9943fb-9b5a-4fd4-846f-3ad7a60e5824,
+        haObjId:uuid-ace2e92b-50ba-4cbc-8d7d-3921ec05758a,
+        haObjId:uuid-d4922046-839d-4bbb-a27a-f7d3d065525f ;
+    relSubType:rep haObjId:uuid-9f07a3eb-1edb-4119-a98e-83ec7fd8d61c ;
+    skos:hiddenLabel "representation_1" .
+
+haObjId:uuid-f59f6fc6-bd50-4cb2-ae41-2a29eec96e52 a premis:Representation ;
+    relSubType:inc haObjId:uuid-45040a1c-8600-4c9e-8a57-153c88aad298,
+        haObjId:uuid-4f8f37ab-a3f0-478c-becb-3e1826663558,
+        haObjId:uuid-5b321487-6077-49d0-96b3-2923ed7bd5d9,
+        haObjId:uuid-df553be9-759a-4560-b8e7-9b06d220b57c ;
+    relSubType:rep haObjId:uuid-9f07a3eb-1edb-4119-a98e-83ec7fd8d61c ;
+    skos:hiddenLabel "representation_2" .
+
+haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 a premis:Representation ;
+    relSubType:inc haObjId:uuid-002f116f-fd66-4fad-9fd9-225755bb06ac,
+        haObjId:uuid-0647c3d1-7d4a-4933-ae03-ea9170ac8fbf,
+        haObjId:uuid-15066343-19b7-4e1d-bf9b-1f5dfae65920,
+        haObjId:uuid-15400cb8-b1f4-465e-903d-467edeb3ce76,
+        haObjId:uuid-1e4c8c3d-3781-45c5-b40f-dd9393caad0e,
+        haObjId:uuid-2c0c2002-f4b5-4044-a2a7-8d66bb7ca263,
+        haObjId:uuid-320097f7-9d94-4872-92c7-6297877a81fc,
+        haObjId:uuid-32f60ec2-c3d9-4897-b7b7-c855b25d46ae,
+        haObjId:uuid-4672ce2c-f86c-4419-91af-3924cda1ecd6,
+        haObjId:uuid-48881331-b7dc-4043-afd8-355318de6e0f,
+        haObjId:uuid-4a7cd48c-c5bd-4fb8-a52d-5f2c231a4ede,
+        haObjId:uuid-57362369-f43e-4502-a5d9-59734ad053f1,
+        haObjId:uuid-5934b085-791c-4083-a5a8-8b3de347e8b5,
+        haObjId:uuid-5b843289-b9fd-4cf2-900f-79a9d7852b2d,
+        haObjId:uuid-68e884fc-bbb1-4688-902c-48b0ea0b8c13,
+        haObjId:uuid-7eb5a221-ac73-41ba-8a75-4eb281fa2155,
+        haObjId:uuid-8233b3d6-2228-43a1-af69-75582184c3c2,
+        haObjId:uuid-9100c2eb-fc43-4049-8c65-c5a26d67bdd1,
+        haObjId:uuid-d7f710e6-d65a-4545-be82-ad19a53f818d,
+        haObjId:uuid-d8b719dd-61a3-4c53-b7d3-09771b369c71,
+        haObjId:uuid-eed731fb-53e1-4817-96ba-0dad2e15ea10,
+        haObjId:uuid-f78b6428-b0d0-4797-8404-443de4c0f910 ;
+    relSubType:rep haObjId:uuid-9f07a3eb-1edb-4119-a98e-83ec7fd8d61c ;
+    skos:hiddenLabel "representation_3" .
+
+<http://the-fr.org/id/file-format/101> a dct:FileFormat .

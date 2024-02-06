@@ -203,9 +203,7 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
         )
 
         for event_node in event_nodes:
-            if graph.value(
-                subject=event_node, object=representation, predicate=None
-            ):
+            if graph.value(subject=event_node, object=representation, predicate=None):
                 events.append(event_node)
 
             # events = graph.subjects(
@@ -247,6 +245,17 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
                     )
                 ),
                 node=file,
+                order=int(str(
+                    graph.value(
+                        subject=file,
+                        predicate=rdflib.URIRef(
+                            "https://schema.org/position"
+                        ),
+                        default=0
+                    )
+                ))
             )
             r.files.append(f)
+        r.files.sort()
+    representations.sort()
     return representations

@@ -30,6 +30,12 @@ def material_artwork_ttl_graph():
         ttl = f.read()
     return ttl
 
+@pytest.fixture
+def newspaper_ttl_graph():
+    with open("./tests/resources/newspaper.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
 
 @pytest.fixture
 def threed_ttl_graph():
@@ -129,3 +135,13 @@ def test_get_sip_info_3d(threed_ttl_graph):
     assert len(sip.representations) == 4
     assert sip.batch_id == "PRD-BD-OR-x921j0n-2022-11-10-001"
     assert sip.format == "3D-model"
+
+def test_newspaper_ordering(newspaper_ttl_graph):
+    graph = parse_graph(newspaper_ttl_graph, format="ttl")
+
+    sip = get_sip_info(graph)
+
+    assert len(sip.representations) == 3
+    assert sip.representations[0].label <= sip.representations[1].label <= sip.representations[2].label
+    assert len(sip.representations[2].files) == 22
+    
