@@ -154,7 +154,7 @@ class EventListener:
 
             producer_topic = self.app_config["producer_topic_basic"]
 
-            self.log.info(data["message"])
+            self.log.info(data["message"], pid=pid)
         else:
             # Make a folder that will be zipped as the complex.
             files_path = Path(self.app_config["aip_folder"], pid)
@@ -213,7 +213,7 @@ class EventListener:
             }
             producer_topic = self.app_config["producer_topic_complex"]
 
-            self.log.info(data["message"])
+            self.log.info(data["message"], pid=pid)
         self.produce_event(
             producer_topic, data, path, EventOutcome.SUCCESS, event.correlation_id
         )

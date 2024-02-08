@@ -104,6 +104,7 @@ def build_mh_mets(
 
     return xml
 
+
 def build_newspaper_mh_mets(
     g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
 ) -> str:
@@ -150,16 +151,23 @@ def build_newspaper_mh_mets(
 
     representations = get_representations(g)
     pages: dict[int, list] = {}
-    
+
     for representation in representations:
         for idx, file in enumerate(representation.files):
             repr_files = pages.get(file.order, [])
             repr_files.append((representation, file))
             pages[file.order] = repr_files
-            
 
     for page in pages:
         newspaper_page = metsrw.FSEntry(type="NewspaperPage")
+        newspaper_page.add_dmdsec(
+            build_minimal_sidecar(f"{pid}_{page}"),
+            "OTHER",
+            **{
+                "othermdtype": "mhs:Sidecar",
+                "id": f"DMDID-{profile.NAME.upper()}-PAGE-{page}",
+            },
+        )
         root_folder.add_child(newspaper_page)
 
         for file_index, repr_file in enumerate(pages[page]):
@@ -281,8 +289,14 @@ def build_mh_sidecar(
                                 )
                         else:
                             if type(obj) == rdflib.URIRef:
-                                obj = g.value(subject=obj, predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"), default=g.namespace_manager.compute_qname(obj)[2])
-                                
+                                obj = g.value(
+                                    subject=obj,
+                                    predicate=rdflib.URIRef(
+                                        "http://www.w3.org/2000/01/rdf-schema#label"
+                                    ),
+                                    default=g.namespace_manager.compute_qname(obj)[2],
+                                )
+
                                 # obj = g.namespace_manager.compute_qname(obj)[2]
                         if (
                             type(obj) == rdflib.Literal
