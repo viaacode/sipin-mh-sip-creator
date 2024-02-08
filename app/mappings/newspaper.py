@@ -135,9 +135,9 @@ MAPPING: dict = {
             "mhs:Descriptive.mh:Description",
         ]
     },
-    "http://id.loc.gov/ontologies/bibframe/genreForm": {
-        "targets": ["mhs:Dynamic.dc_types.multiselect[]"],
-    },
+    # "http://id.loc.gov/ontologies/bibframe/genreForm": {
+    #     "targets": ["mhs:Dynamic.dc_types.multiselect[]"],
+    # },
     "http://id.loc.gov/ontologies/bibframe/provisionActivity": {
         "targets": ["mhs:Dynamic.dcterms_issued"],
         "transformer": date_transform,
@@ -150,7 +150,7 @@ MAPPING: dict = {
     },
     "http://id.loc.gov/ontologies/bibframe/hasSeries": {
         "transformer": value_transform,
-        "targets": ["mhs:Dynamic.dc_identifier_localids.abraham_id[]"],
+        "targets": ["mhs:Dynamic.dc_identifier_localids.abraham_id[]", "mhs:Dynamic.abraham_ID"],
     },
     "http://id.loc.gov/ontologies/bibframe/contribution": {
         "mapping_strategy": contribution_mapper,

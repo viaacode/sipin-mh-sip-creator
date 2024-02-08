@@ -18,17 +18,6 @@ NSMAP = {
 }
 
 
-def lxmlns(ns: str) -> str:
-    """Return namespace"""
-    return f"{{{NSMAP[ns]}}}"
-
-
-def qname_text(ns: str, local_name: str) -> str:
-    if ns == "mets":
-        return f'{{{"http://www.loc.gov/METS/"}}}{local_name}'
-    return f"{lxmlns(ns)}{local_name}"
-
-
 def build_mh_mets(
     g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
 ) -> str:
