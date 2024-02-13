@@ -5,19 +5,10 @@ from lxml import etree
 from rdflib.term import Node
 
 from app.helpers.graph import get_cp_id_from_graph, get_representations
-from app.helpers.mappers import (
-    creator_mapper,
-    geometry_mapper,
-    local_id_mapper,
-    title_mapper,
-    license_mapper,
-    instrument_mapper,
-)
-from app.helpers.transformers import (
-    dimension_transform,
-    language_code_transform,
-    name_transform,
-)
+
+from app.models.sip import SIP
+
+from app.mappings import material_artwork, newspaper
 
 MH_VERSION = "22.1"
 
@@ -26,127 +17,13 @@ NSMAP = {
     "mh": f"https://zeticon.mediahaven.com/metadata/{MH_VERSION}/mh/",
 }
 
-MAPPING: dict = {
-    "http://purl.org/dc/terms/title": {
-        "targets": [
-            "mhs:Descriptive.mh:Title",
-            "mhs:Dynamic.dc_title",
-        ]
-    },
-    "http://purl.org/dc/terms/publisher": {
-        "targets": ["mhs:Dynamic.dc_publisher.Uitgever[]"]
-    },
-    "http://purl.org/dc/terms/abstract": {"targets": ["mhs:Dynamic.dc_description"]},
-    "http://purl.org/dc/terms/alternative": {
-        "targets": ["mhs:Dynamic.dc_titles.alternatief[]"]
-    },
-    "http://purl.org/dc/terms/contributor": {
-        "targets": ["mhs:Dynamic.dc_contributors.Bijdrager[]"]
-    },
-    "http://purl.org/dc/terms/created": {"targets": ["mhs:Dynamic.dcterms_created"]},
-    "http://purl.org/dc/terms/creator": {
-        "targets": ["mhs:Dynamic.dc_creators.Maker[]"]
-    },
-    "http://purl.org/dc/terms/description": {
-        "targets": [
-            "mhs:Dynamic.dc_description_lang",
-            "mhs:Descriptive.mh:Description",
-        ]
-    },
-    "http://purl.org/dc/terms/issued": {"targets": ["mhs:Dynamic.dcterms_issued"]},
-    "http://purl.org/dc/terms/language": {
-        "targets": ["mhs:Dynamic.dc_languages.multiselect[]"],
-        "transformer": language_code_transform,
-    },
-    "http://purl.org/dc/terms/license": {
-        "mapping_strategy": license_mapper,
-        "targets": ["mhs:Dynamic.dc_rights_licenses.multiselect[]"],
-    },
-    "http://purl.org/dc/terms/rights": {"targets": ["mhs:Dynamic.dc_rights_comment"]},
-    "http://purl.org/dc/terms/rightsHolder": {
-        "targets": ["mhs:Dynamic.dc_rights_rightsHolders.Licentiehouder[]"]
-    },
-    "http://purl.org/dc/terms/spatial": {
-        "targets": ["mhs:Dynamic.dc_coverages.ruimte[]"]
-    },
-    "http://purl.org/dc/terms/subject": {
-        "targets": ["mhs:Dynamic.dc_subjects.Trefwoord[]"]
-    },
-    "http://purl.org/dc/terms/temporal": {
-        "targets": ["mhs:Dynamic.dc_coverages.tijd[]"]
-    },
-    "http://www.loc.gov/premis/v3#fixity": {"targets": ["mhs:Dynamic.md5_viaa"]},
-    "https://schema.org/height": {
-        "targets": ["mhs:Dynamic.dimensions.height_in_mm"],
-        "transformer": dimension_transform,
-    },
-    "https://schema.org/width": {
-        "targets": ["mhs:Dynamic.dimensions.width_in_mm"],
-        "transformer": dimension_transform,
-    },
-    "https://schema.org/depth": {
-        "targets": ["mhs:Dynamic.dimensions.depth_in_mm"],
-        "transformer": dimension_transform,
-    },
-    "https://schema.org/weight": {
-        "targets": ["mhs:Dynamic.dimensions.weight_in_kg"],
-        "transformer": dimension_transform,
-    },
-    "https://schema.org/artform": {
-        "targets": ["mhs:Dynamic.artform"],
-    },
-    "https://schema.org/artMedium": {
-        "targets": ["mhs:Dynamic.artmedium"],
-    },
-    "https://schema.org/creator": {
-        "mapping_strategy": creator_mapper,
-    },
-    "http://www.loc.gov/premis/rdf/v3/identifier": {
-        "mapping_strategy": local_id_mapper,
-    },
-    "http://www.w3id.org/omg#hasGeometry": {
-        "mapping_strategy": geometry_mapper,
-    },
-    "https://data.hetarchief.be/ns/object/light-metering": {
-        "targets": ["mhs:Dynamic.light_metering"]
-    },
-    "https://data.hetarchief.be/ns/object/scan-setup": {
-        "targets": ["mhs:Dynamic.scanning.scansetup"]
-    },
-    "https://data.hetarchief.be/ns/object/height-calibration-object": {
-        "targets": [
-            "mhs:Dynamic.mesh_geometry.height_calibration_object",
-            "mhs:Dynamic.mesh_geometry.height_calibration_object_in_mm",
-        ],
-        "transformer": dimension_transform,
-    },
-    "http://id.loc.gov/vocabulary/preservation/eventRelatedAgentRole/exe": {
-        "targets": ["mhs:Dynamic.post_processing_software"],
-        "transformer": name_transform,
-    },
-    "https://schema.org/isPartOf": {"mapping_strategy": title_mapper},
-    "http://www.loc.gov/premis/rdf/v3/note": {"targets": ["mhs:Dynamic.qc_note"]},
-    "https://schema.org/instrument": {"mapping_strategy": instrument_mapper},
-    "http://id.loc.gov/vocabulary/preservation/eventRelatedAgentRole/imp": {
-        "targets": ["mhs:Dynamic.sp_name"]
-    }
-}
-
-
-def lxmlns(ns: str) -> str:
-    """Return namespace"""
-    return f"{{{NSMAP[ns]}}}"
-
-
-def qname_text(ns: str, local_name: str) -> str:
-    if ns == "mets":
-        return f'{{{"http://www.loc.gov/METS/"}}}{local_name}'
-    return f"{lxmlns(ns)}{local_name}"
-
 
 def build_mh_mets(
     g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
 ) -> str:
+    profile = material_artwork
+    mapping = profile.MAPPING
+
     ie = g.value(
         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
@@ -158,12 +35,12 @@ def build_mh_mets(
     root_folder = metsrw.FSEntry(use="Original", type="MaterialArtwork")
 
     mets_fs = metsrw.FSEntry(
-        fileid="FILEID-MATERIALARTWORK-METS",
+        fileid=f"FILEID-{profile.NAME.upper()}-METS",
         use="Disk",
         path="mets.xml",
         type="Representation",
         label="Original",
-        file_uuid="FILEID-MATERIALARTWORK-METS",
+        file_uuid=f"FILEID-{profile.NAME.upper()}-METS",
     )
     mets_med = metsrw.FSEntry(type="Media")
     mets_med.add_dmdsec(
@@ -171,17 +48,17 @@ def build_mh_mets(
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
-            "id": f"DMDID-MATERIALARTWORK-METS",
+            "id": f"DMDID-{profile.NAME.upper()}-METS",
         },
     )
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(g, [ie], pid, dynamic_tags),
+        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
-            "id": f"DMDID-MATERIALARTWORK",
+            "id": f"DMDID-{profile.NAME.upper()}",
         },
     )
 
@@ -193,6 +70,7 @@ def build_mh_mets(
             representation_media = metsrw.FSEntry(type="Media")
             representation_media.add_dmdsec(
                 build_mh_sidecar(
+                    mapping,
                     g,
                     [representation.node, file.node, *representation.events],
                     f"{pid}_{representation_index}_{file_index}",
@@ -200,21 +78,125 @@ def build_mh_mets(
                 "OTHER",
                 **{
                     "othermdtype": "mhs:Sidecar",
-                    "id": f"DMDID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                    "id": f"DMDID-{profile.NAME.upper()}-REPRESENTATION-{representation_index}-{file_index}",
                 },
             )
             file_representation = metsrw.FSEntry(
-                fileid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                fileid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{representation_index}-{file_index}",
                 use=archive_location,
                 path=f"{representation.label}/{file.filename}",
                 type="Representation",
                 label="Original",
-                file_uuid=f"FILEID-MATERIALARTWORK-REPRESENTATION-{representation_index}-{file_index}",
+                file_uuid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{representation_index}-{file_index}",
                 checksumtype="MD5",
                 checksum=file.fixity,
             )
             representation_media.add_child(file_representation)
             root_folder.add_child(representation_media)
+
+    mets.append_file(root_folder)
+
+    m = mets.serialize(normative_structmap=False)
+
+    xml = etree.tostring(
+        m, xml_declaration=True, encoding="UTF-8", pretty_print=True
+    ).decode()
+
+    return xml
+
+
+def build_newspaper_mh_mets(
+    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+) -> str:
+    profile = newspaper
+    mapping = profile.MAPPING
+
+    ie = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+    )
+    mets = metsrw.METSDocument()
+
+    mets.agents.append(metsrw.Agent("CUSTODIAN", type="ORGANIZATION", name="meemoo"))
+
+    root_folder = metsrw.FSEntry(use="Original", type=profile.NAME)
+
+    mets_fs = metsrw.FSEntry(
+        fileid=f"FILEID-{profile.NAME.upper()}-METS",
+        use="Disk",
+        path="mets.xml",
+        type="Representation",
+        label="Original",
+        file_uuid=f"FILEID-{profile.NAME.upper()}-METS",
+    )
+    mets_med = metsrw.FSEntry(type="Media")
+    mets_med.add_dmdsec(
+        build_minimal_sidecar(f"{pid}_mets"),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-{profile.NAME.upper()}-METS",
+        },
+    )
+    mets_med.add_child(mets_fs)
+    root_folder.add_child(mets_med)
+    root_folder.add_dmdsec(
+        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-{profile.NAME.upper()}",
+        },
+    )
+
+    representations = get_representations(g)
+    pages: dict[int, list] = {}
+
+    for representation in representations:
+        for idx, file in enumerate(representation.files):
+            repr_files = pages.get(file.order, [])
+            repr_files.append((representation, file))
+            pages[file.order] = repr_files
+
+    for page in pages:
+        newspaper_page = metsrw.FSEntry(type="NewspaperPage")
+        newspaper_page.add_dmdsec(
+            build_minimal_sidecar(f"{pid}_{page}"),
+            "OTHER",
+            **{
+                "othermdtype": "mhs:Sidecar",
+                "id": f"DMDID-{profile.NAME.upper()}-PAGE-{page}",
+            },
+        )
+        root_folder.add_child(newspaper_page)
+
+        for file_index, repr_file in enumerate(pages[page]):
+            representation_media = metsrw.FSEntry(type="Media")
+            representation_media.add_dmdsec(
+                build_mh_sidecar(
+                    mapping,
+                    g,
+                    [repr_file[0].node, repr_file[1].node, *repr_file[0].events],
+                    f"{pid}_{page}_{file_index}",
+                ),
+                "OTHER",
+                **{
+                    "othermdtype": "mhs:Sidecar",
+                    "id": f"DMDID-{profile.NAME.upper()}-REPRESENTATION-{page}-{file_index}",
+                },
+            )
+            file_representation = metsrw.FSEntry(
+                fileid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{page}-{file_index}",
+                use=archive_location,
+                path=f"{repr_file[0].label}/{repr_file[1].filename}",
+                type="Representation",
+                label="Original",
+                file_uuid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{page}-{file_index}",
+                checksumtype="MD5",
+                checksum=repr_file[1].fixity,
+            )
+            representation_media.add_child(file_representation)
+            newspaper_page.add_child(representation_media)
 
     mets.append_file(root_folder)
 
@@ -257,6 +239,7 @@ def build_minimal_sidecar(external_id: str) -> str:
 
 
 def build_mh_sidecar(
+    mapping: dict,
     g: rdflib.Graph,
     subjects,
     pid: str,
@@ -282,31 +265,39 @@ def build_mh_sidecar(
 
     # Add mappable fields to the XML
     for subject in subjects:
-        for predicate in MAPPING.keys():
+        for predicate in mapping.keys():
             map = {}
-            if MAPPING[predicate].get("mapping_strategy"):
-                map = MAPPING[predicate]["mapping_strategy"](
+            if mapping[predicate].get("mapping_strategy"):
+                map = mapping[predicate]["mapping_strategy"](
                     g,
                     subject,
                     g.objects(predicate=rdflib.URIRef(predicate), subject=subject),
                 )
             else:
-                for key in MAPPING[predicate]["targets"]:
+                for key in mapping[predicate]["targets"]:
                     for obj in g.objects(
                         predicate=rdflib.URIRef(predicate), subject=subject
                     ):
-                        if MAPPING[predicate].get("transformer"):
+                        if mapping[predicate].get("transformer"):
                             if type(obj) == rdflib.URIRef:
                                 result = g.predicate_objects(subject=obj)
-                                obj = MAPPING[predicate]["transformer"](result)
+                                obj = mapping[predicate]["transformer"](result)
                                 obj = rdflib.Literal(obj)
                             else:
                                 obj = rdflib.Literal(
-                                    MAPPING[predicate]["transformer"](obj)
+                                    mapping[predicate]["transformer"](obj)
                                 )
                         else:
                             if type(obj) == rdflib.URIRef:
-                                obj = g.namespace_manager.compute_qname(obj)[2]
+                                obj = g.value(
+                                    subject=obj,
+                                    predicate=rdflib.URIRef(
+                                        "http://www.w3.org/2000/01/rdf-schema#label"
+                                    ),
+                                    default=g.namespace_manager.compute_qname(obj)[2],
+                                )
+
+                                # obj = g.namespace_manager.compute_qname(obj)[2]
                         if (
                             type(obj) == rdflib.Literal
                             and obj.language

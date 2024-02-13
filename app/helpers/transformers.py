@@ -33,3 +33,25 @@ def name_transform(graph_result) -> str:
         if obj[0] == rdflib.URIRef("https://schema.org/name"):
             name = obj[1].toPython()
     return name
+
+def value_transform(graph_result) -> str:
+    name = ""
+    for obj in graph_result:
+        if obj[0] == rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#value"):
+            name = obj[1].toPython()
+    return name
+
+
+def date_transform(graph_result) -> str:
+    name = ""
+    for obj in graph_result:
+        if obj[0] == rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/date"):
+            name = obj[1].toPython()
+    return name
+
+def label_transform(graph_result) -> str:
+    name = ""
+    for obj in graph_result:
+        if obj[0] == rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"):
+            name = obj[1].toPython()
+    return name
