@@ -8,7 +8,7 @@ from app.helpers.graph import get_cp_id_from_graph, get_representations
 
 from app.models.sip import SIP
 
-from app.mappings import material_artwork, newspaper
+from app.mappings import material_artwork, newspaper, basic
 
 MH_VERSION = "22.1"
 
@@ -85,6 +85,92 @@ def build_mh_mets(
                 fileid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{representation_index}-{file_index}",
                 use=archive_location,
                 path=f"{representation.label}/{file.filename}",
+                type="Representation",
+                label="Original",
+                file_uuid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{representation_index}-{file_index}",
+                checksumtype="MD5",
+                checksum=file.fixity,
+            )
+            representation_media.add_child(file_representation)
+            root_folder.add_child(representation_media)
+
+    mets.append_file(root_folder)
+
+    m = mets.serialize(normative_structmap=False)
+
+    xml = etree.tostring(
+        m, xml_declaration=True, encoding="UTF-8", pretty_print=True
+    ).decode()
+
+    return xml
+
+def build_basic_mh_mets(
+    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+) -> str:
+    profile = basic
+    mapping = profile.MAPPING
+
+    ie = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+    )
+    mets = metsrw.METSDocument()
+
+    mets.agents.append(metsrw.Agent("CUSTODIAN", type="ORGANIZATION", name="meemoo"))
+
+    root_folder = metsrw.FSEntry(use="Original", type=profile.NAME)
+
+    mets_fs = metsrw.FSEntry(
+        fileid=f"FILEID-{profile.NAME.upper()}-METS",
+        use="Disk",
+        path="mets.xml",
+        type="Representation",
+        label="Original",
+        file_uuid=f"FILEID-{profile.NAME.upper()}-METS",
+    )
+    mets_med = metsrw.FSEntry(type="Media")
+    mets_med.add_dmdsec(
+        build_minimal_sidecar(f"{pid}_mets"),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-{profile.NAME.upper()}-METS",
+        },
+    )
+    mets_med.add_child(mets_fs)
+    root_folder.add_child(mets_med)
+    root_folder.add_dmdsec(
+        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-{profile.NAME.upper()}",
+        },
+    )
+
+    representations = get_representations(g)
+
+    for representation in representations:
+        representation_index = 1
+        for file_index, file in enumerate(representation.files):
+            representation_media = metsrw.FSEntry(type="Media")
+            representation_media.add_dmdsec(
+                build_mh_sidecar(
+                    mapping,
+                    g,
+                    [representation.node, file.node, *representation.events],
+                    f"{pid}_{representation_index}_{file_index}",
+                ),
+                "OTHER",
+                **{
+                    "othermdtype": "mhs:Sidecar",
+                    "id": f"DMDID-{profile.NAME.upper()}-REPRESENTATION-{representation_index}-{file_index}",
+                },
+            )
+            file_representation = metsrw.FSEntry(
+                fileid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{representation_index}-{file_index}",
+                use=archive_location,
+                path=f"representation_1/{file.filename}",
                 type="Representation",
                 label="Original",
                 file_uuid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{representation_index}-{file_index}",

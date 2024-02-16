@@ -82,6 +82,10 @@ class EventListener:
         )
 
         sip = graph.get_sip_info(metadata_graph)
+        
+        if not sip.profile in ["basic", "newspaper", "material-artwork"]:
+            self.log.warn(f"No support for SIPs with {sip.profile} profile.")
+            return
 
         # Path to unzipped bag
         # `/opt/sipin/unzip/<name>.bag.zip`
@@ -90,130 +94,72 @@ class EventListener:
         if not pid:
             pid = self.pid_client.get_pid()
 
-        if (
-            len(sip.representations) == 1
-            and len(sip.representations[0].files) == 1
-            and sip.profile == "basic"
-        ):
-            # We make essence + sidecar ready for tra
-            cp_id = graph.get_cp_id_from_graph(metadata_graph)
-            filename = Path(sip.representations[0].files[0].filename)
-            md5 = sip.representations[0].files[0].fixity
-            ie = metadata_graph.value(
-                predicate=rdflib.URIRef(
-                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-                ),
-                object=rdflib.URIRef(
-                    "http://www.loc.gov/premis/rdf/v3/IntellectualEntity"
-                ),
+        # Make a folder that will be zipped as the complex.
+        files_path = Path(self.app_config["aip_folder"], pid)
+        files_path.mkdir()
+
+        # Dump all files of the sip in the folder.
+        for i in range(len(sip.representations)):
+            shutil.copytree(
+                Path(path, f"data/representations/representation_{i+1}/data"),
+                Path(files_path, f"representation_{i+1}"),
+                copy_function=shutil.move,
             )
-            sidecar = xml.build_mh_sidecar(
-                material_artwork.MAPPING,
+            
+        # Generate mets xml based on profile
+        if sip.profile == "newspaper":
+            mets_xml = xml.build_newspaper_mh_mets(
                 metadata_graph,
-                ie,
                 pid,
-                {"md5": md5, "batch_id": sip.batch_id},
+                self.app_config["archive_location"],
+                {"batch_id": sip.batch_id, "type_viaa": sip.format},
             )
-
-            essence_filepath = Path(
-                path, "data/representations/representation_1/data", filename
+        if sip.profile == "material-artwork":
+            mets_xml = xml.build_mh_mets(
+                metadata_graph,
+                pid,
+                self.app_config["archive_location"],
+                {"batch_id": sip.batch_id, "type_viaa": sip.format},
             )
-            sidecar_filepath = Path(
-                path, "data/representations/representation_1/data", filename
-            ).with_suffix(".xml")
-
-            # Write sidecar to file
-            with open(sidecar_filepath, "w") as xml_file:
-                xml_file.write(sidecar)
-
-            # Move file(s) to AIP folder with PID as filename(s)
-            aip_filepath = Path(self.app_config["aip_folder"], pid)
-
-            shutil.move(
-                essence_filepath,
-                aip_filepath.with_suffix(filename.suffix),
+            
+        if sip.profile == "basic":
+            mets_xml = xml.build_basic_mh_mets(
+                metadata_graph,
+                pid,
+                self.app_config["archive_location"],
+                {"batch_id": sip.batch_id, "type_viaa": sip.format},
             )
-            shutil.move(sidecar_filepath, aip_filepath.with_suffix(".xml"))
+            
+        # Write xml to the complex folder
+        with open(Path(files_path, "mets.xml"), "w") as mets_file:
+            mets_file.write(mets_xml)
+        # Zip everything
+        with zipfile.ZipFile(str(Path(f"{files_path}.zip")), "w") as zf:
+            for file_path in files_path.rglob("*"):
+                zf.write(file_path, arcname=file_path.relative_to(files_path))
+        # Remove files folder
+        shutil.rmtree(files_path)
 
-            # Send event on topic
-            data = {
-                "source": path,
-                "host": self.config["host"],
-                "paths": [
-                    str(aip_filepath.with_suffix(filename.suffix)),
-                    str(aip_filepath.with_suffix(".xml")),
-                ],
-                "cp_id": cp_id,
-                "type": "pair",
-                "sip_profile": sip.profile,
-                "pid": pid,
-                "outcome": EventOutcome.SUCCESS,
-                "metadata": sidecar,
-                "message": f"AIP created: sidecar ingest for {filename}",
-            }
+        cp_id = graph.get_cp_id_from_graph(metadata_graph)
 
-            producer_topic = self.app_config["producer_topic_basic"]
+        # Send event on topic
+        data = {
+            "source": path,
+            "host": self.config["host"],
+            "paths": [
+                str(Path(f"{files_path}.zip")),
+            ],
+            "cp_id": cp_id,
+            "type": "complex",
+            "sip_profile": sip.profile,
+            "pid": pid,
+            "outcome": EventOutcome.SUCCESS,
+            "metadata": mets_xml,
+            "message": f"AIP created: MH2.0 complex created for {path}",
+        }
+        producer_topic = self.app_config["producer_topic_complex"]
 
-            self.log.info(data["message"], pid=pid)
-        else:
-            # Make a folder that will be zipped as the complex.
-            files_path = Path(self.app_config["aip_folder"], pid)
-            files_path.mkdir()
-
-            # Dump all files of the sip in the folder.
-            for i in range(len(sip.representations)):
-                shutil.copytree(
-                    Path(path, f"data/representations/representation_{i+1}/data"),
-                    Path(files_path, f"representation_{i+1}"),
-                    copy_function=shutil.move,
-                )
-                
-            # Generate mets xml based on profile
-            if sip.profile == "newspaper":
-                mets_xml = xml.build_newspaper_mh_mets(
-                    metadata_graph,
-                    pid,
-                    self.app_config["archive_location"],
-                    {"batch_id": sip.batch_id, "type_viaa": sip.format},
-                )
-            if sip.profile == "material-artwork":
-                mets_xml = xml.build_mh_mets(
-                    metadata_graph,
-                    pid,
-                    self.app_config["archive_location"],
-                    {"batch_id": sip.batch_id, "type_viaa": sip.format},
-                )
-                
-            # Write xml to the complex folder
-            with open(Path(files_path, "mets.xml"), "w") as mets_file:
-                mets_file.write(mets_xml)
-            # Zip everything
-            with zipfile.ZipFile(str(Path(f"{files_path}.zip")), "w") as zf:
-                for file_path in files_path.rglob("*"):
-                    zf.write(file_path, arcname=file_path.relative_to(files_path))
-            # Remove files folder
-            shutil.rmtree(files_path)
-
-            cp_id = graph.get_cp_id_from_graph(metadata_graph)
-
-            # Send event on topic
-            data = {
-                "source": path,
-                "host": self.config["host"],
-                "paths": [
-                    str(Path(f"{files_path}.zip")),
-                ],
-                "cp_id": cp_id,
-                "type": "complex",
-                "sip_profile": sip.profile,
-                "pid": pid,
-                "outcome": EventOutcome.SUCCESS,
-                "metadata": mets_xml,
-                "message": f"AIP created: MH2.0 complex created for {path}",
-            }
-            producer_topic = self.app_config["producer_topic_complex"]
-
-            self.log.info(data["message"], pid=pid)
+        self.log.info(data["message"], pid=pid)
         self.produce_event(
             producer_topic, data, path, EventOutcome.SUCCESS, event.correlation_id
         )
