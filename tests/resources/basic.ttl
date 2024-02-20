@@ -1,0 +1,74 @@
+@prefix cryptographicHashFunctions: <http://id.loc.gov/vocabulary/preservation/cryptographicHashFunctions/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix edtf: <http://id.loc.gov/datatypes/edtf/> .
+@prefix haObj: <https://data.hetarchief.be/ns/object/> .
+@prefix haObjId: <https://data.hetarchief.be/id/object/> .
+@prefix haOrgId: <https://data.hetarchief.be/id/organization/> .
+@prefix haSip: <https://data.hetarchief.be/ns/sip/> .
+@prefix haSipId: <https://data.hetarchief.be/id/sip/1.0/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix premisowl: <http://www.loc.gov/premis/rdf/v3/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix relSubType: <http://id.loc.gov/vocabulary/preservation/relationshipSubType/> .
+@prefix schema: <https://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+haSipId:uuid-e4c7678e-b528-4591-ae62-1da8d05a93c1 a haSip:SIP ;
+    dct:conformsTo "https://data.hetarchief.be/id/sip/1.0/basic",
+        "https://earksip.dilcis.eu/profile/E-ARK-SIP.xml" ;
+    schema:agent [ schema:agent haOrgId:OR-mp4vr0n ;
+            schema:roleName "ARCHIVIST" ],
+        [ schema:agent haOrgId:OR-w66976m ;
+            schema:roleName "CREATOR" ] .
+
+<file:///app/fmt/199> a dct:FileFormat .
+
+haObjId:MEEMOO-LOCAL-ID rdfs:subClassOf haObj:LocalIdentifier .
+
+haObjId:MEEMOO-LOCAL-IDheic2013a a haObjId:MEEMOO-LOCAL-ID ;
+    rdf:value "heic2013a" .
+
+haObjId:cce0f361138dfd380463f0c7ead1880e a cryptographicHashFunctions:md5 ;
+    rdf:value "cce0f361138dfd380463f0c7ead1880e" .
+
+haObjId:uuid-10d1da26-8a90-4fc6-bb20-0abf5bc67b27 a premisowl:File ;
+    relSubType:isi haObjId:uuid-ade1c1ce-ab2e-4fde-bcc9-1f3eb7af2624 ;
+    dct:format <file:///app/fmt/199> ;
+    premisowl:fixity haObjId:cce0f361138dfd380463f0c7ead1880e ;
+    premisowl:originalName "heic2013a.mp4" ;
+    premisowl:size 19262969 .
+
+haObjId:uuid-38251132-5306-4357-b083-d48f8fd51cab a premisowl:IntellectualEntity ;
+    relSubType:isr haObjId:uuid-ade1c1ce-ab2e-4fde-bcc9-1f3eb7af2624 ;
+    dct:contributor "Dolf Dolfman" ;
+    dct:created "2019-01-20"^^edtf:EDTF ;
+    dct:creator "Creatieve Creator" ;
+    dct:description "Beschrijving van een filmpje over telescopen."@nl ;
+    dct:license "BEZOEKERTOOL-CONTENT",
+        "CC0-CONTENT",
+        "VIAA-INTRA_CP-CONTENT",
+        "VIAA-INTRA_CP-METADATA-ALL",
+        "VIAA-ONDERWIJS",
+        "VIAA-ONDERZOEK",
+        "VIAA-PUBLIEK-METADATA-ALL",
+        "VIAA-PUBLIEK-METADATA-LTD" ;
+    dct:publisher "Ruimtevaartcentrum (Publisher)" ;
+    dct:rights "Ruimtevaartcentrum (Rights)"@nl ;
+    dct:rightsHolder "Ruimtevaartcentrum (Rightsholder)" ;
+    dct:title "Titel van een filmpje over telescopen"@nl ;
+    premisowl:identifier haObjId:MEEMOO-LOCAL-IDheic2013a .
+
+haOrgId:OR-mp4vr0n a org:Organization ;
+    skos:prefLabel "Vlaams Audiovisueel Fonds"@nl ;
+    schema:identifier "OR-mp4vr0n" .
+
+haOrgId:OR-w66976m a org:Organization ;
+    skos:prefLabel "Meemoo"@nl ;
+    schema:identifier "OR-w66976m" .
+
+haObjId:uuid-ade1c1ce-ab2e-4fde-bcc9-1f3eb7af2624 a premisowl:Representation ;
+    relSubType:inc haObjId:uuid-10d1da26-8a90-4fc6-bb20-0abf5bc67b27 ;
+    relSubType:rep haObjId:uuid-38251132-5306-4357-b083-d48f8fd51cab .
+

@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mets:mets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
+    xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version1121/mets.xsd">
+    <mets:metsHdr CREATEDATE="2024-02-20T00:00:00">
+        <mets:agent ROLE="CUSTODIAN" TYPE="ORGANIZATION">
+            <mets:name>meemoo</mets:name>
+        </mets:agent>
+    </mets:metsHdr>
+    <mets:dmdSec ID="DMDID-BASIC" CREATED="2024-02-20T00:00:00" STATUS="original">
+        <mets:mdWrap MDTYPE="OTHER" OTHERMDTYPE="mhs:Sidecar">
+            <mets:xmlData>
+                <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/"
+                    xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+                    <mhs:Administrative>
+                        <mh:ExternalId>testpid</mh:ExternalId>
+                    </mhs:Administrative>
+                    <mhs:Descriptive>
+                        <mh:Title>Titel van een filmpje over telescopen</mh:Title>
+                        <mh:Description>Beschrijving van een filmpje over telescopen.</mh:Description>
+                    </mhs:Descriptive>
+                    <mhs:Dynamic>
+                        <dc_title>Titel van een filmpje over telescopen</dc_title>
+                        <dc_publisher>
+                            <Uitgever>Ruimtevaartcentrum (Publisher)</Uitgever>
+                        </dc_publisher>
+                        <dc_contributors>
+                            <Bijdrager>Dolf Dolfman</Bijdrager>
+                        </dc_contributors>
+                        <dcterms_created>2019-01-20</dcterms_created>
+                        <dc_creators>
+                            <Maker>Creatieve Creator</Maker>
+                        </dc_creators>
+                        <dc_description_lang>Beschrijving van een filmpje over telescopen.</dc_description_lang>
+                        <dc_rights_licenses>
+                            <multiselect>BEZOEKERTOOL-CONTENT</multiselect>
+                            <multiselect>CC0-CONTENT</multiselect>
+                            <multiselect>VIAA-INTRA_CP-CONTENT</multiselect>
+                            <multiselect>VIAA-INTRA_CP-METADATA-ALL</multiselect>
+                            <multiselect>VIAA-ONDERWIJS</multiselect>
+                            <multiselect>VIAA-ONDERZOEK</multiselect>
+                            <multiselect>VIAA-PUBLIEK-METADATA-ALL</multiselect>
+                            <multiselect>VIAA-PUBLIEK-METADATA-LTD</multiselect>
+                        </dc_rights_licenses>
+                        <dc_rights_comment>Ruimtevaartcentrum (Rights)</dc_rights_comment>
+                        <dc_rights_rightsHolders>
+                            <Licentiehouder>Ruimtevaartcentrum (Rightsholder)</Licentiehouder>
+                        </dc_rights_rightsHolders>
+                        <dc_identifier_localid>heic2013a</dc_identifier_localid>
+                        <PID>testpid</PID>
+                        <CP_id>OR-mp4vr0n</CP_id>
+                        <ingest_workflow>sipin</ingest_workflow>
+                    </mhs:Dynamic>
+                </mhs:Sidecar>
+            </mets:xmlData>
+        </mets:mdWrap>
+    </mets:dmdSec>
+    <mets:dmdSec ID="DMDID-BASIC-METS" CREATED="2024-02-20T00:00:00" STATUS="original">
+        <mets:mdWrap MDTYPE="OTHER" OTHERMDTYPE="mhs:Sidecar">
+            <mets:xmlData>
+                <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/"
+                    xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+                    <mhs:Administrative>
+                        <mh:ExternalId>testpid_mets</mh:ExternalId>
+                    </mhs:Administrative>
+                    <mhs:Descriptive>
+                        <mh:Title>testpid_mets</mh:Title>
+                    </mhs:Descriptive>
+                </mhs:Sidecar>
+            </mets:xmlData>
+        </mets:mdWrap>
+    </mets:dmdSec>
+    <mets:dmdSec ID="DMDID-BASIC-REPRESENTATION-1-0" CREATED="2024-02-20T00:00:00" STATUS="original">
+        <mets:mdWrap MDTYPE="OTHER" OTHERMDTYPE="mhs:Sidecar">
+            <mets:xmlData>
+                <mhs:Sidecar xmlns:mhs="https://zeticon.mediahaven.com/metadata/22.1/mhs/"
+                    xmlns:mh="https://zeticon.mediahaven.com/metadata/22.1/mh/" version="22.1">
+                    <mhs:Administrative>
+                        <mh:ExternalId>testpid_1_0</mh:ExternalId>
+                    </mhs:Administrative>
+                    <mhs:Dynamic>
+                        <PID>testpid</PID>
+                        <CP_id>OR-mp4vr0n</CP_id>
+                        <ingest_workflow>sipin</ingest_workflow>
+                    </mhs:Dynamic>
+                </mhs:Sidecar>
+            </mets:xmlData>
+        </mets:mdWrap>
+    </mets:dmdSec>
+    <mets:fileSec>
+        <mets:fileGrp USE="Original">
+            <mets:file ID="FILEID-BASIC-METS" USE="Disk">
+                <mets:FLocat xlink:href="mets.xml" LOCTYPE="URL" />
+            </mets:file>
+            <mets:file ID="FILEID-BASIC-REPRESENTATION-1-0"
+                CHECKSUM="cce0f361138dfd380463f0c7ead1880e" CHECKSUMTYPE="MD5" USE="Disk">
+                <mets:FLocat xlink:href="representation_1/heic2013a.mp4" LOCTYPE="URL" />
+            </mets:file>
+        </mets:fileGrp>
+    </mets:fileSec>
+    <mets:structMap>
+        <mets:div TYPE="Basic" DMDID="DMDID-BASIC">
+            <mets:div TYPE="Media" DMDID="DMDID-BASIC-METS">
+                <mets:div TYPE="Representation" LABEL="Original">
+                    <mets:fptr FILEID="FILEID-BASIC-METS" />
+                </mets:div>
+            </mets:div>
+            <mets:div TYPE="Media" DMDID="DMDID-BASIC-REPRESENTATION-1-0">
+                <mets:div TYPE="Representation" LABEL="Original">
+                    <mets:fptr FILEID="FILEID-BASIC-REPRESENTATION-1-0" />
+                </mets:div>
+            </mets:div>
+        </mets:div>
+    </mets:structMap>
+</mets:mets>
