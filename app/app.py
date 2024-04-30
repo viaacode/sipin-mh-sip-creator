@@ -129,6 +129,13 @@ class EventListener:
                 self.app_config["archive_location"],
                 {"batch_id": sip.batch_id, "type_viaa": sip.format},
             )
+        if sip.profile == "bibliographic":
+            mets_xml = xml.build_bibliographic_mh_mets(
+                metadata_graph,
+                pid,
+                self.app_config["archive_location"],
+                {"batch_id": sip.batch_id, "type_viaa": sip.format},
+            )
             
         # Write xml to the complex folder
         with open(Path(files_path, "mets.xml"), "w") as mets_file:
