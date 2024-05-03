@@ -106,19 +106,34 @@ class EventListener:
                 copy_function=shutil.move,
             )
             
+            
+        # Set the storage location based on CP id.
+        cp_id = graph.get_cp_id_from_graph(metadata_graph)
+        
+        archive_location = self.app_config["storage"]["default_archive_location"]
+        
+        tape_content_partners = [or_id.strip().lower() for or_id in self.app_config["storage"]["tape_content_partners"].split(",")]
+        disk_content_partners = [or_id.strip().lower() for or_id in self.app_config["storage"]["disk_content_partners"].split(",")]
+        
+        if cp_id.lower() in tape_content_partners:
+            archive_location = "TAPE"
+        if cp_id.lower() in disk_content_partners:
+            archive_location = "DISK"
+        
+            
         # Generate mets xml based on profile
         if sip.profile == "newspaper":
             mets_xml = xml.build_newspaper_mh_mets(
                 metadata_graph,
                 pid,
-                self.app_config["archive_location"],
+                archive_location,
                 {"batch_id": sip.batch_id, "type_viaa": sip.format},
             )
         if sip.profile == "material-artwork":
             mets_xml = xml.build_mh_mets(
                 metadata_graph,
                 pid,
-                self.app_config["archive_location"],
+                archive_location,
                 {"batch_id": sip.batch_id, "type_viaa": sip.format},
             )
             
@@ -126,7 +141,7 @@ class EventListener:
             mets_xml = xml.build_basic_mh_mets(
                 metadata_graph,
                 pid,
-                self.app_config["archive_location"],
+                archive_location,
                 {"batch_id": sip.batch_id, "type_viaa": sip.format},
             )
             
@@ -139,8 +154,6 @@ class EventListener:
                 zf.write(file_path, arcname=file_path.relative_to(files_path))
         # Remove files folder
         shutil.rmtree(files_path)
-
-        cp_id = graph.get_cp_id_from_graph(metadata_graph)
 
         # Send event on topic
         data = {
