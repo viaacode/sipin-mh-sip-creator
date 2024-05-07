@@ -116,9 +116,9 @@ class EventListener:
         disk_content_partners = [or_id.strip().lower() for or_id in self.app_config["storage"]["disk_content_partners"].split(",")]
         
         if cp_id.lower() in tape_content_partners:
-            archive_location = "TAPE"
+            archive_location = "Tape"
         if cp_id.lower() in disk_content_partners:
-            archive_location = "DISK"
+            archive_location = "Disk"
         
             
         # Generate mets xml based on profile
