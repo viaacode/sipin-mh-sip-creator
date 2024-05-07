@@ -9,7 +9,7 @@ app:
         producer_topic_complex: !ENV ${MH_SIP_COMPLEX_PRODUCER_TOPIC}
         aip_folder: !ENV ${MH_SIP_FOLDER}
         storage:
-            default_archive_location: !ENV ${ARCHIVE_LOCATION}
+            default_archive_location: !ENV ${DEFAULT_ARCHIVE_LOCATION}
             tape_content_partners: !ENV ${TAPE_CONTENT_PARTNERS}
             disk_content_partners: !ENV ${DISK_CONTENT_PARTNERS}
     pulsar:
