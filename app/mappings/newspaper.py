@@ -135,9 +135,9 @@ MAPPING: dict = {
             "mhs:Descriptive.mh:Description",
         ]
     },
-    "http://id.loc.gov/ontologies/bibframe/genreForm": {
-        "targets": ["mhs:Dynamic.dc_types.multiselect[]"],
-    },
+    # "http://id.loc.gov/ontologies/bibframe/genreForm": {
+    #     "targets": ["mhs:Dynamic.dc_types.multiselect[]"],
+    # },
     "http://id.loc.gov/ontologies/bibframe/provisionActivity": {
         "targets": ["mhs:Dynamic.dcterms_issued"],
         "transformer": date_transform,
