@@ -168,6 +168,9 @@ MAPPING: dict = {
     },
     "http://id.loc.gov/ontologies/bibframe/provisionActivity": {
         "mapping_strategy": provision_activity_mapper,
+    },
+    "http://id.loc.gov/ontologies/bibframe/issuance": {
+        "targets":["mhs:Dynamic.issuance"]
     }
 }
 
