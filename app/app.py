@@ -108,7 +108,11 @@ class EventListener:
             
             
         # Set the storage location based on CP id.
-        cp_id = graph.get_cp_id_from_graph(metadata_graph)
+        cp_info = graph.get_cp_info_from_graph(metadata_graph)
+        if cp_info:
+            cp_id = cp_info.id
+        else:
+            cp_id = ""
         
         archive_location = self.app_config["storage"]["default_archive_location"]
         

@@ -1,7 +1,7 @@
 import pytest
 
 from app.helpers.graph import (
-    get_cp_id_from_graph,
+    get_cp_info_from_graph,
     get_representations,
     parse_graph,
     GraphException,
@@ -43,6 +43,12 @@ def threed_ttl_graph():
         ttl = f.read()
     return ttl
 
+@pytest.fixture
+def bibliographic_ttl_graph():
+    with open("./tests/resources/bibliographic.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
 
 def test_parse_json_graph_json_ld(json_ld_graph):
     assert parse_graph(json_ld_graph, "json-ld")
@@ -73,12 +79,14 @@ def test_parse_turtle_graph_invalid_format(turtle_graph):
         assert parse_graph(turtle_graph, "")
 
 
-def test_get_cp_id_from_graph(json_ld_graph):
+def test_get_cp_info_from_graph(json_ld_graph):
     graph = parse_graph(json_ld_graph, "json-ld")
 
-    cp_id = get_cp_id_from_graph(graph)
+    cp = get_cp_info_from_graph(graph)
 
-    assert cp_id == "OR-5h7bt1n"
+    assert cp
+    assert cp.id == "OR-5h7bt1n"
+    assert cp.label == "KMSKA"
 
 
 def test_get_pid_from_turtle_graph(material_artwork_ttl_graph):

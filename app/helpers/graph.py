@@ -1,3 +1,4 @@
+from app.models.organization import Organization
 import rdflib
 
 from app.models.file import File
@@ -44,7 +45,7 @@ def parse_graph(data: str, format: str = "json-ld") -> rdflib.Graph:
         )
 
 
-def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
+def get_cp_info_from_graph(graph: rdflib.Graph) -> Organization | None:
     """Retrieves the CP-id of the archivist from a given graph. Returns an empty string if no CP-id is found.
 
     Args:
@@ -68,32 +69,36 @@ def get_cp_id_from_graph(graph: rdflib.Graph) -> str:
             )
 
             if str(role) == "ARCHIVIST":
-                cp_id = graph.value(
+                cp_id = str(graph.value(
                     subject=organization,
                     predicate=rdflib.URIRef("https://schema.org/identifier"),
-                )
+                ))
+                
+                label = str(graph.value(
+                    subject=organization,
+                    predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#prefLabel"),
+                ))
 
-                return str(cp_id)
-    return ""
+                return Organization(cp_id, label)
 
 
-def get_sp_id_from_graph(graph: rdflib.Graph) -> str:
-    """Retrieves the CP-id from a given graph.
+# def get_cp_info_from_graph(graph: rdflib.Graph) -> Organization | None:
+#     """Retrieves the CP-id from a given graph.
 
-    Args:
-        graph (rdflib.Graph): The metadata graph of the SIP.
+#     Args:
+#         graph (rdflib.Graph): The metadata graph of the SIP.
 
-    Returns:
-        str: The CP-id (OR-XXXXXXX)
-    """
-    cp = graph.value(
-        object=rdflib.URIRef("http://www.w3.org/ns/org#Organization"),
-        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-    )
-    cp_id = graph.value(
-        subject=cp, predicate=rdflib.URIRef("https://schema.org/identifier")
-    )
-    return str(cp_id)
+#     Returns:
+#         str: The CP-id (OR-XXXXXXX)
+#     """
+#     cp = graph.value(
+#         object=rdflib.URIRef("http://www.w3.org/ns/org#Organization"),
+#         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+#     )
+#     cp_id = graph.value(
+#         subject=cp, predicate=rdflib.URIRef("https://schema.org/identifier")
+#     )
+#     return str(cp_id)
 
 
 def get_sip_info(graph: rdflib.Graph) -> SIP:

@@ -4,7 +4,7 @@ from lxml import etree
 
 from rdflib.term import Node
 
-from app.helpers.graph import get_cp_id_from_graph, get_representations
+from app.helpers.graph import get_cp_info_from_graph, get_representations
 
 from app.models.sip import SIP
 
@@ -407,9 +407,16 @@ def build_mh_sidecar(
     pid_tag.text = pid.split("_")[0]
 
     # Add CP-id to the XML
-    cp_tag = etree.Element("CP_id")
-    dynamic_tag.append(cp_tag)
-    cp_tag.text = get_cp_id_from_graph(g)
+    cp = get_cp_info_from_graph(g)
+    
+    if cp:
+        cp_id_tag = etree.Element("CP_id")
+        cp_tag = etree.Element("CP")
+        dynamic_tag.append(cp_id_tag)
+        dynamic_tag.append(cp_tag)
+        cp_id_tag.text = cp.id
+        cp_tag.text = cp.label
+        
 
     for key, value in dynamic_tags.items():
         if value:

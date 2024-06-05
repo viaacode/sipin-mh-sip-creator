@@ -39,6 +39,12 @@ def three_dimensional_ttl_graph():
         ttl = f.read()
     return ttl
 
+@pytest.fixture
+def bibliographic_ttl_graph():
+    with open("./tests/resources/bibliographic.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
 
 @pytest.fixture
 def material_artwork_minimal_rep_graph():
@@ -227,4 +233,3 @@ def test_build_basic_mets(basic_ttl_graph, basic_mets_xml):
     assert not "Tape" in mets
     assert mets
     assert sorted("".join(mets.split())) == sorted("".join(basic_mets_xml.split()))
-

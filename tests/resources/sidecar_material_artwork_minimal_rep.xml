@@ -5,6 +5,7 @@
   <mhs:Dynamic>
     <PID>testpid</PID>
     <CP_id>OR-5h7bt1n</CP_id>
+    <CP>KMSKA</CP>
     <ingest_workflow>sipin</ingest_workflow>
   </mhs:Dynamic>
 </mhs:Sidecar>

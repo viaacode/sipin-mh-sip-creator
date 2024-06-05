@@ -1,0 +1,223 @@
+@prefix bf:      <http://id.loc.gov/ontologies/bibframe/> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix edm:     <http://www.europeana.eu/schemas/edm/> .
+@prefix edtf:    <http://id.loc.gov/datatypes/edtf/> .
+@prefix fx:      <http://sparql.xyz/facade-x/ns/> .
+@prefix haDes:   <https://data.hetarchief.be/ns/description/> .
+@prefix haObj:   <https://data.hetarchief.be/ns/object/> .
+@prefix haObjId: <https://data.hetarchief.be/id/entity/> .
+@prefix haSip:   <https://data.hetarchief.be/ns/sip/> .
+@prefix madsrdf: <http://www.loc.gov/mads/rdf/v1#> .
+@prefix mods:    <http://www.loc.gov/mods/v3#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix pav:     <http://purl.org/pav/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema:  <https://schema.org/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix xyz:     <http://sparql.xyz/facade-x/data/> .
+
+haObjId:9831b78cdd6ac74abe728321a13c83d6
+        rdf:type  bf:Contribution ;
+        bf:agent  haObjId:f9d1102542b26bb2feb86bc804af38a5 ;
+        bf:role   haObjId:d4f732a95f4a1220659f29e6e8f3468a .
+
+haObjId:61d7c5a92d0fe8e6a01660e676280b76
+        rdf:type    bf:Carrier ;
+        rdfs:label  "print" ;
+        bf:extent   haObjId:7d0278ab7c1b0a64d600b450d32d5129 , haObjId:ff5f504bf8161650b4b358ad1fffff76 , haObjId:c81e728d9d4c2f636f067f89cc14862c ;
+        bf:note     haObjId:7ff3e75ce6aca348bc513ed3d5882946 ;
+        bf:source   <https://www.loc.gov/standards/valuelist/marcform.html> .
+
+haObjId:VIAA-PUBLIEK-METADATA-LTD
+        rdf:type    bf:UsageAndAccessPolicy ;
+        rdfs:label  "VIAA-PUBLIEK-METADATA-LTD" .
+
+haObjId:69da234ae73a51cbeca323b8cefd1f4e
+        rdf:type    bf:GenreForm ;
+        rdfs:label  "newspaper" ;
+        bf:source   <https://www.loc.gov/standards/valuelist/marcgt.html> .
+
+haObjId:b3cd915d758008bd19d0f2428fbb354a
+        rdf:type    bf:Unit ;
+        rdfs:label  "mm" .
+
+haObjId:d4f732a95f4a1220659f29e6e8f3468a
+        rdf:type    bf:Role ;
+        rdfs:label  "author" .
+
+haObjId:3f404bbed1672b52480a334dd13ab4a4
+        rdf:type    bf:Topic ;
+        rdfs:label  "chat blanc" .
+
+haObjId:7ff3e75ce6aca348bc513ed3d5882946
+        rdf:type     bf:Note ;
+        rdfs:label   "Bad" ;
+        bf:noteType  "condition" .
+
+haObjId:9b3887e4a1a3f9f33e0a90fad27723e3
+        rdf:type         bf:AdminMetadata ;
+        bf:identifiedBy  haObjId:6db9555a6fe17763d8dba8543f566f4c .
+
+haObjId:6a2b6d6adc84504c5d3e51c96bfb6932
+        rdf:type        bf:VariantTitle ;
+        rdfs:label      "Corresp" ;
+        bf:variantType  "correspondenten" , "alternative" .
+
+haObjId:82a9e4d26595c87ab6e442391d8c5bba
+        rdf:type    bf:Language ;
+        rdfs:label  "fr" .
+
+haObjId:b8c411b63f4a75515b660b7d65cf272b
+        rdf:type    bf:Title ;
+        rdfs:label  "Le Chat Blanc" .
+
+haObjId:2e29af509374c6ddb178bc0d7087116f
+        rdf:type    bf:Place ;
+        rdfs:label  "Ghent, Belgium" ;
+        bf:code     "BEL" ;
+        bf:source   <https://www.iso.org/iso-3166-country-codes.html> .
+
+haObjId:uuid-e6a138e5-a0fc-41d3-a912-9491a3502f57
+        rdf:type                 haDes:Text , bf:Manuscript , haDes:NotatedMusic , bf:Work , haDes:NewspaperIssue ;
+        rdfs:label               "Le Chat Blanc" ;
+        bf:adminMetadata         haObjId:9b3887e4a1a3f9f33e0a90fad27723e3 ;
+        bf:carrier               haObjId:61d7c5a92d0fe8e6a01660e676280b76 ;
+        bf:contribution          haObjId:9831b78cdd6ac74abe728321a13c83d6 , haObjId:2b1a5596c1a3a727dec5988fec6f6663 ;
+        bf:genreForm             haObjId:69da234ae73a51cbeca323b8cefd1f4e , haObjId:0485df95bbfad639457c6573459c5983 ;
+        bf:hasSeries             haObjId:7d4f7ef47ccc5703b375d693624e8579 , <https://anet.be/record/opacbnc/c:bnc:99999/N> ;
+        bf:identifiedBy          haObjId:2f4909296afba61aad2487af9d050a79 ;
+        bf:issuance              "serial" ;
+        bf:language              haObjId:82a9e4d26595c87ab6e442391d8c5bba ;
+        bf:originDate            "2000-01-01"^^edtf:EDTF , "2022-08-02"^^edtf:EDTF ;
+        bf:provisionActivity     haObjId:d386f6abd9da7bf697b704db7dde8377 , haObjId:eb585405a45342fdae347aeeb91bef8f ;
+        bf:subject               haObjId:0832c1202da8d382318e329a7c133ea0 , haObjId:3f404bbed1672b52480a334dd13ab4a4 ;
+        bf:summary               haObjId:29bc54305b6f4e6bfcb066d7ba152abd ;
+        bf:title                 haObjId:cb627955bb35997c1efa54844b090587 , haObjId:b8c411b63f4a75515b660b7d65cf272b , haObjId:6a2b6d6adc84504c5d3e51c96bfb6932 , haObjId:210a2592d5931ebaafe8d0b8380cfccf ;
+        bf:usageAndAccessPolicy  haObjId:VIAA-PUBLIEK-METADATA-LTD .
+
+haObjId:820eb5b696ea2a657c0db1e258dc7d81
+        rdf:type    bf:Unit ;
+        rdfs:label  "cm" .
+
+haObjId:3851349df9f4f91fb050aad6fe16c3c5
+        rdf:type    bf:Organization ;
+        rdfs:label  "Hetzel" .
+
+haObjId:0485df95bbfad639457c6573459c5983
+        rdf:type    bf:GenreForm ;
+        rdfs:label  "amateur newspapers" ;
+        bf:source   <https://www.lib.washington.edu/gmm/collections/mcnews/ngl> .
+
+haObjId:d386f6abd9da7bf697b704db7dde8377
+        rdf:type  bf:ProvisionActivity ;
+        bf:date   "2000-01-01"^^edtf:EDTF .
+
+<https://www.lib.washington.edu/gmm/collections/mcnews/ngl>
+        rdf:type    bf:Source ;
+        rdfs:label  "ngl" .
+
+haObjId:cb627955bb35997c1efa54844b090587
+        rdf:type        bf:VariantTitle ;
+        rdfs:label      "Incipit" ;
+        bf:variantType  "incipit" , "alternative" .
+
+haObjId:6db9555a6fe17763d8dba8543f566f4c
+        rdf:type   bf:Identifier ;
+        rdf:value  "uuid-22ccc925-a13b-4a47-a0e5-a71cc8bee67b" .
+
+haObjId:0ac302d3fc4555c61e2c12af7605d25d
+        rdf:type    bf:Role ;
+        rdfs:label  "publisher" .
+
+haObjId:eb585405a45342fdae347aeeb91bef8f
+        rdf:type  bf:Publication ;
+        bf:agent  haObjId:c82f0c686f0eba96664821786c59497f ;
+        bf:date   "2022-08-02"^^edtf:EDTF ;
+        bf:place  haObjId:2e29af509374c6ddb178bc0d7087116f .
+
+haObjId:7d0278ab7c1b0a64d600b450d32d5129
+        rdf:type    bf:Extent ;
+        rdfs:label  "59.7 x 74.9" ;
+        bf:unit     haObjId:820eb5b696ea2a657c0db1e258dc7d81 .
+
+haObjId:7d4f7ef47ccc5703b375d693624e8579
+        rdf:type           bf:Series ;
+        bf:title           haObjId:a2a86c91777e281aab7ce50c73e186e2 ;
+        schema:identifier  haObjId:a87ff679a2f3e71d9181a67b7542122c , haObjId:eccbc87e4b5ce2fe28308fd9f2a7baf3 .
+
+haObjId:ff5f504bf8161650b4b358ad1fffff76
+        rdf:type    bf:Extent ;
+        rdfs:label  "597 x 749" ;
+        bf:unit     haObjId:b3cd915d758008bd19d0f2428fbb354a .
+
+<https://anet.be/record/opacbnc/c:bnc:99999/N>
+        rdf:type           bf:Series ;
+        bf:title           haObjId:a2a86c91777e281aab7ce50c73e186e2 ;
+        schema:identifier  <https://anet.be/record/opacbnc/c:bnc:99999/N> .
+
+<https://www.loc.gov/standards/valuelist/marcform.html>
+        rdf:type    bf:Source ;
+        rdfs:label  "marcform" .
+
+haObjId:c81e728d9d4c2f636f067f89cc14862c
+        rdf:type    bf:Extent ;
+        rdfs:label  "2" ;
+        bf:unit     haObjId:7183a0be08d4f555313309ed04788b11 .
+
+haObjId:210a2592d5931ebaafe8d0b8380cfccf
+        rdf:type        bf:VariantTitle ;
+        rdfs:label      "Brief" ;
+        bf:variantType  "incipit brief" , "alternative" .
+
+<https://www.iso.org/iso-3166-country-codes.html>
+        rdf:type    bf:Source ;
+        rdfs:label  "iso3166" .
+
+haObjId:a87ff679a2f3e71d9181a67b7542122c
+        rdf:type   bf:Identifier ;
+        rdf:value  "4" .
+
+<https://www.loc.gov/standards/valuelist/marcgt.html>
+        rdf:type    bf:Source ;
+        rdfs:label  "marcgt" .
+
+haObjId:2f4909296afba61aad2487af9d050a79
+        rdf:type   bf:Identifier ;
+        rdf:value  "uuid-e6a138e5-a0fc-41d3-a912-9491a3502f57" .
+
+haObjId:0832c1202da8d382318e329a7c133ea0
+        rdf:type    bf:Topic ;
+        rdfs:label  "cats" .
+
+haObjId:2b1a5596c1a3a727dec5988fec6f6663
+        rdf:type  bf:Contribution ;
+        bf:agent  haObjId:3851349df9f4f91fb050aad6fe16c3c5 ;
+        bf:role   haObjId:0ac302d3fc4555c61e2c12af7605d25d .
+
+haObjId:a2a86c91777e281aab7ce50c73e186e2
+        rdf:type    bf:Title ;
+        rdfs:label  "Series title" .
+
+haObjId:c82f0c686f0eba96664821786c59497f
+        rdf:type    bf:Agent ;
+        rdfs:label  "Hetzel" .
+
+haObjId:7183a0be08d4f555313309ed04788b11
+        rdf:type    bf:Unit ;
+        rdfs:label  "sheets" .
+
+haObjId:29bc54305b6f4e6bfcb066d7ba152abd
+        rdf:type    bf:Summary ;
+        rdfs:label  "Le Chat Blanc abstract etc. etc." .
+
+haObjId:eccbc87e4b5ce2fe28308fd9f2a7baf3
+        rdf:type   bf:Identifier ;
+        rdf:value  "3" .
+
+haObjId:f9d1102542b26bb2feb86bc804af38a5
+        rdf:type           bf:Person ;
+        schema:familyName  "Verne" ;
+        schema:givenName   "Jules" .

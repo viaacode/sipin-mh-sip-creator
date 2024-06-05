@@ -55,6 +55,7 @@
     </dc_identifier_localids>
     <PID>testpid</PID>
     <CP_id>OR-5h7bt1n</CP_id>
+    <CP>KMSKA</CP>
     <md5>18513a8d61c6f2cbaaeeedd754b01d6b</md5>
     <ingest_workflow>sipin</ingest_workflow>
   </mhs:Dynamic>
