@@ -18,6 +18,8 @@
 @prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix xyz:     <http://sparql.xyz/facade-x/data/> .
+@prefix premis: <http://www.loc.gov/premis/rdf/v3/> .
+
 
 haObjId:9831b78cdd6ac74abe728321a13c83d6
         rdf:type  bf:Contribution ;
@@ -31,8 +33,7 @@ haObjId:61d7c5a92d0fe8e6a01660e676280b76
         bf:note     haObjId:7ff3e75ce6aca348bc513ed3d5882946 ;
         bf:source   <https://www.loc.gov/standards/valuelist/marcform.html> .
 
-haObjId:VIAA-PUBLIEK-METADATA-LTD
-        rdf:type    bf:UsageAndAccessPolicy ;
+haObjId:VIAA-PUBLIEK-METADATA-LTD a bf:UsageAndAccessPolicy ;
         rdfs:label  "VIAA-PUBLIEK-METADATA-LTD" .
 
 haObjId:69da234ae73a51cbeca323b8cefd1f4e
@@ -81,7 +82,7 @@ haObjId:2e29af509374c6ddb178bc0d7087116f
         bf:source   <https://www.iso.org/iso-3166-country-codes.html> .
 
 haObjId:uuid-e6a138e5-a0fc-41d3-a912-9491a3502f57
-        rdf:type                 haDes:Text , bf:Manuscript , haDes:NotatedMusic , bf:Work , haDes:NewspaperIssue ;
+        rdf:type                 haDes:Text , bf:Manuscript , haDes:NotatedMusic , bf:Work , haDes:NewspaperIssue , premis:IntellectualEntity ;
         rdfs:label               "Le Chat Blanc" ;
         bf:adminMetadata         haObjId:9b3887e4a1a3f9f33e0a90fad27723e3 ;
         bf:carrier               haObjId:61d7c5a92d0fe8e6a01660e676280b76 ;

@@ -4,7 +4,7 @@ import rdflib
 from freezegun import freeze_time
 
 from app.helpers.graph import parse_graph
-from app.helpers.xml import build_mh_sidecar, build_mh_mets, build_minimal_sidecar, build_newspaper_mh_mets, build_basic_mh_mets
+from app.helpers.xml import build_bibliographic_mh_mets, build_mh_sidecar, build_mh_mets, build_minimal_sidecar, build_newspaper_mh_mets, build_basic_mh_mets
 from app.mappings import material_artwork
 
 
@@ -233,3 +233,15 @@ def test_build_basic_mets(basic_ttl_graph, basic_mets_xml):
     assert not "Tape" in mets
     assert mets
     assert sorted("".join(mets.split())) == sorted("".join(basic_mets_xml.split()))
+
+
+
+@freeze_time("2024-02-20")
+def test_build_bibliographic_mets(bibliographic_ttl_graph):
+    g = parse_graph(bibliographic_ttl_graph, "ttl")
+
+    mets = build_bibliographic_mh_mets(g, "testpid", "Disk")
+
+    assert "Disk" in mets
+    assert not "Tape" in mets
+    assert mets

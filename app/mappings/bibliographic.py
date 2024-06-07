@@ -89,6 +89,8 @@ def extent_mapper(graph, subject, extents) -> dict[str, list[str]]:
 
     for extent in extents:
         extent_string = str(graph.value(subject=extent, predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label")))
+        if not " x " in extent_string:
+            break
         width_and_height = extent_string.split(" x ")
         width_in_mm = str(round(float(width_and_height[0])*10))
         height_in_mm = str(round(float(width_and_height[1])*10))
@@ -147,10 +149,6 @@ MAPPING: dict = {
     },
     "http://id.loc.gov/ontologies/bibframe/subject": {
         "targets": ["mhs:Dynamic.dc_subjects.Trefwoord[]"],
-    },
-    "http://id.loc.gov/ontologies/bibframe/hasSeries": {
-        "transformer": value_transform,
-        "targets": ["mhs:Dynamic.dc_identifier_localids.abraham_id[]", "mhs:Dynamic.abraham_ID"],
     },
     "http://id.loc.gov/ontologies/bibframe/contribution": {
         "mapping_strategy": contribution_mapper,
