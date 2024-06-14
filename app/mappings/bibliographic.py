@@ -63,18 +63,7 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
         for obj in graph.predicate_objects(subject=contributor_role):
             if obj[0] == rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"):
                 role_label = obj[1].toPython()
-        
-        contributor_details = graph.value(
-            subject=contributor, predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/agent")
-        )
-        contributor_given_name = graph.value(
-            subject=contributor_details, predicate=rdflib.URIRef("https://schema.org/givenName")
-        )
-        
-        contributor_family_name = graph.value(
-            subject=contributor_details, predicate=rdflib.URIRef("https://schema.org/familyName")
-        )
-
+    
         role_mapping = {
             "composer": "Componist",
             "arrangeur": "Arrangeur",
@@ -88,7 +77,31 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
             role = f"mhs:Dynamic.dc_creators.{mapped_role}[]"
         else:
             role = f"mhs:Dynamic.dc_creators.Maker[]"
-        name = str(" ".join([str(contributor_given_name), str(contributor_family_name)]))
+        
+        
+        # check if contributor is person or company
+        contributor_details = graph.value(
+            subject=contributor, predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/agent")
+        )
+        
+        agent_type = graph.value(
+            subject=contributor_details, predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+        )
+        
+        if agent_type == rdflib.URIRef('http://id.loc.gov/ontologies/bibframe/Organization'):
+            name = str(graph.value(
+                subject=contributor_details, predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label")
+            ))
+
+        if agent_type == rdflib.URIRef('http://id.loc.gov/ontologies/bibframe/Person'):
+            contributor_given_name = graph.value(
+                subject=contributor_details, predicate=rdflib.URIRef("https://schema.org/givenName")
+            )
+            contributor_family_name = graph.value(
+                subject=contributor_details, predicate=rdflib.URIRef("https://schema.org/familyName")
+            )
+            
+            name = str(" ".join([str(contributor_given_name), str(contributor_family_name)]))
 
         mapping[role] = [*mapping.get(role, []), name]
 
