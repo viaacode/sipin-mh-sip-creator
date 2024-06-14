@@ -107,21 +107,42 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
 
     return mapping
 
-def extent_mapper(graph, subject, extents) -> dict[str, list[str]]:
+def carrier_mapper(graph, subject, carriers) -> dict[str, list[str]]:
 
     mapping: dict[str, list[str]] = {}
 
-    for extent in extents:
-        extent_string = str(graph.value(subject=extent, predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label")))
-        if not " x " in extent_string:
-            break
-        width_and_height = extent_string.split(" x ")
-        width_in_mm = str(round(float(width_and_height[0])*10))
-        height_in_mm = str(round(float(width_and_height[1])*10))
+    for carrier in carriers:
+        extents =  graph.objects(
+                        predicate=rdflib.URIRef( "http://id.loc.gov/ontologies/bibframe/extent"), subject=carrier
+                    )
+        for extent in extents:
+            unit = graph.value(
+                    subject=extent, predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/unit")
+                )
+            unit_label = str(graph.value(
+                    subject=unit, predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label")
+                ))
+            
+                
+            extent_string = str(graph.value(subject=extent, predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label")))
+            if unit_label == "sheets":
+                mapping["mhs:Dynamic.number_of_pages"] = [extent_string]
+            
+            if unit_label == "cm":
+                width_and_height = extent_string.split(" x ")
+                width_in_mm = str(round(float(width_and_height[0])*10))
+                height_in_mm = str(round(float(width_and_height[1])*10))
 
+                mapping["mhs:Dynamic.dimensions.height_in_mm"] = [height_in_mm]
+                mapping["mhs:Dynamic.dimensions.width_in_mm"] = [width_in_mm]
 
-        mapping["mhs:Dynamic.dimensions.height_in_mm"] = [height_in_mm]
-        mapping["mhs:Dynamic.dimensions.width_in_mm"] = [width_in_mm]
+            if unit_label == "mm":
+                width_and_height = extent_string.split(" x ")
+                width_in_mm = str(round(float(width_and_height[0])))
+                height_in_mm = str(round(float(width_and_height[1])))
+
+                mapping["mhs:Dynamic.dimensions.height_in_mm"] = [height_in_mm]
+                mapping["mhs:Dynamic.dimensions.width_in_mm"] = [width_in_mm]
 
     return mapping
 
@@ -180,9 +201,8 @@ MAPPING: dict = {
     "https://data.hetarchief.be/ns/bibliographic/numberOfPages": {
         "targets": ["mhs:Dynamic.number_of_pages"],
     },
-    "http://id.loc.gov/ontologies/bibframe/extent": {
-        "targets": ["mhs:Dynamic.dimensions"],
-        "mapping_strategy": extent_mapper
+    "http://id.loc.gov/ontologies/bibframe/carrier": {
+        "mapping_strategy": carrier_mapper
     },
     "http://id.loc.gov/ontologies/bibframe/usageAndAccessPolicy": {
         "mapping_strategy": license_mapper,
