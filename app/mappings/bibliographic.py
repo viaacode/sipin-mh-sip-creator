@@ -75,8 +75,19 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
             subject=contributor_details, predicate=rdflib.URIRef("https://schema.org/familyName")
         )
 
-        # role = f"mhs:Dynamic.dc_creators.{str(role_label)}[]"
-        role = f"mhs:Dynamic.dc_creators.Maker[]"
+        role_mapping = {
+            "composer": "Componist",
+            "arrangeur": "Arrangeur",
+            "adaptation": "Arrangeur",
+            "harmonization": "Arrangeur",
+            "author": "Auteur",
+            "lyricist": "Schrijver",
+            "translator": "Vertaler",
+        }
+        if mapped_role := role_mapping.get(str(role_label)):
+            role = f"mhs:Dynamic.dc_creators.{mapped_role}[]"
+        else:
+            role = f"mhs:Dynamic.dc_creators.Maker[]"
         name = str(" ".join([str(contributor_given_name), str(contributor_family_name)]))
 
         mapping[role] = [*mapping.get(role, []), name]
