@@ -105,16 +105,25 @@ def provision_activity_mapper(graph, subject, activities) -> dict[str, list[str]
     mapping: dict[str, list[str]] = {}
 
     for activity in activities:
-        place = graph.value(subject=activity, predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/place"))
-        place_code = graph.value(subject=place, predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/code"))
-        place_name = graph.value(subject=place, predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"))
-
-        key = "mhs:Dynamic.dc_coverages.ruimte[]"
-        if place_code:
-            mapping[key] = [*mapping.get(key, []), str(place_code)]
+        date = graph.value(subject=activity, predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/date"))
         
-        if place_name:
-            mapping[key] = [*mapping.get(key, []), str(place_name)]
+        if date:
+            key = "mhs:Dynamic.dcterms_issued"
+            
+            mapping[key] = [str(date)]
+        
+        place = graph.value(subject=activity, predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/place"))
+        
+        if place:
+            place_code = graph.value(subject=place, predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/code"))
+            place_name = graph.value(subject=place, predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"))
+
+            key = "mhs:Dynamic.dc_coverages.ruimte[]"
+            if place_code:
+                mapping[key] = [*mapping.get(key, []), str(place_code)]
+            
+            if place_name:
+                mapping[key] = [*mapping.get(key, []), str(place_name)]
         
     return mapping
 
@@ -139,10 +148,6 @@ MAPPING: dict = {
     # "http://id.loc.gov/ontologies/bibframe/genreForm": {
     #     "targets": ["mhs:Dynamic.dc_types.multiselect[]"],
     # },
-    "http://id.loc.gov/ontologies/bibframe/provisionActivity": {
-        "targets": ["mhs:Dynamic.dcterms_issued"],
-        "transformer": date_transform,
-    },
     "http://id.loc.gov/ontologies/bibframe/originDate": {
         "targets": ["mhs:Dynamic.dcterms_created"],
     },
@@ -166,9 +171,6 @@ MAPPING: dict = {
     "http://id.loc.gov/ontologies/bibframe/usageAndAccessPolicy": {
         "mapping_strategy": license_mapper,
         "targets": ["mhs:Dynamic.dc_rights_licenses.multiselect[]"],
-    },
-    "http://id.loc.gov/ontologies/bibframe/provisionActivity": {
-        "mapping_strategy": provision_activity_mapper,
     },
     "http://id.loc.gov/ontologies/bibframe/provisionActivity": {
         "mapping_strategy": provision_activity_mapper,
