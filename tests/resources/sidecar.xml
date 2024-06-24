@@ -5,6 +5,7 @@
   <mhs:Descriptive>
     <mh:Title>de titel van de episode</mh:Title>
     <mh:Description>de beschrijving van de episode</mh:Description>
+    <mh:OriginalFilename>abc.zip</mh:OriginalFilename>
   </mhs:Descriptive>
   <mhs:Dynamic>
     <dc_title>de titel van de episode</dc_title>

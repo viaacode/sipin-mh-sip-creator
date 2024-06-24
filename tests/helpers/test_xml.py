@@ -125,7 +125,7 @@ def test_build_mh_sidecar(json_ld_graph, mh_sidecar_xml):
         g,
         [ie],
         "testpid",
-        {"md5": "18513a8d61c6f2cbaaeeedd754b01d6b"},
+        {"dynamic": {"md5": "18513a8d61c6f2cbaaeeedd754b01d6b"}, "descriptive": {"OriginalFilename": "abc.zip"}},
     )
 
     assert sidecar == mh_sidecar_xml
@@ -157,7 +157,7 @@ def test_build_material_artwork_mets(material_artwork_ttl_graph):
 def test_build_3d_mets(three_dimensional_ttl_graph):
     g = parse_graph(three_dimensional_ttl_graph, "ttl")
 
-    mets = build_mh_mets(g, "testpid", "Disk", {"batch_id": "batch-idke"})
+    mets = build_mh_mets(g, "testpid", "Disk", {f"dynamic":{"batch_id": "batch-idke"}})
 
     assert "16354987" in mets
     assert "13548987" in mets
@@ -167,7 +167,7 @@ def test_build_3d_mets(three_dimensional_ttl_graph):
 def test_build_minimal_mets(material_artwork_minimal_rep_graph, mets_xml):
     g = parse_graph(material_artwork_minimal_rep_graph, "ttl")
 
-    mets = build_mh_mets(g, "testpid", "Disk", {"batch_id": "batch-idke"})
+    mets = build_mh_mets(g, "testpid", "Disk", {f"dynamic":{"batch_id": "batch-idke"}})
 
     assert "2023-11-28" in mets
     assert sorted(mets) == sorted(mets_xml)

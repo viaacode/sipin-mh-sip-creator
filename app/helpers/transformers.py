@@ -34,6 +34,7 @@ def name_transform(graph_result) -> str:
             name = obj[1].toPython()
     return name
 
+
 def value_transform(graph_result) -> str:
     name = ""
     for obj in graph_result:
@@ -48,6 +49,7 @@ def date_transform(graph_result) -> str:
         if obj[0] == rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/date"):
             name = obj[1].toPython()
     return name
+
 
 def label_transform(graph_result) -> str:
     name = ""

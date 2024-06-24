@@ -19,7 +19,10 @@ NSMAP = {
 
 
 def build_mh_mets(
-    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+    g: rdflib.Graph,
+    pid: str,
+    archive_location: str,
+    additional_metadata: dict[str, dict[str, str]] = {},
 ) -> str:
     profile = material_artwork
     mapping = profile.MAPPING
@@ -54,7 +57,7 @@ def build_mh_mets(
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
+        build_mh_sidecar(mapping, g, [ie], pid, additional_metadata),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -104,8 +107,12 @@ def build_mh_mets(
 
     return xml
 
+
 def build_basic_mh_mets(
-    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+    g: rdflib.Graph,
+    pid: str,
+    archive_location: str,
+    additional_metadata: dict[str, dict[str, str]] = {},
 ) -> str:
     profile = basic
     mapping = profile.MAPPING
@@ -140,7 +147,7 @@ def build_basic_mh_mets(
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
+        build_mh_sidecar(mapping, g, [ie], pid, additional_metadata),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -192,7 +199,10 @@ def build_basic_mh_mets(
 
 
 def build_newspaper_mh_mets(
-    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+    g: rdflib.Graph,
+    pid: str,
+    archive_location: str,
+    additional_metadata: dict[str, dict[str, str]] = {},
 ) -> str:
     profile = newspaper
     mapping = profile.MAPPING
@@ -227,7 +237,7 @@ def build_newspaper_mh_mets(
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
+        build_mh_sidecar(mapping, g, [ie], pid, additional_metadata),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -295,9 +305,11 @@ def build_newspaper_mh_mets(
     return xml
 
 
-
 def build_bibliographic_mh_mets(
-    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+    g: rdflib.Graph,
+    pid: str,
+    archive_location: str,
+    additional_metadata: dict[str, dict[str, str]] = {},
 ) -> str:
     profile = bibliographic
     mapping = profile.MAPPING
@@ -332,7 +344,7 @@ def build_bibliographic_mh_mets(
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
+        build_mh_sidecar(mapping, g, [ie], pid, additional_metadata),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -428,12 +440,13 @@ def build_minimal_sidecar(external_id: str) -> str:
 
     return xml
 
+
 def build_mh_sidecar(
     mapping: dict,
     g: rdflib.Graph,
     subjects,
     pid: str,
-    dynamic_tags: dict[str, str] = {},
+    additional_metadata: dict[str, dict[str, str]] = {},
 ) -> str:
     """
     Builds a MH 2.0 sidecar based on metadata from a graph
@@ -512,7 +525,7 @@ def build_mh_sidecar(
 
     # Add CP-id to the XML
     cp = get_cp_info_from_graph(g)
-    
+
     if cp:
         cp_id_tag = etree.Element("CP_id")
         cp_tag = etree.Element("CP")
@@ -520,13 +533,26 @@ def build_mh_sidecar(
         dynamic_tag.append(cp_tag)
         cp_id_tag.text = cp.id
         cp_tag.text = cp.label
-        
 
-    for key, value in dynamic_tags.items():
-        if value:
-            key_tag = etree.Element(key)
-            dynamic_tag.append(key_tag)
-            key_tag.text = value
+    if additional_metadata.get("dynamic"):
+        for key, value in additional_metadata["dynamic"].items():
+            if value:
+                key_tag = etree.Element(key)
+                dynamic_tag.append(key_tag)
+                key_tag.text = value
+
+    if additional_metadata.get("descriptive"):
+        descriptive_tag = root.find("mhs:Descriptive", namespaces=NSMAP)
+        if descriptive_tag is None:
+            descriptive_tag = etree.Element(
+                etree.QName(NSMAP["mhs"], "Descriptive"), nsmap=NSMAP
+            )
+            root.append(descriptive_tag)
+        for key, value in additional_metadata["descriptive"].items():
+            if value:
+                key_tag = etree.Element(etree.QName(NSMAP["mh"], key), nsmap=NSMAP)
+                descriptive_tag.append(key_tag)
+                key_tag.text = value
 
     # Set ingest_workflow to sipin
     sp_tag = etree.Element("ingest_workflow")

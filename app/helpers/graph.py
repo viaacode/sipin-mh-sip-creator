@@ -69,15 +69,21 @@ def get_cp_info_from_graph(graph: rdflib.Graph) -> Organization | None:
             )
 
             if str(role) == "ARCHIVIST":
-                cp_id = str(graph.value(
-                    subject=organization,
-                    predicate=rdflib.URIRef("https://schema.org/identifier"),
-                ))
-                
-                label = str(graph.value(
-                    subject=organization,
-                    predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#prefLabel"),
-                ))
+                cp_id = str(
+                    graph.value(
+                        subject=organization,
+                        predicate=rdflib.URIRef("https://schema.org/identifier"),
+                    )
+                )
+
+                label = str(
+                    graph.value(
+                        subject=organization,
+                        predicate=rdflib.URIRef(
+                            "http://www.w3.org/2004/02/skos/core#prefLabel"
+                        ),
+                    )
+                )
 
                 return Organization(cp_id, label)
 
@@ -250,15 +256,15 @@ def get_representations(graph: rdflib.Graph) -> list[Representation]:
                     )
                 ),
                 node=file,
-                order=int(str(
-                    graph.value(
-                        subject=file,
-                        predicate=rdflib.URIRef(
-                            "https://schema.org/position"
-                        ),
-                        default=0
+                order=int(
+                    str(
+                        graph.value(
+                            subject=file,
+                            predicate=rdflib.URIRef("https://schema.org/position"),
+                            default=0,
+                        )
                     )
-                ))
+                ),
             )
             r.files.append(f)
         r.files.sort()
