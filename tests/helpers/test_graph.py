@@ -152,4 +152,5 @@ def test_newspaper_ordering(newspaper_ttl_graph):
     assert len(sip.representations) == 3
     assert sip.representations[0].label <= sip.representations[1].label <= sip.representations[2].label
     assert len(sip.representations[2].files) == 22
+    assert sip.format == "print"
     

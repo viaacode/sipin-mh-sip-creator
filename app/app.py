@@ -139,7 +139,7 @@ class EventListener:
                 pid,
                 archive_location,
                 {
-                    "dynamic": {"batch_id": sip.batch_id, "type_viaa": sip.format},
+                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format},
                     "descriptive": {"OriginalFilename": Path(path).name},
                 },
             )
@@ -170,7 +170,7 @@ class EventListener:
                 pid,
                 self.app_config["archive_location"],
                 {
-                    "dynamic": {"batch_id": sip.batch_id, "type_viaa": sip.format},
+                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format},
                     "descriptive": {"OriginalFilename": Path(path).name},
                 },
             )

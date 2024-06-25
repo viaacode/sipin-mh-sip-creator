@@ -146,6 +146,7 @@ def get_sip_info(graph: rdflib.Graph) -> SIP:
         format_mapping = {
             "Photographs - Digital": "photo",
             "Scanned 3D Objects (output from photogrammetry scanning)": "3D-model",
+            "Textual works - Print": "print",    
         }
         format = format_mapping.get(str(format_node), "")
 
