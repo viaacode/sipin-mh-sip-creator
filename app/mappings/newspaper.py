@@ -64,6 +64,26 @@ def license_mapper(graph, subject, licenses) -> dict[str, list[str]]:
     return mapping
 
 
+def issuance_mapper(graph, subject, issuances) -> dict[str, list[str]]:
+    mapping = {}
+    translation = {
+        "monographic": "monografisch",
+        "single unit": "enkele eenheid",
+        "multipart monograph": "meerdelige monografie",
+        "continuing": "doorlopend",
+        "serial": "serieel",
+        "integrating resource": "integrerende hulpbron",
+    }
+    
+    for issuance in issuances:
+        if translation.get(str(issuance)):
+            mapping = {
+                "mhs:Dynamic.dc_description_categorie":[translation[str(issuance)]]
+            }        
+
+    return mapping
+
+
 def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
 
     mapping: dict[str, list[str]] = {}
@@ -211,5 +231,8 @@ MAPPING: dict = {
     },
     "http://www.loc.gov/premis/rdf/v3/identifier": {
         "mapping_strategy": local_id_mapper,
+    },
+    "http://id.loc.gov/ontologies/bibframe/issuance": {
+        "mapping_strategy": issuance_mapper,
     },
 }
