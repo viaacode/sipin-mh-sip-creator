@@ -257,7 +257,7 @@ def build_newspaper_mh_mets(
     for page in pages:
         newspaper_page = metsrw.FSEntry(type="NewspaperPage")
         newspaper_page.add_dmdsec(
-            build_minimal_sidecar(f"{pid}_{page}"),
+            build_minimal_sidecar(f"{pid}_{page}", {"descriptive": {"Title": f"testjeuh - pagina {page + 1}"}}),
             "OTHER",
             **{
                 "othermdtype": "mhs:Sidecar",
@@ -412,7 +412,7 @@ def build_bibliographic_mh_mets(
     return xml
 
 
-def build_minimal_sidecar(external_id: str) -> str:
+def build_minimal_sidecar(external_id: str, additional_metadata: dict[str, dict[str,str]] = {}) -> str:
     root = etree.Element(
         etree.QName(NSMAP["mhs"], "Sidecar"),
         nsmap=NSMAP,
@@ -433,8 +433,32 @@ def build_minimal_sidecar(external_id: str) -> str:
     root.append(descriptive_node)
     administrative_node.append(id_node)
     descriptive_node.append(title_node)
+    
     id_node.text = external_id
     title_node.text = external_id
+    
+    if additional_metadata.get("descriptive"):
+        for key, value in additional_metadata["descriptive"].items():
+            if value:
+                key_tag = descriptive_node.find(f"mh:{key}", namespaces=NSMAP)
+                if type(key_tag) == etree._Element:
+                    key_tag.text = value
+                else:
+                    key_tag = etree.Element(etree.QName(NSMAP["mh"], key), nsmap=NSMAP)
+                    descriptive_node.append(key_tag)
+                    key_tag.text = value
+
+    if additional_metadata.get("dynamic"):
+        dynamic_node = etree.Element(
+            etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP
+        )
+        for key, value in additional_metadata["dynamic"].items():
+            if value:
+                key_tag = etree.Element(key)
+                dynamic_node.append(key_tag)
+                key_tag.text = value
+        root.append(dynamic_node)
+
 
     xml = etree.tostring(root, pretty_print=True).decode()
 

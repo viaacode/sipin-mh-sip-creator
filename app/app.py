@@ -139,7 +139,7 @@ class EventListener:
                 pid,
                 archive_location,
                 {
-                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format},
+                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format, "dc_format": "kranteneditie"},
                     "descriptive": {"OriginalFilename": Path(path).name},
                 },
             )
