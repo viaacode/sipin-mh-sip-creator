@@ -5,6 +5,7 @@
   <mhs:Descriptive>
     <mh:Title>de titel van de episode</mh:Title>
     <mh:Description>de beschrijving van de episode</mh:Description>
+    <mh:OriginalFilename>abc.zip</mh:OriginalFilename>
   </mhs:Descriptive>
   <mhs:Dynamic>
     <dc_title>de titel van de episode</dc_title>
@@ -55,6 +56,7 @@
     </dc_identifier_localids>
     <PID>testpid</PID>
     <CP_id>OR-5h7bt1n</CP_id>
+    <CP>KMSKA</CP>
     <md5>18513a8d61c6f2cbaaeeedd754b01d6b</md5>
     <ingest_workflow>sipin</ingest_workflow>
   </mhs:Dynamic>

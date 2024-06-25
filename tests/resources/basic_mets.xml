@@ -49,6 +49,7 @@
                         <dc_identifier_localid>heic2013a</dc_identifier_localid>
                         <PID>testpid</PID>
                         <CP_id>OR-mp4vr0n</CP_id>
+                        <CP>Vlaams Audiovisueel Fonds</CP>
                         <ingest_workflow>sipin</ingest_workflow>
                     </mhs:Dynamic>
                 </mhs:Sidecar>
@@ -81,6 +82,7 @@
                     <mhs:Dynamic>
                         <PID>testpid</PID>
                         <CP_id>OR-mp4vr0n</CP_id>
+                        <CP>Vlaams Audiovisueel Fonds</CP>
                         <ingest_workflow>sipin</ingest_workflow>
                     </mhs:Dynamic>
                 </mhs:Sidecar>

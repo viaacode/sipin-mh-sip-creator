@@ -4,11 +4,11 @@ from lxml import etree
 
 from rdflib.term import Node
 
-from app.helpers.graph import get_cp_id_from_graph, get_representations
+from app.helpers.graph import get_cp_info_from_graph, get_representations
 
 from app.models.sip import SIP
 
-from app.mappings import material_artwork, newspaper, basic
+from app.mappings import material_artwork, newspaper, basic, bibliographic
 
 MH_VERSION = "22.1"
 
@@ -19,7 +19,10 @@ NSMAP = {
 
 
 def build_mh_mets(
-    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+    g: rdflib.Graph,
+    pid: str,
+    archive_location: str,
+    additional_metadata: dict[str, dict[str, str]] = {},
 ) -> str:
     profile = material_artwork
     mapping = profile.MAPPING
@@ -54,7 +57,7 @@ def build_mh_mets(
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
+        build_mh_sidecar(mapping, g, [ie], pid, additional_metadata),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -104,8 +107,12 @@ def build_mh_mets(
 
     return xml
 
+
 def build_basic_mh_mets(
-    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+    g: rdflib.Graph,
+    pid: str,
+    archive_location: str,
+    additional_metadata: dict[str, dict[str, str]] = {},
 ) -> str:
     profile = basic
     mapping = profile.MAPPING
@@ -140,7 +147,7 @@ def build_basic_mh_mets(
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
+        build_mh_sidecar(mapping, g, [ie], pid, additional_metadata),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -192,7 +199,10 @@ def build_basic_mh_mets(
 
 
 def build_newspaper_mh_mets(
-    g: rdflib.Graph, pid: str, archive_location: str, dynamic_tags: dict[str, str] = {}
+    g: rdflib.Graph,
+    pid: str,
+    archive_location: str,
+    additional_metadata: dict[str, dict[str, str]] = {},
 ) -> str:
     profile = newspaper
     mapping = profile.MAPPING
@@ -227,7 +237,7 @@ def build_newspaper_mh_mets(
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
     root_folder.add_dmdsec(
-        build_mh_sidecar(mapping, g, [ie], pid, dynamic_tags),
+        build_mh_sidecar(mapping, g, [ie], pid, additional_metadata),
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
@@ -247,7 +257,7 @@ def build_newspaper_mh_mets(
     for page in pages:
         newspaper_page = metsrw.FSEntry(type="NewspaperPage")
         newspaper_page.add_dmdsec(
-            build_minimal_sidecar(f"{pid}_{page}"),
+            build_minimal_sidecar(f"{pid}_{page}", {"descriptive": {"Title": f"testjeuh - pagina {page + 1}"}}),
             "OTHER",
             **{
                 "othermdtype": "mhs:Sidecar",
@@ -295,7 +305,114 @@ def build_newspaper_mh_mets(
     return xml
 
 
-def build_minimal_sidecar(external_id: str) -> str:
+def build_bibliographic_mh_mets(
+    g: rdflib.Graph,
+    pid: str,
+    archive_location: str,
+    additional_metadata: dict[str, dict[str, str]] = {},
+) -> str:
+    profile = bibliographic
+    mapping = profile.MAPPING
+
+    ie = g.value(
+        predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        object=rdflib.URIRef("http://www.loc.gov/premis/rdf/v3/IntellectualEntity"),
+    )
+    mets = metsrw.METSDocument()
+
+    mets.agents.append(metsrw.Agent("CUSTODIAN", type="ORGANIZATION", name="meemoo"))
+
+    root_folder = metsrw.FSEntry(use="Original", type=profile.NAME)
+
+    mets_fs = metsrw.FSEntry(
+        fileid=f"FILEID-{profile.NAME.upper()}-METS",
+        use="Disk",
+        path="mets.xml",
+        type="Representation",
+        label="Original",
+        file_uuid=f"FILEID-{profile.NAME.upper()}-METS",
+    )
+    mets_med = metsrw.FSEntry(type="Media")
+    mets_med.add_dmdsec(
+        build_minimal_sidecar(f"{pid}_mets"),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-{profile.NAME.upper()}-METS",
+        },
+    )
+    mets_med.add_child(mets_fs)
+    root_folder.add_child(mets_med)
+    root_folder.add_dmdsec(
+        build_mh_sidecar(mapping, g, [ie], pid, additional_metadata),
+        "OTHER",
+        **{
+            "othermdtype": "mhs:Sidecar",
+            "id": f"DMDID-{profile.NAME.upper()}",
+        },
+    )
+
+    representations = get_representations(g)
+    pages: dict[int, list] = {}
+
+    for representation in representations:
+        for idx, file in enumerate(representation.files):
+            repr_files = pages.get(file.order, [])
+            repr_files.append((representation, file))
+            pages[file.order] = repr_files
+
+    for page in pages:
+        bibliographic_page = metsrw.FSEntry(type="BibliographicPage")
+        bibliographic_page.add_dmdsec(
+            build_minimal_sidecar(f"{pid}_{page}"),
+            "OTHER",
+            **{
+                "othermdtype": "mhs:Sidecar",
+                "id": f"DMDID-{profile.NAME.upper()}-PAGE-{page}",
+            },
+        )
+        root_folder.add_child(bibliographic_page)
+
+        for file_index, repr_file in enumerate(pages[page]):
+            representation_media = metsrw.FSEntry(type="Media")
+            representation_media.add_dmdsec(
+                build_mh_sidecar(
+                    mapping,
+                    g,
+                    [repr_file[0].node, repr_file[1].node, *repr_file[0].events],
+                    f"{pid}_{page}_{file_index}",
+                ),
+                "OTHER",
+                **{
+                    "othermdtype": "mhs:Sidecar",
+                    "id": f"DMDID-{profile.NAME.upper()}-REPRESENTATION-{page}-{file_index}",
+                },
+            )
+            file_representation = metsrw.FSEntry(
+                fileid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{page}-{file_index}",
+                use=archive_location,
+                path=f"{repr_file[0].label}/{repr_file[1].filename}",
+                type="Representation",
+                label="Original",
+                file_uuid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{page}-{file_index}",
+                checksumtype="MD5",
+                checksum=repr_file[1].fixity,
+            )
+            representation_media.add_child(file_representation)
+            bibliographic_page.add_child(representation_media)
+
+    mets.append_file(root_folder)
+
+    m = mets.serialize(normative_structmap=False)
+
+    xml = etree.tostring(
+        m, xml_declaration=True, encoding="UTF-8", pretty_print=True
+    ).decode()
+
+    return xml
+
+
+def build_minimal_sidecar(external_id: str, additional_metadata: dict[str, dict[str,str]] = {}) -> str:
     root = etree.Element(
         etree.QName(NSMAP["mhs"], "Sidecar"),
         nsmap=NSMAP,
@@ -316,8 +433,32 @@ def build_minimal_sidecar(external_id: str) -> str:
     root.append(descriptive_node)
     administrative_node.append(id_node)
     descriptive_node.append(title_node)
+    
     id_node.text = external_id
     title_node.text = external_id
+    
+    if additional_metadata.get("descriptive"):
+        for key, value in additional_metadata["descriptive"].items():
+            if value:
+                key_tag = descriptive_node.find(f"mh:{key}", namespaces=NSMAP)
+                if type(key_tag) == etree._Element:
+                    key_tag.text = value
+                else:
+                    key_tag = etree.Element(etree.QName(NSMAP["mh"], key), nsmap=NSMAP)
+                    descriptive_node.append(key_tag)
+                    key_tag.text = value
+
+    if additional_metadata.get("dynamic"):
+        dynamic_node = etree.Element(
+            etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP
+        )
+        for key, value in additional_metadata["dynamic"].items():
+            if value:
+                key_tag = etree.Element(key)
+                dynamic_node.append(key_tag)
+                key_tag.text = value
+        root.append(dynamic_node)
+
 
     xml = etree.tostring(root, pretty_print=True).decode()
 
@@ -329,7 +470,7 @@ def build_mh_sidecar(
     g: rdflib.Graph,
     subjects,
     pid: str,
-    dynamic_tags: dict[str, str] = {},
+    additional_metadata: dict[str, dict[str, str]] = {},
 ) -> str:
     """
     Builds a MH 2.0 sidecar based on metadata from a graph
@@ -407,15 +548,35 @@ def build_mh_sidecar(
     pid_tag.text = pid.split("_")[0]
 
     # Add CP-id to the XML
-    cp_tag = etree.Element("CP_id")
-    dynamic_tag.append(cp_tag)
-    cp_tag.text = get_cp_id_from_graph(g)
+    cp = get_cp_info_from_graph(g)
 
-    for key, value in dynamic_tags.items():
-        if value:
-            key_tag = etree.Element(key)
-            dynamic_tag.append(key_tag)
-            key_tag.text = value
+    if cp:
+        cp_id_tag = etree.Element("CP_id")
+        cp_tag = etree.Element("CP")
+        dynamic_tag.append(cp_id_tag)
+        dynamic_tag.append(cp_tag)
+        cp_id_tag.text = cp.id
+        cp_tag.text = cp.label
+
+    if additional_metadata.get("dynamic"):
+        for key, value in additional_metadata["dynamic"].items():
+            if value:
+                key_tag = etree.Element(key)
+                dynamic_tag.append(key_tag)
+                key_tag.text = value
+
+    if additional_metadata.get("descriptive"):
+        descriptive_tag = root.find("mhs:Descriptive", namespaces=NSMAP)
+        if descriptive_tag is None:
+            descriptive_tag = etree.Element(
+                etree.QName(NSMAP["mhs"], "Descriptive"), nsmap=NSMAP
+            )
+            root.append(descriptive_tag)
+        for key, value in additional_metadata["descriptive"].items():
+            if value:
+                key_tag = etree.Element(etree.QName(NSMAP["mh"], key), nsmap=NSMAP)
+                descriptive_tag.append(key_tag)
+                key_tag.text = value
 
     # Set ingest_workflow to sipin
     sp_tag = etree.Element("ingest_workflow")

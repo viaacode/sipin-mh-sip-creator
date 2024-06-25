@@ -73,16 +73,17 @@ class EventListener:
             self.log.info(f"Dropping non succesful event: {event.get_data()}")
             return
 
+        # `subject` contains the path to the unzipped bag.
         self.log.info(f"Start handling of {event.get_attributes()['subject']}.")
 
-        # Parse the incoming metadata as a graph.
+        # Parse the incoming metadata as a graph using the supplied format or json-ld as fallback.
         metadata_graph_format = event.get_data().get("metadata_graph_fmt", "")
         metadata_graph = graph.parse_graph(
             event.get_data()["metadata_graph"], metadata_graph_format
         )
 
         sip = graph.get_sip_info(metadata_graph)
-        
+
         if not sip.profile in ["basic", "newspaper", "material-artwork"]:
             self.log.warn(f"No support for SIPs with {sip.profile} profile.")
             return
@@ -90,6 +91,8 @@ class EventListener:
         # Path to unzipped bag
         # `/opt/sipin/unzip/<name>.bag.zip`
         path: str = event.get_attributes()["subject"]
+
+        # In some cases a PID is supplied by the CP, if not, we generate a new one.
         pid = graph.get_pid_from_graph(metadata_graph)
         if not pid:
             pid = self.pid_client.get_pid()
@@ -105,46 +108,73 @@ class EventListener:
                 Path(files_path, f"representation_{i+1}"),
                 copy_function=shutil.move,
             )
-            
-            
+
         # Set the storage location based on CP id.
-        cp_id = graph.get_cp_id_from_graph(metadata_graph)
-        
+        cp_info = graph.get_cp_info_from_graph(metadata_graph)
+        if cp_info:
+            cp_id = cp_info.id
+        else:
+            cp_id = ""
+
         archive_location = self.app_config["storage"]["default_archive_location"]
-        
-        tape_content_partners = [or_id.strip().lower() for or_id in self.app_config["storage"]["tape_content_partners"].split(",")]
-        disk_content_partners = [or_id.strip().lower() for or_id in self.app_config["storage"]["disk_content_partners"].split(",")]
-        
+
+        tape_content_partners = [
+            or_id.strip().lower()
+            for or_id in self.app_config["storage"]["tape_content_partners"].split(",")
+        ]
+        disk_content_partners = [
+            or_id.strip().lower()
+            for or_id in self.app_config["storage"]["disk_content_partners"].split(",")
+        ]
+
         if cp_id.lower() in tape_content_partners:
             archive_location = "Tape"
         if cp_id.lower() in disk_content_partners:
             archive_location = "Disk"
-        
-            
+
         # Generate mets xml based on profile
         if sip.profile == "newspaper":
             mets_xml = xml.build_newspaper_mh_mets(
                 metadata_graph,
                 pid,
                 archive_location,
-                {"batch_id": sip.batch_id, "type_viaa": sip.format},
+                {
+                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format, "dc_format": "kranteneditie"},
+                    "descriptive": {"OriginalFilename": Path(path).name},
+                },
             )
         if sip.profile == "material-artwork":
             mets_xml = xml.build_mh_mets(
                 metadata_graph,
                 pid,
                 archive_location,
-                {"batch_id": sip.batch_id, "type_viaa": sip.format},
+                {
+                    "dynamic": {"batch_id": sip.batch_id, "type_viaa": sip.format},
+                    "descriptive": {"OriginalFilename": Path(path).name},
+                },
             )
-            
+
         if sip.profile == "basic":
             mets_xml = xml.build_basic_mh_mets(
                 metadata_graph,
                 pid,
                 archive_location,
-                {"batch_id": sip.batch_id, "type_viaa": sip.format},
+                {
+                    "dynamic": {"batch_id": sip.batch_id, "type_viaa": sip.format},
+                    "descriptive": {"OriginalFilename": Path(path).name},
+                },
             )
-            
+        if sip.profile == "bibliographic":
+            mets_xml = xml.build_bibliographic_mh_mets(
+                metadata_graph,
+                pid,
+                self.app_config["archive_location"],
+                {
+                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format},
+                    "descriptive": {"OriginalFilename": Path(path).name},
+                },
+            )
+
         # Write xml to the complex folder
         with open(Path(files_path, "mets.xml"), "w") as mets_file:
             mets_file.write(mets_xml)
