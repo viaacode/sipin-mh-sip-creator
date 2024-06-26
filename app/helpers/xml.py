@@ -264,7 +264,7 @@ def build_newspaper_mh_mets(
     for page in pages:
         newspaper_page = metsrw.FSEntry(type="NewspaperPage")
         newspaper_page.add_dmdsec(
-            build_minimal_sidecar(f"{pid}_{page}", {"descriptive": {"Title": f"{newspaper_title} - pagina {page + 1}"}}),
+            build_minimal_sidecar(f"{pid}_{page}", {"descriptive": {"Title": f"{newspaper_title} - pagina {page}"}}),
             "OTHER",
             **{
                 "othermdtype": "mhs:Sidecar",
