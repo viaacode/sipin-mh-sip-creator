@@ -236,14 +236,21 @@ def build_newspaper_mh_mets(
     )
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
+    
+    ie_sidecar = build_mh_sidecar(mapping, g, [ie], pid, additional_metadata)
     root_folder.add_dmdsec(
-        build_mh_sidecar(mapping, g, [ie], pid, additional_metadata),
+        ie_sidecar,
         "OTHER",
         **{
             "othermdtype": "mhs:Sidecar",
             "id": f"DMDID-{profile.NAME.upper()}",
         },
     )
+    
+    # Dirty hack to get the title of the newspaper copied to the pages
+    
+    newspaper_title = etree.fromstring(ie_sidecar).find(".//mh:Title", namespaces=NSMAP).text
+    #
 
     representations = get_representations(g)
     pages: dict[int, list] = {}
@@ -257,7 +264,7 @@ def build_newspaper_mh_mets(
     for page in pages:
         newspaper_page = metsrw.FSEntry(type="NewspaperPage")
         newspaper_page.add_dmdsec(
-            build_minimal_sidecar(f"{pid}_{page}", {"descriptive": {"Title": f"testjeuh - pagina {page + 1}"}}),
+            build_minimal_sidecar(f"{pid}_{page}", {"descriptive": {"Title": f"{newspaper_title} - pagina {page + 1}"}}),
             "OTHER",
             **{
                 "othermdtype": "mhs:Sidecar",
