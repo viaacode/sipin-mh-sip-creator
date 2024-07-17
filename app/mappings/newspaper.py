@@ -180,7 +180,7 @@ def provision_activity_mapper(graph, subject, activities) -> dict[str, list[str]
     return mapping
 
 
-NAME: str = "Newspaper"
+NAME: str = "Bibliographic"
 
 MAPPING: dict = {
     "http://id.loc.gov/ontologies/bibframe/title": {
