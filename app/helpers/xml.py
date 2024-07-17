@@ -262,7 +262,7 @@ def build_newspaper_mh_mets(
             pages[file.order] = repr_files
 
     for page in pages:
-        newspaper_page = metsrw.FSEntry(type="NewspaperPage")
+        newspaper_page = metsrw.FSEntry(type="BibliographicPage")
         newspaper_page.add_dmdsec(
             build_minimal_sidecar(f"{pid}_{page}", {"descriptive": {"Title": f"{newspaper_title} - pagina {page}"}}),
             "OTHER",
