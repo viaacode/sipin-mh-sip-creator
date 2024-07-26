@@ -214,6 +214,26 @@ def provision_activity_mapper(graph, subject, activities) -> dict[str, list[str]
 
     return mapping
 
+def extent_mapper(graph, subject, extents) -> dict[str, list[str]]:
+
+    mapping: dict[str, list[str]] = {}
+
+    for extent in extents:
+        extent_string = str(
+            graph.value(
+                subject=extent,
+                predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
+            )
+        )
+        width_and_height = extent_string.split(" x ")
+        width_in_mm = str(round(float(width_and_height[0]) * 10))
+        height_in_mm = str(round(float(width_and_height[1]) * 10))
+
+        mapping["mhs:Dynamic.dimensions.height_in_mm"] = [height_in_mm]
+        mapping["mhs:Dynamic.dimensions.width_in_mm"] = [width_in_mm]
+
+    return mapping
+
 
 NAME: str = "Bibliographic"
 
@@ -262,5 +282,9 @@ MAPPING: dict = {
     },
     "http://www.loc.gov/premis/rdf/v3/identifier": {
         "mapping_strategy": local_id_mapper,
+    },
+    "http://id.loc.gov/ontologies/bibframe/extent": {
+        "targets": ["mhs:Dynamic.dimensions"],
+        "mapping_strategy": extent_mapper,
     },
 }
