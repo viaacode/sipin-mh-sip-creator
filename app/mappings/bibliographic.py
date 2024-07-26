@@ -1,6 +1,7 @@
 import rdflib
 
 from app.helpers.transformers import date_transform, value_transform
+from app.helpers.mappers import local_id_mapper
 
 
 def title_mapper(graph, subject, objects) -> dict[str, list[str]]:
@@ -258,5 +259,8 @@ MAPPING: dict = {
     },
     "http://id.loc.gov/ontologies/bibframe/provisionActivity": {
         "mapping_strategy": provision_activity_mapper,
+    },
+    "http://www.loc.gov/premis/rdf/v3/identifier": {
+        "mapping_strategy": local_id_mapper,
     },
 }
