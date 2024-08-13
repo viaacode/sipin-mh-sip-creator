@@ -114,13 +114,13 @@ def test_get_representations(json_ld_graph):
     assert len(representations[0].files) == 1
     assert (
         representations[0].id
-        == "https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572"
+        == "https://data.hetarchief.be/id/entity/uuid-4e475706-2752-4f77-9069-1f71c0e22572"
     )
     assert representations[0].files[0].fixity == "18513a8d61c6f2cbaaeeedd754b01d6b"
     assert representations[0].files[0].filename == "D523F963.jpg"
     assert (
         representations[0].files[0].id
-        == "https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d"
+        == "https://data.hetarchief.be/id/entity/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d"
     )
 
 

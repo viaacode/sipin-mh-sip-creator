@@ -17,23 +17,23 @@
 
 <http://the-fr.org/id/file-format/1507> a ns1:FileFormat .
 
-<https://data.hetarchief.be/id/object/18513a8d61c6f2cbaaeeedd754b01d6b> a <http://id.loc.gov/vocabulary/preservation/cryptographicHashFunctions/md5> ;
+<https://data.hetarchief.be/id/entity/18513a8d61c6f2cbaaeeedd754b01d6b> a <http://id.loc.gov/vocabulary/preservation/cryptographicHashFunctions/md5> ;
     rdf:value "18513a8d61c6f2cbaaeeedd754b01d6b" .
 
-<https://data.hetarchief.be/id/object/Object_number> rdfs:subClassOf <https://data.hetarchief.be/ns/object/LocalIdentifier> .
+<https://data.hetarchief.be/id/entity/Object_number> rdfs:subClassOf <https://data.hetarchief.be/ns/object/LocalIdentifier> .
 
-<https://data.hetarchief.be/id/object/Object_numberv_2021073114124363> a <https://data.hetarchief.be/id/object/Object_number> ;
+<https://data.hetarchief.be/id/entity/Object_numberv_2021073114124363> a <https://data.hetarchief.be/id/entity/Object_number> ;
     rdf:value "v_2021073114124363" .
 
-<https://data.hetarchief.be/id/object/local_id> rdfs:subClassOf <https://data.hetarchief.be/ns/object/LocalIdentifier> .
+<https://data.hetarchief.be/id/entity/local_id> rdfs:subClassOf <https://data.hetarchief.be/ns/object/LocalIdentifier> .
 
-<https://data.hetarchief.be/id/object/local_idce980d9> a <https://data.hetarchief.be/id/object/local_id> ;
+<https://data.hetarchief.be/id/entity/local_idce980d9> a <https://data.hetarchief.be/id/entity/local_id> ;
     rdf:value "ce980d9" .
 
-<https://data.hetarchief.be/id/object/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4> a ns3:IntellectualEntity,
+<https://data.hetarchief.be/id/entity/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4> a ns3:IntellectualEntity,
         "edtf:EDTF",
         "edtf:EDTF-level1" ;
-    ns5:isr <https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572> ;
+    ns5:isr <https://data.hetarchief.be/id/entity/uuid-4e475706-2752-4f77-9069-1f71c0e22572> ;
     ns1:abstract "the abstract of the episode"@en,
         "de samenvatting van de episode"@nl ;
     ns1:alternative "the alternative title of the episode"@en,
@@ -69,19 +69,19 @@
     ns1:title "the title of the episode"@en,
         "de titel van de episode"@nl ;
     ns1:type "video" ;
-    ns3:identifier <https://data.hetarchief.be/id/object/Object_numberv_2021073114124363>,
-        <https://data.hetarchief.be/id/object/local_idce980d9> .
+    ns3:identifier <https://data.hetarchief.be/id/entity/Object_numberv_2021073114124363>,
+        <https://data.hetarchief.be/id/entity/local_idce980d9> .
 
-<https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d> a ns3:File ;
-    ns5:isi <https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572> ;
+<https://data.hetarchief.be/id/entity/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d> a ns3:File ;
+    ns5:isi <https://data.hetarchief.be/id/entity/uuid-4e475706-2752-4f77-9069-1f71c0e22572> ;
     ns1:format <http://the-fr.org/id/file-format/1507> ;
-    ns3:fixity <https://data.hetarchief.be/id/object/18513a8d61c6f2cbaaeeedd754b01d6b> ;
+    ns3:fixity <https://data.hetarchief.be/id/entity/18513a8d61c6f2cbaaeeedd754b01d6b> ;
     ns3:originalName "D523F963.jpg" ;
     ns3:size 1735648 .
 
-<https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572> a ns3:Representation ;
-    ns5:inc <https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d> ;
-    ns5:rep <https://data.hetarchief.be/id/object/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4> .
+<https://data.hetarchief.be/id/entity/uuid-4e475706-2752-4f77-9069-1f71c0e22572> a ns3:Representation ;
+    ns5:inc <https://data.hetarchief.be/id/entity/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d> ;
+    ns5:rep <https://data.hetarchief.be/id/entity/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4> .
 
 <https://data.hetarchief.be/id/organization/OR-m30wc4t> a <http://www.w3.org/ns/org#Organization> ;
     ns4:prefLabel "Flemish Cat Museum"@nl ;

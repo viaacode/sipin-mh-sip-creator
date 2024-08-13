@@ -176,7 +176,7 @@ def get_pid_from_graph(graph: rdflib.Graph) -> str:
     """
     pid_node = graph.value(
         predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        object=rdflib.URIRef("https://data.hetarchief.be/id/object/MEEMOO-PID"),
+        object=rdflib.URIRef("https://data.hetarchief.be/id/entity/MEEMOO-PID"),
     )
     if pid_node:
         pid = graph.value(subject=pid_node)
