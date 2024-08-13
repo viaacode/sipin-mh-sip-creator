@@ -274,6 +274,11 @@ def build_newspaper_mh_mets(
         root_folder.add_child(newspaper_page)
 
         for file_index, repr_file in enumerate(pages[page]):
+            # Check if essence or xml
+            use = archive_location
+            if str(repr_file[1].filename).endswith(".xml"):
+                use = "Disk"
+            
             representation_media = metsrw.FSEntry(type="Media")
             representation_media.add_dmdsec(
                 build_mh_sidecar(
@@ -290,7 +295,7 @@ def build_newspaper_mh_mets(
             )
             file_representation = metsrw.FSEntry(
                 fileid=f"FILEID-{profile.NAME.upper()}-REPRESENTATION-{page}-{file_index}",
-                use=archive_location,
+                use=use,
                 path=f"{repr_file[0].label}/{repr_file[1].filename}",
                 type="Representation",
                 label="Original",

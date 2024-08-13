@@ -217,10 +217,12 @@ def test_build_mh_sidecar_material_artwork_minimal_rep(
 def test_build_newspaper_mets(newspaper_ttl_graph):
     g = parse_graph(newspaper_ttl_graph, "ttl")
 
-    mets = build_newspaper_mh_mets(g, "testpid", "Disk")
+    mets = build_newspaper_mh_mets(g, "testpid", "Tape")
 
     assert "Disk" in mets
-    assert not "Tape" in mets
+    assert "Tape" in mets
+    assert mets.count("Disk") == 27
+    assert mets.count("Tape") == 4
     assert mets
 
 @freeze_time("2024-02-20")
