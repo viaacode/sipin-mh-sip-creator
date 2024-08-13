@@ -1,8 +1,8 @@
 [
   {
-    "@id": "https://data.hetarchief.be/id/object/local_idce980d9",
+    "@id": "https://data.hetarchief.be/id/entity/local_idce980d9",
     "@type": [
-      "https://data.hetarchief.be/id/object/local_id"
+      "https://data.hetarchief.be/id/entity/local_id"
     ],
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": [
       {
@@ -11,7 +11,7 @@
     ]
   },
   {
-    "@id": "https://data.hetarchief.be/id/object/18513a8d61c6f2cbaaeeedd754b01d6b",
+    "@id": "https://data.hetarchief.be/id/entity/18513a8d61c6f2cbaaeeedd754b01d6b",
     "@type": [
       "http://id.loc.gov/vocabulary/preservation/cryptographicHashFunctions/md5"
     ],
@@ -22,7 +22,7 @@
     ]
   },
   {
-    "@id": "https://data.hetarchief.be/id/object/local_id",
+    "@id": "https://data.hetarchief.be/id/entity/local_id",
     "http://www.w3.org/2000/01/rdf-schema#subClassOf": [
       {
         "@id": "https://data.hetarchief.be/ns/object/LocalIdentifier"
@@ -30,7 +30,7 @@
     ]
   },
   {
-    "@id": "https://data.hetarchief.be/id/object/Object_number",
+    "@id": "https://data.hetarchief.be/id/entity/Object_number",
     "http://www.w3.org/2000/01/rdf-schema#subClassOf": [
       {
         "@id": "https://data.hetarchief.be/ns/object/LocalIdentifier"
@@ -44,7 +44,7 @@
     ]
   },
   {
-    "@id": "https://data.hetarchief.be/id/object/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4",
+    "@id": "https://data.hetarchief.be/id/entity/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4",
     "@type": [
       "http://www.loc.gov/premis/rdf/v3/IntellectualEntity",
       {
@@ -56,7 +56,7 @@
     ],
     "http://id.loc.gov/vocabulary/preservation/relationshipSubType/isr": [
       {
-        "@id": "https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572"
+        "@id": "https://data.hetarchief.be/id/entity/uuid-4e475706-2752-4f77-9069-1f71c0e22572"
       }
     ],
     "http://purl.org/dc/terms/abstract": [
@@ -224,10 +224,10 @@
     ],
     "http://www.loc.gov/premis/rdf/v3/identifier": [
       {
-        "@id": "https://data.hetarchief.be/id/object/Object_numberv_2021073114124363"
+        "@id": "https://data.hetarchief.be/id/entity/Object_numberv_2021073114124363"
       },
       {
-        "@id": "https://data.hetarchief.be/id/object/local_idce980d9"
+        "@id": "https://data.hetarchief.be/id/entity/local_idce980d9"
       }
     ]
   },
@@ -280,9 +280,9 @@
     ]
   },
   {
-    "@id": "https://data.hetarchief.be/id/object/Object_numberv_2021073114124363",
+    "@id": "https://data.hetarchief.be/id/entity/Object_numberv_2021073114124363",
     "@type": [
-      "https://data.hetarchief.be/id/object/Object_number"
+      "https://data.hetarchief.be/id/entity/Object_number"
     ],
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": [
       {
@@ -291,13 +291,13 @@
     ]
   },
   {
-    "@id": "https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d",
+    "@id": "https://data.hetarchief.be/id/entity/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d",
     "@type": [
       "http://www.loc.gov/premis/rdf/v3/File"
     ],
     "http://id.loc.gov/vocabulary/preservation/relationshipSubType/isi": [
       {
-        "@id": "https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572"
+        "@id": "https://data.hetarchief.be/id/entity/uuid-4e475706-2752-4f77-9069-1f71c0e22572"
       }
     ],
     "http://purl.org/dc/terms/format": [
@@ -307,7 +307,7 @@
     ],
     "http://www.loc.gov/premis/rdf/v3/fixity": [
       {
-        "@id": "https://data.hetarchief.be/id/object/18513a8d61c6f2cbaaeeedd754b01d6b"
+        "@id": "https://data.hetarchief.be/id/entity/18513a8d61c6f2cbaaeeedd754b01d6b"
       }
     ],
     "http://www.loc.gov/premis/rdf/v3/originalName": [
@@ -339,18 +339,18 @@
     ]
   },
   {
-    "@id": "https://data.hetarchief.be/id/object/uuid-4e475706-2752-4f77-9069-1f71c0e22572",
+    "@id": "https://data.hetarchief.be/id/entity/uuid-4e475706-2752-4f77-9069-1f71c0e22572",
     "@type": [
       "http://www.loc.gov/premis/rdf/v3/Representation"
     ],
     "http://id.loc.gov/vocabulary/preservation/relationshipSubType/inc": [
       {
-        "@id": "https://data.hetarchief.be/id/object/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d"
+        "@id": "https://data.hetarchief.be/id/entity/uuid-945a16cd-eeb6-4a4c-95bb-4656a9f0909d"
       }
     ],
     "http://id.loc.gov/vocabulary/preservation/relationshipSubType/rep": [
       {
-        "@id": "https://data.hetarchief.be/id/object/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4"
+        "@id": "https://data.hetarchief.be/id/entity/uuid-6b80a848-f2d2-44a4-bc55-56f272a8e5b4"
       }
     ]
   }
