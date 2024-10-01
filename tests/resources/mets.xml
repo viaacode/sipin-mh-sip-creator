@@ -13,7 +13,6 @@
             <mh:ExternalId>testpid</mh:ExternalId>
           </mhs:Administrative>
           <mhs:Dynamic>
-            <dc_description_lang>GIVE 2D</dc_description_lang>
             <dc_rights_licenses>
               <multiselect>VIAA-ONDERWIJS</multiselect>
               <multiselect>VIAA-ONDERZOEK</multiselect>

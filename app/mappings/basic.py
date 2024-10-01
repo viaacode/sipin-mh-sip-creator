@@ -37,7 +37,6 @@ MAPPING: dict = {
     },
     "http://purl.org/dc/terms/description": {
         "targets": [
-            "mhs:Dynamic.dc_description_lang",
             "mhs:Descriptive.mh:Description",
         ]
     },
