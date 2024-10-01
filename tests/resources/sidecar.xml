@@ -26,7 +26,6 @@
       <Maker>creator 1</Maker>
       <Maker>creator 2</Maker>
     </dc_creators>
-    <dc_description_lang>de beschrijving van de episode</dc_description_lang>
     <dcterms_issued>2023-02-14</dcterms_issued>
     <dc_languages>
       <multiselect>en</multiselect>

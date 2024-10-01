@@ -247,7 +247,6 @@ MAPPING: dict = {
     },
     "http://id.loc.gov/ontologies/bibframe/summary": {
         "targets": [
-            "mhs:Dynamic.dc_description_lang",
             "mhs:Descriptive.mh:Description",
         ]
     },
