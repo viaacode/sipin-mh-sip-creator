@@ -179,6 +179,20 @@ def provision_activity_mapper(graph, subject, activities) -> dict[str, list[str]
 
     return mapping
 
+def abraham_id_mapper(graph, subject, objects) -> dict[str, list[str]]:
+    mapping: dict[str, list[str]] = {}
+    for object in objects:
+        if abraham_id := graph.value(
+            subject=object,
+            predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/identifier"),
+        ):
+            abraham_id_value = graph.value(subject=abraham_id, predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#value"))
+
+            mapping["mhs:Dynamic.dc_identifier_localids.abraham_id[]"] = [str(abraham_id_value)]
+            mapping["mhs:Dynamic.abraham_ID"] = [str(abraham_id_value)]
+
+    return mapping
+
 
 NAME: str = "Newspaper"
 
@@ -205,11 +219,7 @@ MAPPING: dict = {
         "targets": ["mhs:Dynamic.dc_subjects.Trefwoord[]"],
     },
     "http://id.loc.gov/ontologies/bibframe/hasSeries": {
-        "transformer": value_transform,
-        "targets": [
-            "mhs:Dynamic.dc_identifier_localids.abraham_id[]",
-            "mhs:Dynamic.abraham_ID",
-        ],
+        "mapping_strategy": abraham_id_mapper,
     },
     "http://id.loc.gov/ontologies/bibframe/contribution": {
         "mapping_strategy": contribution_mapper,
