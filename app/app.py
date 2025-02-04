@@ -168,7 +168,7 @@ class EventListener:
             mets_xml = xml.build_bibliographic_mh_mets(
                 metadata_graph,
                 pid,
-                self.app_config["archive_location"],
+                archive_location,
                 {
                     "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format},
                     "descriptive": {"OriginalFilename": Path(path).name},
