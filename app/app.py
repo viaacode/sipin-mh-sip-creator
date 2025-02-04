@@ -84,7 +84,7 @@ class EventListener:
 
         sip = graph.get_sip_info(metadata_graph)
 
-        if not sip.profile in ["basic", "newspaper", "material-artwork"]:
+        if not sip.profile in ["basic", "newspaper", "material-artwork", "bibliographic"]:
             self.log.warn(f"No support for SIPs with {sip.profile} profile.")
             return
 
