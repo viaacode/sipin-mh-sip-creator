@@ -87,6 +87,9 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
             "lyricist": "Schrijver",
             "translator": "Vertaler",
         }
+
+        contributor_roles = ["Ontvanger"]
+
         if mapped_role := role_mapping.get(str(role_label)):
             role = f"mhs:Dynamic.dc_creators.{mapped_role}[]"
         else:
@@ -125,9 +128,24 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
                 predicate=rdflib.URIRef("https://schema.org/familyName"),
             )
 
-            name = str(
-                " ".join([str(contributor_given_name), str(contributor_family_name)])
-            )
+            if contributor_full_name:
+                name = str(contributor_full_name)
+            else:
+                contributor_given_name = graph.value(
+                    subject=contributor_details,
+                    predicate=rdflib.URIRef("https://schema.org/givenName"),
+                )
+
+                contributor_family_name = graph.value(
+                    subject=contributor_details,
+                    predicate=rdflib.URIRef("https://schema.org/familyName"),
+                )
+
+                name = str(
+                    " ".join(
+                        [str(contributor_given_name), str(contributor_family_name)]
+                    )
+                )
 
         mapping[role] = [*mapping.get(role, []), name]
 
@@ -139,6 +157,11 @@ def carrier_mapper(graph, subject, carriers) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
 
     for carrier in carriers:
+        label = graph.objects(
+            subject=carrier,
+            predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
+        )
+
         extents = graph.objects(
             predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/extent"),
             subject=carrier,
@@ -210,9 +233,18 @@ def provision_activity_mapper(graph, subject, activities) -> dict[str, list[str]
             mapping[key] = [*mapping.get(key, []), str(place_code)]
 
         if place_name:
-            mapping[key] = [*mapping.get(key, []), str(place_name)]
+            mapping[place_key] = [*mapping.get(place_key, []), str(place_name)]
+
+        date_key = "mhs:Dynamic.dcterms_issued"
+        date = graph.value(
+            subject=activity,
+            predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/date"),
+        )
+        if date:
+            mapping[date_key] = [*mapping.get(date_key, []), str(date)]
 
     return mapping
+
 
 def extent_mapper(graph, subject, extents) -> dict[str, list[str]]:
 
@@ -231,6 +263,32 @@ def extent_mapper(graph, subject, extents) -> dict[str, list[str]]:
 
         mapping["mhs:Dynamic.dimensions.height_in_mm"] = [height_in_mm]
         mapping["mhs:Dynamic.dimensions.width_in_mm"] = [width_in_mm]
+
+    return mapping
+
+
+def relation_mapper(graph, subject, relations) -> dict[str, list[str]]:
+
+    mapping: dict[str, list[str]] = {}
+
+    for relation in relations:
+        relation_target = graph.value(
+            subject=relation,
+            predicate=rdflib.URIRef(
+                "http://id.loc.gov/ontologies/bibframe/identifiedBy"
+            ),
+        )
+
+        relation_value = str(
+            graph.value(
+                subject=relation_target,
+                predicate=rdflib.URIRef(
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+                ),
+            )
+        )
+
+        mapping["mhs:Dynamic.dc_relations.is_verwant_aan[]"] = [f"dc_identifier_localid:{relation_value}"]
 
     return mapping
 
@@ -282,5 +340,8 @@ MAPPING: dict = {
     "http://id.loc.gov/ontologies/bibframe/extent": {
         "targets": ["mhs:Dynamic.dimensions"],
         "mapping_strategy": extent_mapper,
+    },
+    "http://id.loc.gov/ontologies/bibframe/relatedTo": {
+        "mapping_strategy": relation_mapper,
     },
 }
