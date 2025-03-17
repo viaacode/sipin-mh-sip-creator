@@ -1,3 +1,4 @@
+from xml.etree.ElementPath import prepare_predicate
 import rdflib
 
 from app.helpers.transformers import date_transform, value_transform
@@ -86,9 +87,17 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
             "author": "Auteur",
             "lyricist": "Schrijver",
             "translator": "Vertaler",
+            "briefschrijver": "Schrijver",
+            "briefontvanger": "Ontvanger",
         }
+        
+        contributor_roles = ["Ontvanger"]
+        
         if mapped_role := role_mapping.get(str(role_label)):
-            role = f"mhs:Dynamic.dc_creators.{mapped_role}[]"
+            if mapped_role in contributor_roles:
+                role = f"mhs:Dynamic.dc_contributors.{mapped_role}[]"
+            else:
+                role = f"mhs:Dynamic.dc_creators.{mapped_role}[]"
         else:
             role = f"mhs:Dynamic.dc_creators.Maker[]"
 
@@ -116,18 +125,27 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
             )
 
         if agent_type == rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/Person"):
-            contributor_given_name = graph.value(
+            contributor_full_name = graph.value(
                 subject=contributor_details,
-                predicate=rdflib.URIRef("https://schema.org/givenName"),
+                predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
             )
-            contributor_family_name = graph.value(
-                subject=contributor_details,
-                predicate=rdflib.URIRef("https://schema.org/familyName"),
-            )
+            
+            if contributor_full_name:
+                name = str(contributor_full_name)
+            else:
+                contributor_given_name = graph.value(
+                    subject=contributor_details,
+                    predicate=rdflib.URIRef("https://schema.org/givenName"),
+                )
+                
+                contributor_family_name = graph.value(
+                    subject=contributor_details,
+                    predicate=rdflib.URIRef("https://schema.org/familyName"),
+                )
 
-            name = str(
-                " ".join([str(contributor_given_name), str(contributor_family_name)])
-            )
+                name = str(
+                    " ".join([str(contributor_given_name), str(contributor_family_name)])
+                )
 
         mapping[role] = [*mapping.get(role, []), name]
 
@@ -139,6 +157,11 @@ def carrier_mapper(graph, subject, carriers) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
 
     for carrier in carriers:
+        label = graph.objects(
+            subject=carrier,
+            predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
+        )
+        
         extents = graph.objects(
             predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/extent"),
             subject=carrier,
@@ -205,12 +228,21 @@ def provision_activity_mapper(graph, subject, activities) -> dict[str, list[str]
             predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
         )
 
-        key = "mhs:Dynamic.dc_coverages.ruimte[]"
+        place_key = "mhs:Dynamic.dc_coverages.ruimte[]"
         if place_code:
-            mapping[key] = [*mapping.get(key, []), str(place_code)]
+            mapping[place_key] = [*mapping.get(place_key, []), str(place_code)]
 
         if place_name:
-            mapping[key] = [*mapping.get(key, []), str(place_name)]
+            mapping[place_key] = [*mapping.get(place_key, []), str(place_name)]
+            
+        date_key = "mhs:Dynamic.dcterms_issued"
+        date = graph.value(
+            subject=activity,
+            predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/date"),
+        )
+        if date:
+            mapping[date_key] = [*mapping.get(date_key, []), str(date)]            
+        
 
     return mapping
 
@@ -282,5 +314,8 @@ MAPPING: dict = {
     "http://id.loc.gov/ontologies/bibframe/extent": {
         "targets": ["mhs:Dynamic.dimensions"],
         "mapping_strategy": extent_mapper,
+    },
+    "hhttp://id.loc.gov/ontologies/bibframe/identifier": {
+        "targets": ["mhs:Dynamic.dc_identifier_localid"],
     },
 }
