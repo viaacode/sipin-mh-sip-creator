@@ -274,7 +274,40 @@ def test_build_bibliographic_mets(bibliographic_ttl_graph):
 
 
 @freeze_time("2024-02-20")
+def test_build_bibliographic_mets_licenses(bibliographic_ttl_graph):
+    # Test if UsageAndAccessPolicy are transformed to dc_rights_licenses
+    g = parse_graph(bibliographic_ttl_graph, "ttl")
+
+    mets = build_bibliographic_mh_mets(g, "testpid", "Disk")
+
+    root = lxml.etree.fromstring(mets.encode("utf-8"))
+
+    namespaces = {
+        "mets": "http://www.loc.gov/METS/",
+        "mhs": "https://zeticon.mediahaven.com/metadata/22.1/mhs/",
+    }
+
+    licences_mets = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_rights_licenses/multiselect/text()",
+        namespaces=namespaces,
+    )
+
+    expected_licenses = [
+        "VIAA-ONDERWIJS",
+        "VIAA-ONDERZOEK",
+        "VIAA-INTRA_CP-CONTENT",
+        "VIAA-INTRA_CP-METADATA-ALL",
+        "VIAA-PUBLIEK-METADATA-LTD",
+        "BEZOEKERTOOL-CONTENT",
+        "BEZOEKERTOOL-METADATA-ALL",
+    ]
+
+    assert set(licences_mets) == set(expected_licenses)
+
+
+@freeze_time("2024-02-20")
 def test_build_bibliographic_mets_default_licenses(bibliographic_no_licenses_ttl_graph):
+    # Test if default licenses are added
     g = parse_graph(bibliographic_no_licenses_ttl_graph, "ttl")
 
     mets = build_bibliographic_mh_mets(g, "testpid", "Disk")
