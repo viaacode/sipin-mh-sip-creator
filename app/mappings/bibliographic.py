@@ -97,7 +97,7 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
             else:
                 role = f"mhs:Dynamic.dc_creators.{mapped_role}[]"
         else:
-            role = f"mhs:Dynamic.dc_creators.Maker[]"
+            role = "mhs:Dynamic.dc_creators.Maker[]"
 
         # check if contributor is person or company
         contributor_details = graph.value(
