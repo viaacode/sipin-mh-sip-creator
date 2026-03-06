@@ -1,8 +1,9 @@
 from xml.etree.ElementPath import prepare_predicate
+
 import rdflib
 
-from app.helpers.transformers import date_transform, value_transform
 from app.helpers.mappers import local_id_mapper
+from app.helpers.transformers import date_transform, value_transform
 
 
 def title_mapper(graph, subject, objects) -> dict[str, list[str]]:
@@ -35,12 +36,12 @@ def title_mapper(graph, subject, objects) -> dict[str, list[str]]:
 
 
 def license_mapper(graph, subject, licenses) -> dict[str, list[str]]:
-    type = graph.namespace_manager.compute_qname(
-        graph.value(
-            predicate=rdflib.URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-            subject=subject,
-        )
-    )[2]
+    # The entity has multiple types
+    types = [
+        graph.namespace_manager.compute_qname(t)[2]
+        for t in list(graph.objects(subject, rdflib.RDF.type))
+    ]
+
     license_list = list(licenses)
     mapping = {}
     if license_list:
@@ -50,7 +51,7 @@ def license_mapper(graph, subject, licenses) -> dict[str, list[str]]:
                 for license in license_list
             ]
         }
-    elif type == "IntellectualEntity":
+    elif "IntellectualEntity" in types:
         mapping = {
             "mhs:Dynamic.dc_rights_licenses.multiselect[]": [
                 "VIAA-ONDERWIJS",
@@ -90,7 +91,7 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
             "briefschrijver": "Schrijver",
             "briefontvanger": "Ontvanger",
         }
-        
+
         contributor_roles = ["Ontvanger"]
         if mapped_role := role_mapping.get(str(role_label)):
             if mapped_role in contributor_roles:
@@ -128,7 +129,7 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
                 subject=contributor_details,
                 predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
             )
-            
+
             if contributor_full_name:
                 name = str(contributor_full_name)
             else:
@@ -136,7 +137,7 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
                     subject=contributor_details,
                     predicate=rdflib.URIRef("https://schema.org/givenName"),
                 )
-                
+
                 contributor_family_name = graph.value(
                     subject=contributor_details,
                     predicate=rdflib.URIRef("https://schema.org/familyName"),
@@ -175,7 +176,7 @@ def carrier_mapper(graph, subject, carriers) -> dict[str, list[str]]:
             subject=carrier,
             predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
         )
-        
+
         extents = graph.objects(
             predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/extent"),
             subject=carrier,
@@ -248,7 +249,7 @@ def provision_activity_mapper(graph, subject, activities) -> dict[str, list[str]
 
         if place_name:
             mapping[place_key] = [*mapping.get(place_key, []), str(place_name)]
-         
+
         date_key = "mhs:Dynamic.dcterms_issued"
         date = graph.value(
             subject=activity,
@@ -256,7 +257,7 @@ def provision_activity_mapper(graph, subject, activities) -> dict[str, list[str]
         )
         if date:
             mapping[date_key] = [*mapping.get(date_key, []), str(date)]
-        
+
     return mapping
 
 
@@ -302,7 +303,9 @@ def relation_mapper(graph, subject, relations) -> dict[str, list[str]]:
             )
         )
 
-        mapping["mhs:Dynamic.dc_relations.is_verwant_aan[]"] = [f"dc_identifier_localid:{relation_value}"]
+        mapping["mhs:Dynamic.dc_relations.is_verwant_aan[]"] = [
+            f"dc_identifier_localid:{relation_value}"
+        ]
 
     return mapping
 
@@ -356,7 +359,8 @@ MAPPING: dict = {
         "mapping_strategy": extent_mapper,
     },
     "http://id.loc.gov/ontologies/bibframe/relatedTo": {
-        "mapping_strategy": relation_mapper,
+        "mapping_strategy": relation_mapper
+    },
     "http://id.loc.gov/ontologies/bibframe/identifier": {
         "targets": ["mhs:Dynamic.dc_identifier_localid"],
     },
