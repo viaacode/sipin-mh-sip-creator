@@ -173,7 +173,7 @@ def test_build_material_artwork_mets(material_artwork_ttl_graph):
     mets = build_mh_mets(g, "testpid", "Disk")
 
     assert "Disk" in mets
-    assert not "Tape" in mets
+    assert "Tape" not in mets
     assert mets
 
 
@@ -257,7 +257,7 @@ def test_build_basic_mets(basic_ttl_graph, basic_mets_xml):
     mets = build_basic_mh_mets(g, "testpid", "Disk")
 
     assert "Disk" in mets
-    assert not "Tape" in mets
+    assert "Tape" not in mets
     assert mets
     assert sorted("".join(mets.split())) == sorted("".join(basic_mets_xml.split()))
 
@@ -269,7 +269,7 @@ def test_build_bibliographic_mets(bibliographic_ttl_graph):
     mets = build_bibliographic_mh_mets(g, "testpid", "Disk")
 
     assert "Disk" in mets
-    assert not "Tape" in mets
+    assert "Tape" not in mets
     assert mets
 
 
