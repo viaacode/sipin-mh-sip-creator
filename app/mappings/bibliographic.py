@@ -1,9 +1,7 @@
-from xml.etree.ElementPath import prepare_predicate
-
 import rdflib
 
 from app.helpers.mappers import local_id_mapper
-from app.helpers.transformers import date_transform, value_transform
+from app.helpers.transformers import date_transform
 
 
 def title_mapper(graph, subject, objects) -> dict[str, list[str]]:
