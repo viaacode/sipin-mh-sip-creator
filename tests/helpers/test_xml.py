@@ -293,6 +293,31 @@ def test_build_bibliographic_mets_rights_credit(bibliographic_ttl_graph):
     assert rights_credit == ["This is the statement of responsibility"]
 
 
+def test_build_bibliographic_mets_dc_subjects(bibliographic_ttl_graph):
+    g = parse_graph(bibliographic_ttl_graph, "ttl")
+
+    mets = build_bibliographic_mh_mets(g, "testpid", "Disk")
+
+    root = lxml.etree.fromstring(mets.encode("utf-8"))
+
+    namespaces = {
+        "mets": "http://www.loc.gov/METS/",
+        "mhs": "https://zeticon.mediahaven.com/metadata/22.1/mhs/",
+    }
+
+    subjects_mets = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_subjects/Trefwoord/text()",
+        namespaces=namespaces,
+    )
+
+    assert subjects_mets == [
+        "cats",
+        "certain cat",
+        "wit (papiersoort)",
+        "inkt (schrijfstoffen)",
+    ]
+
+
 @freeze_time("2024-02-20")
 def test_build_bibliographic_mets_licenses(bibliographic_ttl_graph):
     # Test if UsageAndAccessPolicy are transformed to dc_rights_licenses

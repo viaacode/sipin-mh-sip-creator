@@ -94,6 +94,8 @@ haObjId:1d8f32a17f7db905fbb0fd7b4e42db7f a bf:Carrier ;
     rdfs:label "print" ;
     bf:extent haObjId:7d0278ab7c1b0a64d600b450d32d5129 ;
     bf:note haObjId:7ff3e75ce6aca348bc513ed3d5882946 ;
+    bf:appliedMaterial haObjId:d18089537410b6a02d4b201affedca24 ;
+    bf:baseMaterial haObjId:26f6bd393df766642c4e6215573c6059 ;
     bf:responsibilityStatement "This is the statement of responsibility" ;
     bf:source <https://www.loc.gov/standards/valuelist/marcform.html> .
 
@@ -630,4 +632,12 @@ haObjId:uuid-7eb2ca82-b89c-4e3b-b8bf-843c9fef3f74 a premisowl:Representation ;
 
 <http://the-fr.org/id/file-format/101> a dct:FileFormat .
 
+haObjId:26f6bd393df766642c4e6215573c6059 a bf:BaseMaterial ;
+    rdfs:label "wit" ;
+    bf:source haSip:f4a3ab6dde3562b994c0e47c6c285a7b ;
+    skos:note "papiersoort" .
 
+haObjId:d18089537410b6a02d4b201affedca24 a bf:AppliedMaterial ;
+    rdfs:label "inkt" ;
+    bf:source haSip:f4a3ab6dde3562b994c0e47c6c285a7b ;
+    skos:note "schrijfstoffen" .
