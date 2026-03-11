@@ -219,15 +219,15 @@ def carrier_mapper(graph, subject, carriers) -> dict[str, list[str]]:
 
                 mapping["mhs:Dynamic.dimensions.height_in_mm"] = [height_in_mm]
                 mapping["mhs:Dynamic.dimensions.width_in_mm"] = [width_in_mm]
-        
-    responsability_statements = graph.objects(
-        subject=carrier,
-        predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/responsibilityStatement"),
-    )
-    
-    if responsability_statements:
-        mapping["mhs:Dynamic.dc_rights_credit"] = str(responsability_statements[0])
-            
+
+        responsability_statement = graph.value(
+            subject=carrier,
+            predicate=rdflib.URIRef(
+                "http://id.loc.gov/ontologies/bibframe/responsibilityStatement"
+            ),
+        )
+        mapping["mhs:Dynamic.dc_rights_credit"] = [str(responsability_statement)]
+
     return mapping
 
 
