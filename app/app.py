@@ -30,7 +30,7 @@ class EventListener:
         config_parser = ConfigParser()
         self.log = logging.get_logger(__name__, config=config_parser)
         self.config = config_parser.app_cfg
-        self.pulsar_client = PulsarClient()
+        self.pulsar_client = PulsarClient(APP_NAME)
         self.pid_client = PidClient()
 
         # Topics
