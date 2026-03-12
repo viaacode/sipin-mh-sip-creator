@@ -228,6 +228,47 @@ def carrier_mapper(graph, subject, carriers) -> dict[str, list[str]]:
         )
         mapping["mhs:Dynamic.dc_rights_credit"] = [str(responsability_statement)]
 
+        subjects: list[str] = []
+        # Base materials
+        base_materials = graph.objects(
+            predicate=rdflib.URIRef(
+                "http://id.loc.gov/ontologies/bibframe/baseMaterial"
+            ),
+            subject=carrier,
+        )
+        for base_material in base_materials:
+            label = graph.value(
+                subject=base_material,
+                predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
+            )
+            note = graph.value(
+                subject=base_material,
+                predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#note"),
+            )
+
+            subjects.append(f"{label} ({note})")
+
+        # Applied materials
+        applied_materials = graph.objects(
+            predicate=rdflib.URIRef(
+                "http://id.loc.gov/ontologies/bibframe/appliedMaterial"
+            ),
+            subject=carrier,
+        )
+        for applied_material in applied_materials:
+            label = graph.value(
+                subject=applied_material,
+                predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
+            )
+            note = graph.value(
+                subject=applied_material,
+                predicate=rdflib.URIRef("http://www.w3.org/2004/02/skos/core#note"),
+            )
+
+            subjects.append(f"{label} ({note})")
+
+        mapping["mhs:Dynamic.dc_subjects.Trefwoord[]"] = subjects
+
     return mapping
 
 
