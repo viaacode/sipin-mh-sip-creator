@@ -411,4 +411,7 @@ MAPPING: dict = {
     "http://id.loc.gov/ontologies/bibframe/identifier": {
         "targets": ["mhs:Dynamic.dc_identifier_localid"],
     },
+    "http://id.loc.gov/ontologies/bibframe/genreForm": {
+        "targets": ["mhs:Dynamic.dc_types.multiselect[]"],
+    },
 }
