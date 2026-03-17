@@ -213,9 +213,6 @@ haObjId:a0e929ed7b41913e79b2996aa49806a7 a cryptographicHashFunctions:md5 ;
 haObjId:a65d975de019813ff2d1835579ce2671 a cryptographicHashFunctions:md5 ;
     rdf:value "a65d975de019813ff2d1835579ce2671" .
 
-haObjId:a7ecee0d0816aec17615890be6ab95ae a bf:Role ;
-    rdfs:label "author" .
-
 haObjId:a87ff679a2f3e71d9181a67b7542122c a bf:Identifier ;
     rdfs:label "number" ;
     rdf:value "4" .
@@ -231,10 +228,6 @@ haObjId:b203825339525959f488ba1849b61114 a cryptographicHashFunctions:md5 ;
 
 haObjId:b5748215f775a9ec473c0b02b22b0176 a cryptographicHashFunctions:md5 ;
     rdf:value "b5748215f775a9ec473c0b02b22b0176" .
-
-haObjId:b674ddafb61fa30e1f63a1ad71f52a0a a bf:Person ;
-    schema:familyName "family" ;
-    schema:givenName "given" .
 
 haObjId:ba017a2967ed600cbefc123775f46556 a bf:ProvisionActivity ;
     bf:date "2022-08-02"^^edtf:EDTF ;
