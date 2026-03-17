@@ -3,6 +3,14 @@ import rdflib
 from app.helpers.mappers import local_id_mapper
 from app.helpers.transformers import date_transform
 
+def type_mapper(graph, subject, types) -> dict[str, list[str]]:
+    mapping: dict[str, list[str]] = {}
+    for type in types:
+        type_label = graph.namespace_manager.compute_qname(type)[2]
+        if type_label == "Manuscript":
+            mapping["mhs:Dynamic.text_type[]"] = ["Handwritten"]
+
+    return mapping
 
 def title_mapper(graph, subject, objects) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
@@ -413,5 +421,8 @@ MAPPING: dict = {
     },
     "http://id.loc.gov/ontologies/bibframe/genreForm": {
         "targets": ["mhs:Dynamic.dc_types.multiselect[]"],
+    },
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+        "mapping_strategy": type_mapper,
     },
 }
