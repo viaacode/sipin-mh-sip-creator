@@ -5,11 +5,8 @@ from app.helpers.transformers import date_transform
 
 def type_mapper(graph, subject, types) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
-    print(subject)
     for type in types:
-        print(type)
         type_label = graph.namespace_manager.compute_qname(type)[2]
-        print(type_label)
         if type_label == "Manuscript":
             mapping["mhs:Dynamic.text_type[]"] = ["Handwritten"]
 
