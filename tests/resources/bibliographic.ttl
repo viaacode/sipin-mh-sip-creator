@@ -555,6 +555,7 @@ haObjId:uuid-df553be9-759a-4560-b8e7-9b06d220b57c a premisowl:File ;
     schema:position 1 .
 
 haObjId:uuid-9f07a3eb-1edb-4119-a98e-83ec7fd8d61c a bf:Work,
+        bf:Manuscript,
         premisowl:IntellectualEntity,
         haDes:NewspaperIssue ;
     rdfs:label "Newspaper title" ;
