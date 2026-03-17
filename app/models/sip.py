@@ -16,3 +16,4 @@ class SIP:
         default_factory=list[IntellectualEntity]
     )
     representations: list[Representation] = field(default_factory=list[Representation])
+    content_category: str = ""

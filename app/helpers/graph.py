@@ -1,7 +1,7 @@
-from app.models.organization import Organization
 import rdflib
 
 from app.models.file import File
+from app.models.organization import Organization
 from app.models.representation import Representation
 from app.models.sip import SIP
 
@@ -140,15 +140,17 @@ def get_sip_info(graph: rdflib.Graph) -> SIP:
             )
 
     format = ""
+    content_category = ""
     if format_node := graph.value(
         subject=sip_node, predicate=rdflib.URIRef("http://purl.org/dc/terms/format")
     ):
         format_mapping = {
             "Photographs - Digital": "photo",
             "Scanned 3D Objects (output from photogrammetry scanning)": "3D-model",
-            "Textual works - Print": "print",    
+            "Textual works - Print": "print",
         }
         format = format_mapping.get(str(format_node), "")
+        content_category = str(format_node)
 
     # sip_ies = get_intellectual_entities(graph)
     sip_representations = get_representations(graph)
@@ -160,6 +162,7 @@ def get_sip_info(graph: rdflib.Graph) -> SIP:
         format=format,
         intellectual_entities=[],
         representations=sip_representations,
+        content_category=content_category,
     )
 
     return sip

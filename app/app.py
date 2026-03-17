@@ -15,12 +15,11 @@ from viaa.configuration import ConfigParser
 from viaa.observability import logging
 
 from app.helpers import graph, xml
+from app.mappings import material_artwork
 
 # from helpers.xml import build_mh_sidecar
 from app.services.pid import PidClient
 from app.services.pulsar import PulsarClient
-
-from app.mappings import material_artwork
 
 APP_NAME = "mh-sip-creator"
 
@@ -84,7 +83,12 @@ class EventListener:
 
         sip = graph.get_sip_info(metadata_graph)
 
-        if not sip.profile in ["basic", "newspaper", "material-artwork", "bibliographic"]:
+        if not sip.profile in [
+            "basic",
+            "newspaper",
+            "material-artwork",
+            "bibliographic",
+        ]:
             self.log.warn(f"No support for SIPs with {sip.profile} profile.")
             return
 
@@ -104,8 +108,8 @@ class EventListener:
         # Dump all files of the sip in the folder.
         for i in range(len(sip.representations)):
             shutil.copytree(
-                Path(path, f"data/representations/representation_{i+1}/data"),
-                Path(files_path, f"representation_{i+1}"),
+                Path(path, f"data/representations/representation_{i + 1}/data"),
+                Path(files_path, f"representation_{i + 1}"),
                 copy_function=shutil.move,
             )
 
@@ -139,7 +143,11 @@ class EventListener:
                 pid,
                 archive_location,
                 {
-                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format, "dc_format": "kranteneditie"},
+                    "dynamic": {
+                        "batch_id": sip.batch_id,
+                        "text_type": sip.format,
+                        "dc_format": "kranteneditie",
+                    },
                     "descriptive": {"OriginalFilename": Path(path).name},
                 },
             )
@@ -165,14 +173,14 @@ class EventListener:
                 },
             )
         if sip.profile == "bibliographic":
+            additional_metadata = {
+                "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format},
+                "descriptive": {"OriginalFilename": Path(path).name},
+            }
+            if sip.content_category:
+                additional_metadata["dynamic"]["contentCategory"] = sip.content_category
             mets_xml = xml.build_bibliographic_mh_mets(
-                metadata_graph,
-                pid,
-                archive_location,
-                {
-                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format},
-                    "descriptive": {"OriginalFilename": Path(path).name},
-                },
+                metadata_graph, pid, archive_location, additional_metadata
             )
 
         # Write xml to the complex folder
