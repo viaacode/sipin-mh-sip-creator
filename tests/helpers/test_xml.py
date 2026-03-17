@@ -17,6 +17,7 @@ from app.mappings import material_artwork
 NAMESPACES = {
     "mets": "http://www.loc.gov/METS/",
     "mhs": "https://zeticon.mediahaven.com/metadata/22.1/mhs/",
+    "mh": "https://zeticon.mediahaven.com/metadata/22.1/mh/",
 }
 
 
@@ -502,29 +503,23 @@ def test_build_bibliographic_additional_content_category(bibliographic_ttl_graph
 
     root = lxml.etree.fromstring(mets.encode("utf-8"))
 
-    namespaces = {
-        "mets": "http://www.loc.gov/METS/",
-        "mhs": "https://zeticon.mediahaven.com/metadata/22.1/mhs/",
-        "mh": "https://zeticon.mediahaven.com/metadata/22.1/mh/",
-    }
-
     content_category = root.xpath(
         ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/ContentCategory/text()",
-        namespaces=namespaces,
+        namespaces=NAMESPACES,
     )
 
     assert content_category == ["Content Category"]
 
     batch_id = root.xpath(
         ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/batch_id/text()",
-        namespaces=namespaces,
+        namespaces=NAMESPACES,
     )
 
     assert batch_id == ["Batch ID"]
 
     original_filename = root.xpath(
         ".//mets:xmlData/mhs:Sidecar/mhs:Descriptive/mh:OriginalFilename/text()",
-        namespaces=namespaces,
+        namespaces=NAMESPACES,
     )
 
     assert original_filename == ["Original Filename"]
