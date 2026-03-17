@@ -385,3 +385,19 @@ def test_build_bibliographic_mets_dc_types(
     expected_genres = ["amateur newspapers", "newspaper"]
 
     assert genre_mets == expected_genres
+
+
+@freeze_time("2024-02-20")
+def test_build_bibliographic_mets_text_type(bibliographic_ttl_graph):
+    g = parse_graph(bibliographic_ttl_graph, "ttl")
+
+    mets = build_bibliographic_mh_mets(g, "testpid", "Disk")
+
+    root = lxml.etree.fromstring(mets.encode("utf-8"))
+
+    text_type_mets = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/text_type/text()",
+        namespaces=NAMESPACES,
+    )
+
+    assert text_type_mets == ["Handwritten"]
