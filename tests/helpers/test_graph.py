@@ -136,7 +136,7 @@ def test_get_sip_info(json_ld_graph):
     assert len(sip.representations) == 1
 
 
-def test_get_sip_info_bilbiographic(bibliographic_ttl_graph):
+def test_get_sip_info_bibliographic(bibliographic_ttl_graph):
     graph = parse_graph(bibliographic_ttl_graph, format="ttl")
 
     sip = get_sip_info(graph)

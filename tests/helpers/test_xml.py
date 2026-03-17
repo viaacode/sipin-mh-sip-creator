@@ -489,3 +489,42 @@ def test_build_bibliographic_mets_creators_contributors(
         "Txt",
         "Performer",
     ]
+
+
+def test_build_bibliographic_additional_content_category(bibliographic_ttl_graph):
+    g = parse_graph(bibliographic_ttl_graph, "ttl")
+
+    additional_metadata = {
+        "dynamic": {"batch_id": "Batch ID", "ContentCategory": "Content Category"},
+        "descriptive": {"OriginalFilename": "Original Filename"},
+    }
+    mets = build_bibliographic_mh_mets(g, "testpid", "Disk", additional_metadata)
+
+    root = lxml.etree.fromstring(mets.encode("utf-8"))
+
+    namespaces = {
+        "mets": "http://www.loc.gov/METS/",
+        "mhs": "https://zeticon.mediahaven.com/metadata/22.1/mhs/",
+        "mh": "https://zeticon.mediahaven.com/metadata/22.1/mh/",
+    }
+
+    content_category = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/ContentCategory/text()",
+        namespaces=namespaces,
+    )
+
+    assert content_category == ["Content Category"]
+
+    batch_id = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/batch_id/text()",
+        namespaces=namespaces,
+    )
+
+    assert batch_id == ["Batch ID"]
+
+    original_filename = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Descriptive/mh:OriginalFilename/text()",
+        namespaces=namespaces,
+    )
+
+    assert original_filename == ["Original Filename"]
