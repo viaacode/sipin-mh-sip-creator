@@ -96,9 +96,11 @@ def contribution_mapper(graph, subject, contributors) -> dict[str, list[str]]:
             "translator": "Vertaler",
             "briefschrijver": "Schrijver",
             "briefontvanger": "Ontvanger",
+            "auteur": "Auteur",
+            "contributor": "Bijdrager",
         }
 
-        contributor_roles = ["Ontvanger"]
+        contributor_roles = ["Ontvanger", "Arrangeur", "Bijdrager"]
         if mapped_role := role_mapping.get(str(role_label)):
             if mapped_role in contributor_roles:
                 role = f"mhs:Dynamic.dc_contributors.{mapped_role}[]"

@@ -70,6 +70,13 @@ def bibliographic_no_licenses_ttl_graph():
 
 
 @pytest.fixture
+def bibliographic_creators_contributors_ttl_graph():
+    with open("./tests/resources/bibliographic_creators_contributors.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
+
+@pytest.fixture
 def material_artwork_minimal_rep_graph():
     with open("./tests/resources/materialartwork_minimal_rep.ttl", "r") as f:
         ttl = f.read()
@@ -401,3 +408,84 @@ def test_build_bibliographic_mets_text_type(bibliographic_ttl_graph):
     )
 
     assert text_type_mets == ["Handwritten"]
+
+
+def test_build_bibliographic_mets_creators_contributors(
+    bibliographic_creators_contributors_ttl_graph,
+):
+    g = parse_graph(bibliographic_creators_contributors_ttl_graph, "ttl")
+
+    mets = build_bibliographic_mh_mets(g, "testpid", "Disk")
+
+    root = lxml.etree.fromstring(mets.encode("utf-8"))
+
+    creators_auteur = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_creators/Auteur/text()",
+        namespaces=NAMESPACES,
+    )
+
+    assert creators_auteur == [
+        "Auteur - given Auteur - family",
+        "Auteur - corporate",
+        "Author",
+    ]
+
+    creators_schrijver = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_creators/Schrijver/text()",
+        namespaces=NAMESPACES,
+    )
+
+    assert creators_schrijver == [
+        "Briefschrijver - given Briefschrijver - family",
+        "Lyricist",
+        "Briefschrijver - corporate",
+    ]
+
+    creators_vertaler = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_creators/Vertaler/text()",
+        namespaces=NAMESPACES,
+    )
+    assert creators_vertaler == ["Translator"]
+
+    creators_componist = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_creators/Componist/text()",
+        namespaces=NAMESPACES,
+    )
+    assert creators_componist == ["Composer"]
+
+    creators_maker = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_creators/Maker/text()",
+        namespaces=NAMESPACES,
+    )
+    assert creators_maker == ["Handschrijver"]
+
+    # Contributors
+    contributors_ontvanger = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_contributors/Ontvanger/text()",
+        namespaces=NAMESPACES,
+    )
+
+    assert contributors_ontvanger == [
+        "Briefontvanger - corporate",
+        "Briefontvanger - given Briefontvanger - family",
+    ]
+
+    contributors_arrangeur = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_contributors/Arrangeur/text()",
+        namespaces=NAMESPACES,
+    )
+    assert contributors_arrangeur == ["Harmonization", "Arrangeur", "Adaptation"]
+
+    contributors_bijdrager = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_contributors/Bijdrager/text()",
+        namespaces=NAMESPACES,
+    )
+    assert contributors_bijdrager == [
+        "Accompaniment",
+        "Producer",
+        "Theme",
+        "Copyist",
+        "Editor",
+        "Txt",
+        "Performer",
+    ]
