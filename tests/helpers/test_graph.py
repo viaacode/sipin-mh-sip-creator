@@ -1,12 +1,12 @@
 import pytest
 
 from app.helpers.graph import (
-    get_cp_info_from_graph,
-    get_representations,
-    parse_graph,
     GraphException,
-    get_sip_info,
+    get_cp_info_from_graph,
     get_pid_from_graph,
+    get_representations,
+    get_sip_info,
+    parse_graph,
 )
 
 
@@ -30,6 +30,7 @@ def material_artwork_ttl_graph():
         ttl = f.read()
     return ttl
 
+
 @pytest.fixture
 def newspaper_ttl_graph():
     with open("./tests/resources/newspaper.ttl", "r") as f:
@@ -42,6 +43,7 @@ def threed_ttl_graph():
     with open("./tests/resources/3d.ttl", "r") as f:
         ttl = f.read()
     return ttl
+
 
 @pytest.fixture
 def bibliographic_ttl_graph():
@@ -134,6 +136,18 @@ def test_get_sip_info(json_ld_graph):
     assert len(sip.representations) == 1
 
 
+def test_get_sip_info_bibliographic(bibliographic_ttl_graph):
+    graph = parse_graph(bibliographic_ttl_graph, format="ttl")
+
+    sip = get_sip_info(graph)
+
+    assert sip.id == "uuid-f82f9e39-3760-4dcd-8f3d-7e482f231988"
+    assert sip.profile == "bibliographic"
+    assert sip.content_category == "Textual works - Print"
+    assert sip.format == "print"
+    assert len(sip.representations) == 3
+
+
 def test_get_sip_info_3d(threed_ttl_graph):
     graph = parse_graph(threed_ttl_graph, format="ttl")
 
@@ -144,13 +158,17 @@ def test_get_sip_info_3d(threed_ttl_graph):
     assert sip.batch_id == "PRD-BD-OR-x921j0n-2022-11-10-001"
     assert sip.format == "3D-model"
 
+
 def test_newspaper_ordering(newspaper_ttl_graph):
     graph = parse_graph(newspaper_ttl_graph, format="ttl")
 
     sip = get_sip_info(graph)
 
     assert len(sip.representations) == 3
-    assert sip.representations[0].label <= sip.representations[1].label <= sip.representations[2].label
+    assert (
+        sip.representations[0].label
+        <= sip.representations[1].label
+        <= sip.representations[2].label
+    )
     assert len(sip.representations[2].files) == 22
     assert sip.format == "print"
-    

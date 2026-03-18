@@ -1,26 +1,21 @@
-import json
 import shutil
 import zipfile
 from pathlib import Path
 
-import rdflib
 from cloudevents.events import (
-    CEMessageMode,
     Event,
     EventAttributes,
     EventOutcome,
     PulsarBinding,
 )
+from rdflib import Graph
 from viaa.configuration import ConfigParser
 from viaa.observability import logging
 
 from app.helpers import graph, xml
-
-# from helpers.xml import build_mh_sidecar
+from app.models.sip import SIP
 from app.services.pid import PidClient
 from app.services.pulsar import PulsarClient
-
-from app.mappings import material_artwork
 
 APP_NAME = "mh-sip-creator"
 
@@ -64,6 +59,74 @@ class EventListener:
         event = Event(attributes, data)
         self.pulsar_client.produce_event(topic, event)
 
+    def _build_mh_mets(
+        self,
+        metadata_graph: Graph,
+        sip: SIP,
+        pid: str,
+        archive_location: str,
+        path: str,
+    ) -> str:
+
+        mets_xml: str = ""
+
+        if sip.profile == "newspaper":
+            mets_xml = xml.build_newspaper_mh_mets(
+                metadata_graph,
+                pid,
+                archive_location,
+                {
+                    "dynamic": {
+                        "batch_id": sip.batch_id,
+                        "text_type": sip.format,
+                        "dc_format": "kranteneditie",
+                    },
+                    "descriptive": {"OriginalFilename": Path(path).name},
+                },
+            )
+        elif sip.profile == "material-artwork":
+            mets_xml = xml.build_mh_mets(
+                metadata_graph,
+                pid,
+                archive_location,
+                {
+                    "dynamic": {
+                        "batch_id": sip.batch_id,
+                        "type_viaa": sip.format,
+                    },
+                    "descriptive": {"OriginalFilename": Path(path).name},
+                },
+            )
+        elif sip.profile == "basic":
+            mets_xml = xml.build_basic_mh_mets(
+                metadata_graph,
+                pid,
+                archive_location,
+                {
+                    "dynamic": {
+                        "batch_id": sip.batch_id,
+                        "type_viaa": sip.format,
+                    },
+                    "descriptive": {"OriginalFilename": Path(path).name},
+                },
+            )
+        elif sip.profile == "bibliographic":
+            additional_metadata = {
+                "dynamic": {"batch_id": sip.batch_id},
+                "descriptive": {"OriginalFilename": Path(path).name},
+            }
+            if sip.content_category:
+                additional_metadata["dynamic"]["ContentCategory"] = sip.content_category
+
+            mets_xml = xml.build_bibliographic_mh_mets(
+                metadata_graph,
+                pid,
+                archive_location,
+                additional_metadata,
+            )
+
+        return mets_xml
+
     def handle_incoming_message(self, event: Event):
         """
         Handles an incoming pulsar event.
@@ -84,7 +147,12 @@ class EventListener:
 
         sip = graph.get_sip_info(metadata_graph)
 
-        if not sip.profile in ["basic", "newspaper", "material-artwork", "bibliographic"]:
+        if sip.profile not in [
+            "basic",
+            "newspaper",
+            "material-artwork",
+            "bibliographic",
+        ]:
             self.log.warn(f"No support for SIPs with {sip.profile} profile.")
             return
 
@@ -104,8 +172,8 @@ class EventListener:
         # Dump all files of the sip in the folder.
         for i in range(len(sip.representations)):
             shutil.copytree(
-                Path(path, f"data/representations/representation_{i+1}/data"),
-                Path(files_path, f"representation_{i+1}"),
+                Path(path, f"data/representations/representation_{i + 1}/data"),
+                Path(files_path, f"representation_{i + 1}"),
                 copy_function=shutil.move,
             )
 
@@ -133,47 +201,7 @@ class EventListener:
             archive_location = "Disk"
 
         # Generate mets xml based on profile
-        if sip.profile == "newspaper":
-            mets_xml = xml.build_newspaper_mh_mets(
-                metadata_graph,
-                pid,
-                archive_location,
-                {
-                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format, "dc_format": "kranteneditie"},
-                    "descriptive": {"OriginalFilename": Path(path).name},
-                },
-            )
-        if sip.profile == "material-artwork":
-            mets_xml = xml.build_mh_mets(
-                metadata_graph,
-                pid,
-                archive_location,
-                {
-                    "dynamic": {"batch_id": sip.batch_id, "type_viaa": sip.format},
-                    "descriptive": {"OriginalFilename": Path(path).name},
-                },
-            )
-
-        if sip.profile == "basic":
-            mets_xml = xml.build_basic_mh_mets(
-                metadata_graph,
-                pid,
-                archive_location,
-                {
-                    "dynamic": {"batch_id": sip.batch_id, "type_viaa": sip.format},
-                    "descriptive": {"OriginalFilename": Path(path).name},
-                },
-            )
-        if sip.profile == "bibliographic":
-            mets_xml = xml.build_bibliographic_mh_mets(
-                metadata_graph,
-                pid,
-                archive_location,
-                {
-                    "dynamic": {"batch_id": sip.batch_id, "text_type": sip.format},
-                    "descriptive": {"OriginalFilename": Path(path).name},
-                },
-            )
+        mets_xml = self._build_mh_mets(metadata_graph, sip, pid, archive_location, path)
 
         # Write xml to the complex folder
         with open(Path(files_path, "mets.xml"), "w") as mets_file:
