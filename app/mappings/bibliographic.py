@@ -3,6 +3,7 @@ import rdflib
 from app.helpers.mappers import local_id_mapper
 from app.helpers.transformers import date_transform
 
+
 def type_mapper(graph, subject, types) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
     for type in types:
@@ -11,6 +12,7 @@ def type_mapper(graph, subject, types) -> dict[str, list[str]]:
             mapping["mhs:Dynamic.text_type[]"] = ["Handwritten"]
 
     return mapping
+
 
 def title_mapper(graph, subject, objects) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
@@ -236,7 +238,8 @@ def carrier_mapper(graph, subject, carriers) -> dict[str, list[str]]:
                 "http://id.loc.gov/ontologies/bibframe/responsibilityStatement"
             ),
         )
-        mapping["mhs:Dynamic.dc_rights_credit"] = [str(responsability_statement)]
+        if responsability_statement:
+            mapping["mhs:Dynamic.dc_rights_credit"] = [str(responsability_statement)]
 
         subjects: list[str] = []
         # Base materials

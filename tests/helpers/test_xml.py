@@ -64,6 +64,13 @@ def bibliographic_ttl_graph():
 
 
 @pytest.fixture
+def bibliographic_minimal_ttl_graph():
+    with open("./tests/resources/bibliographic_minimal.ttl", "r") as f:
+        ttl = f.read()
+    return ttl
+
+
+@pytest.fixture
 def bibliographic_no_licenses_ttl_graph():
     with open("./tests/resources/bibliographic_no_licenses.ttl", "r") as f:
         ttl = f.read()
@@ -523,3 +530,18 @@ def test_build_bibliographic_additional_content_category(bibliographic_ttl_graph
     )
 
     assert original_filename == ["Original Filename"]
+
+
+def test_build_bibliographic_minimal_rights_credit(bibliographic_minimal_ttl_graph):
+    g = parse_graph(bibliographic_minimal_ttl_graph, "ttl")
+
+    mets = build_bibliographic_mh_mets(g, "testpid", "Disk")
+
+    root = lxml.etree.fromstring(mets.encode("utf-8"))
+
+    content_category = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_rights_credit/text()",
+        namespaces=NAMESPACES,
+    )
+
+    assert "None" not in content_category
