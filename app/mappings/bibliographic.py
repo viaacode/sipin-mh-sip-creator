@@ -1,7 +1,7 @@
 import rdflib
 
 from app.helpers.mappers import local_id_mapper
-from app.helpers.transformers import date_transform
+
 
 def type_mapper(graph, subject, types) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
@@ -11,6 +11,7 @@ def type_mapper(graph, subject, types) -> dict[str, list[str]]:
             mapping["mhs:Dynamic.text_type[]"] = ["Handwritten"]
 
     return mapping
+
 
 def title_mapper(graph, subject, objects) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
@@ -315,6 +316,21 @@ def provision_activity_mapper(graph, subject, activities) -> dict[str, list[str]
         if date:
             mapping[date_key] = [*mapping.get(date_key, []), str(date)]
 
+        publisher_key = "mhs:Dynamic.dc_publishers.Publisher[]"
+        publisher = graph.value(
+            subject=activity,
+            predicate=rdflib.URIRef("http://id.loc.gov/ontologies/bibframe/agent"),
+        )
+        publisher_label = graph.value(
+            subject=publisher,
+            predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
+        )
+        if publisher_label:
+            mapping[publisher_key] = [
+                *mapping.get(publisher_key, []),
+                str(publisher_label),
+            ]
+
     return mapping
 
 
@@ -381,10 +397,6 @@ MAPPING: dict = {
         "targets": [
             "mhs:Descriptive.mh:Description",
         ]
-    },
-    "http://id.loc.gov/ontologies/bibframe/provisionActivity": {
-        "targets": ["mhs:Dynamic.dcterms_issued"],
-        "transformer": date_transform,
     },
     "http://id.loc.gov/ontologies/bibframe/originDate": {
         "targets": ["mhs:Dynamic.dcterms_created"],

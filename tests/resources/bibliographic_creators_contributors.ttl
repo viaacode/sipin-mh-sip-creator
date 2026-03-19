@@ -230,6 +230,7 @@ haObjId:b5748215f775a9ec473c0b02b22b0176 a cryptographicHashFunctions:md5 ;
     rdf:value "b5748215f775a9ec473c0b02b22b0176" .
 
 haObjId:ba017a2967ed600cbefc123775f46556 a bf:ProvisionActivity ;
+    bf:agent haObjId:23141294af6bb6cc4f80a7346cdc9997 ;
     bf:date "2022-08-02"^^edtf:EDTF ;
     bf:place haObjId:5070cdcebce8822749f61e7a2f9dc796 .
 
@@ -864,3 +865,6 @@ haObjId:37170ac5705a66635156c5750cdfad08 a bf:Role ;
 haObjId:fa93cd1cd9b463e1cca7c30f0c3d0806 a bf:Contribution ;
     bf:agent haObjId:64257b084459d2a8eb9ca8c1114ca6d2 ;
     bf:role haObjId:37170ac5705a66635156c5750cdfad08 .
+
+haObjId:23141294af6bb6cc4f80a7346cdc9997 a bf:Agent ;
+    rdfs:label "Publisher" .
