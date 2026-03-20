@@ -3,6 +3,7 @@ import rdflib
 from app.helpers.mappers import local_id_mapper
 
 
+
 def type_mapper(graph, subject, types) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
     for type in types:
@@ -237,7 +238,8 @@ def carrier_mapper(graph, subject, carriers) -> dict[str, list[str]]:
                 "http://id.loc.gov/ontologies/bibframe/responsibilityStatement"
             ),
         )
-        mapping["mhs:Dynamic.dc_rights_credit"] = [str(responsability_statement)]
+        if responsability_statement:
+            mapping["mhs:Dynamic.dc_rights_credit"] = [str(responsability_statement)]
 
         subjects: list[str] = []
         # Base materials
