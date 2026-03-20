@@ -491,6 +491,14 @@ def test_build_bibliographic_mets_creators_contributors(
         "Performer",
     ]
 
+    publishers_publisher = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_publishers/Publisher/text()",
+        namespaces=NAMESPACES,
+    )
+    assert publishers_publisher == [
+        "Publisher",
+    ]
+
 
 def test_build_bibliographic_additional_content_category(bibliographic_ttl_graph):
     g = parse_graph(bibliographic_ttl_graph, "ttl")
