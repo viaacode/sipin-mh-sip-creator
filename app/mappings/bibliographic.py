@@ -3,7 +3,6 @@ import rdflib
 from app.helpers.mappers import local_id_mapper
 
 
-
 def type_mapper(graph, subject, types) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
     for type in types:
@@ -19,7 +18,7 @@ def title_mapper(graph, subject, objects) -> dict[str, list[str]]:
     for object in objects:
         types = [
             graph.namespace_manager.compute_qname(t)[2]
-            for t in list(graph.objects(subject, rdflib.RDF.type))
+            for t in list(graph.objects(object, rdflib.RDF.type))
         ]
         value = str(
             graph.value(
