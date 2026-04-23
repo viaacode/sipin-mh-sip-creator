@@ -294,6 +294,38 @@ def test_build_bibliographic_mets(bibliographic_ttl_graph):
 
 
 @freeze_time("2024-02-20")
+def test_build_bibliographic_mets_title(bibliographic_ttl_graph):
+    g = parse_graph(bibliographic_ttl_graph, "ttl")
+
+    mets = build_bibliographic_mh_mets(g, "testpid", "Disk")
+
+    root = lxml.etree.fromstring(mets.encode("utf-8"))
+
+    title = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_title/text()",
+        namespaces=NAMESPACES,
+    )
+    alt_title = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Dynamic/dc_titles/alternatief/text()",
+        namespaces=NAMESPACES,
+    )
+    desc_title = root.xpath(
+        ".//mets:xmlData/mhs:Sidecar/mhs:Descriptive/mh:Title/text()",
+        namespaces=NAMESPACES,
+    )
+    assert title == ["Newspaper title"]
+    assert desc_title == [
+        "Newspaper title",
+        "testpid_mets",
+        "testpid_1",
+        "testpid_2",
+        "testpid_3",
+        "testpid_4",
+    ]
+    assert alt_title == ["Newspaper title: alt"]
+
+
+@freeze_time("2024-02-20")
 def test_build_bibliographic_mets_rights_credit(bibliographic_ttl_graph):
     g = parse_graph(bibliographic_ttl_graph, "ttl")
 
