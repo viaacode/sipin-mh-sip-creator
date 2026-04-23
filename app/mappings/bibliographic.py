@@ -17,21 +17,17 @@ def type_mapper(graph, subject, types) -> dict[str, list[str]]:
 def title_mapper(graph, subject, objects) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
     for object in objects:
-        type = graph.namespace_manager.compute_qname(
-            graph.value(
-                predicate=rdflib.URIRef(
-                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-                ),
-                subject=object,
-            )
-        )[2]
+        types = [
+            graph.namespace_manager.compute_qname(t)[2]
+            for t in list(graph.objects(subject, rdflib.RDF.type))
+        ]
         value = str(
             graph.value(
                 predicate=rdflib.URIRef("http://www.w3.org/2000/01/rdf-schema#label"),
                 subject=object,
             )
         )
-        if type == "Title":
+        if "Title" in types:
             mapping["mhs:Dynamic.dc_title"] = [value]
             mapping["mhs:Descriptive.mh:Title"] = [value]
         else:
