@@ -398,7 +398,7 @@ def build_bibliographic_mh_mets(
                     pageless_file[0].node,
                     *pageless_file[1].events,
                 ],
-                f"{pid}_{pageless_file_idx}",
+                f"{pid}_{pageless_file[0].filename.split('.')[-1]}_{pageless_file_idx}",
             ),
             "OTHER",
             **{
