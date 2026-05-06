@@ -1,14 +1,11 @@
 import metsrw
 import rdflib
 from lxml import etree
-
 from rdflib.term import Node
 
 from app.helpers.graph import get_cp_info_from_graph, get_representations
-
+from app.mappings import basic, bibliographic, material_artwork, newspaper
 from app.models.sip import SIP
-
-from app.mappings import material_artwork, newspaper, basic, bibliographic
 
 MH_VERSION = "22.1"
 
@@ -236,7 +233,7 @@ def build_newspaper_mh_mets(
     )
     mets_med.add_child(mets_fs)
     root_folder.add_child(mets_med)
-    
+
     ie_sidecar = build_mh_sidecar(mapping, g, [ie], pid, additional_metadata)
     root_folder.add_dmdsec(
         ie_sidecar,
@@ -246,10 +243,12 @@ def build_newspaper_mh_mets(
             "id": f"DMDID-{profile.NAME.upper()}",
         },
     )
-    
+
     # Dirty hack to get the title of the newspaper copied to the pages
-    
-    newspaper_title = etree.fromstring(ie_sidecar).find(".//mh:Title", namespaces=NSMAP).text
+
+    newspaper_title = (
+        etree.fromstring(ie_sidecar).find(".//mh:Title", namespaces=NSMAP).text
+    )
     #
 
     representations = get_representations(g)
@@ -264,7 +263,10 @@ def build_newspaper_mh_mets(
     for page in pages:
         newspaper_page = metsrw.FSEntry(type="NewspaperPage")
         newspaper_page.add_dmdsec(
-            build_minimal_sidecar(f"{pid}_{page}", {"descriptive": {"Title": f"{newspaper_title} - pagina {page}"}}),
+            build_minimal_sidecar(
+                f"{pid}_{page}",
+                {"descriptive": {"Title": f"{newspaper_title} - pagina {page}"}},
+            ),
             "OTHER",
             **{
                 "othermdtype": "mhs:Sidecar",
@@ -278,7 +280,7 @@ def build_newspaper_mh_mets(
             use = archive_location
             if str(repr_file[1].filename).endswith(".xml"):
                 use = "Disk"
-            
+
             representation_media = metsrw.FSEntry(type="Media")
             representation_media.add_dmdsec(
                 build_mh_sidecar(
@@ -366,12 +368,47 @@ def build_bibliographic_mh_mets(
 
     representations = get_representations(g)
     pages: dict[int, list] = {}
+    pageless_files: list = []
 
     for representation in representations:
         for idx, file in enumerate(representation.files):
-            repr_files = pages.get(file.order, [])
-            repr_files.append((representation, file))
-            pages[file.order] = repr_files
+            if file.order == 0:
+                pageless_files.append((file, representation))
+            else:
+                repr_files = pages.get(file.order, [])
+                repr_files.append((representation, file))
+                pages[file.order] = repr_files
+
+    for pageless_file_idx, pageless_file in enumerate(pageless_files):
+        pageless_file_fs = metsrw.FSEntry(
+            fileid=f"FILEID-{profile.NAME.upper()}-file-{pageless_file_idx}",
+            use=archive_location,
+            path=f"{pageless_file[1].label}/{pageless_file[0].filename}",
+            type="Representation",
+            label="Original",
+            file_uuid=f"FILEID-{profile.NAME.upper()}-file-{pageless_file_idx}",
+        )
+        pageless_file_med = metsrw.FSEntry(type="Media")
+        pageless_file_med.add_dmdsec(
+            build_mh_sidecar(
+                mapping,
+                g,
+                [
+                    pageless_file[1].node,
+                    pageless_file[0].node,
+                    *pageless_file[1].events,
+                ],
+                f"{pid}_{pageless_file_idx}",
+            ),
+            "OTHER",
+            **{
+                "othermdtype": "mhs:Sidecar",
+                "id": f"DMDID-{profile.NAME.upper()}-file-{pageless_file_idx}",
+            },
+        )
+
+        pageless_file_med.add_child(pageless_file_fs)
+        root_folder.add_child(pageless_file_med)
 
     for page in pages:
         bibliographic_page = metsrw.FSEntry(type="BibliographicPage")
@@ -424,7 +461,9 @@ def build_bibliographic_mh_mets(
     return xml
 
 
-def build_minimal_sidecar(external_id: str, additional_metadata: dict[str, dict[str,str]] = {}) -> str:
+def build_minimal_sidecar(
+    external_id: str, additional_metadata: dict[str, dict[str, str]] = {}
+) -> str:
     root = etree.Element(
         etree.QName(NSMAP["mhs"], "Sidecar"),
         nsmap=NSMAP,
@@ -445,10 +484,10 @@ def build_minimal_sidecar(external_id: str, additional_metadata: dict[str, dict[
     root.append(descriptive_node)
     administrative_node.append(id_node)
     descriptive_node.append(title_node)
-    
+
     id_node.text = external_id
     title_node.text = external_id
-    
+
     if additional_metadata.get("descriptive"):
         for key, value in additional_metadata["descriptive"].items():
             if value:
@@ -461,16 +500,13 @@ def build_minimal_sidecar(external_id: str, additional_metadata: dict[str, dict[
                     key_tag.text = value
 
     if additional_metadata.get("dynamic"):
-        dynamic_node = etree.Element(
-            etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP
-        )
+        dynamic_node = etree.Element(etree.QName(NSMAP["mhs"], "Dynamic"), nsmap=NSMAP)
         for key, value in additional_metadata["dynamic"].items():
             if value:
                 key_tag = etree.Element(key)
                 dynamic_node.append(key_tag)
                 key_tag.text = value
         root.append(dynamic_node)
-
 
     xml = etree.tostring(root, pretty_print=True).decode()
 
